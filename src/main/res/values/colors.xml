@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="wave_background">#212121</color>
+    <color name="wave_color1">#673AB7</color>
+    <color name="wave_color2">#7E57C2</color>
+    <color name="wave_color3">#9575CD</color>
+    <color name="wave_color4">#B39DDB</color>
+    <color name="wave_color5">#D1C4E9</color>
+    <color name="wave_color6">#EDE7F6</color>
+</resources>

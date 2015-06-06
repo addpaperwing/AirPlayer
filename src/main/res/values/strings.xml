@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AirPlayer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string-array name="tab_item_array">
+        <item>Artists</item>
+        <item>Albums</item>
+        <item>Songs</item>
+    </string-array>
+</resources>

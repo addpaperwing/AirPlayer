@@ -1,4 +1,4 @@
-package com.airplayer.Fragment;
+package com.airplayer.fragment;
 
 import android.app.Activity;
 import android.content.SharedPreferences;

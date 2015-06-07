@@ -2,33 +2,30 @@ package com.airplayer.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airplayer.R;
-import com.airplayer.Util.ImageUtils;
-import com.airplayer.Util.QueryUtils;
-import com.airplayer.model.Album;
-import com.airplayer.model.LibraryAdapter;
+import com.airplayer.database.AirPlayerDB;
+import com.airplayer.model.Music;
+import com.airplayer.util.ImageUtils;
+import com.airplayer.util.LibraryListAdapter;
 
 import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/6/5.
  */
-public class ArtistActivity extends Activity implements LibraryAdapter.LibraryAdapterCallbacks {
+public class ArtistActivity extends Activity {
 
     private ImageView mImageView;
     private ListView mListView;
-    List<Album> albums;
+    private List<Music> list;
+    private AirPlayerDB db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,32 +34,29 @@ public class ArtistActivity extends Activity implements LibraryAdapter.LibraryAd
 
         Intent intent = getIntent();
         String artistName = intent.getStringExtra("artist_name");
-        final int artistId = intent.getIntExtra("artist_id", 0);
 
         TextView artistNameTextView = (TextView) findViewById(R.id.activity_artist_artist_name);
         artistNameTextView.setText(artistName);
 
-        albums = QueryUtils.queryArtistAlbums(ArtistActivity.this, artistId);
+        db = AirPlayerDB.newInstance(this);
+        list = db.loadList(
+                new String[] { AirPlayerDB.ALBUM, AirPlayerDB.ALBUM_ART },
+                AirPlayerDB.ARTIST + " = ?",
+                new String[] { artistName },
+                1
+        );
+
 
         mImageView = (ImageView) findViewById(R.id.activity_artist_image);
 
         mListView = (ListView) findViewById(R.id.activity_artist_list);
-        mListView.setAdapter(new LibraryAdapter<Album>(this, R.layout.library_list_item, albums, this));
+        mListView.setAdapter(new LibraryListAdapter(this, R.layout.library_list_item,
+                list, LibraryListAdapter.ALBUM_LIST));
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                mImageView.setImageBitmap(ImageUtils.getListItemThumbnail(list.get(position).getAlbumArt()));
             }
         });
-    }
-
-    @Override
-    public String onGetTitle(int position) {
-        return albums.get(position).getTitle();
-    }
-
-    @Override
-    public Bitmap onGetImage(int position) {
-        return ImageUtils.getAlbumArt(albums.get(position).getArtPath());
     }
 }

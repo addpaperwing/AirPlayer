@@ -1,4 +1,4 @@
-package com.airplayer.Google;
+package com.airplayer.google;
 
 import android.R;
 import android.content.Context;

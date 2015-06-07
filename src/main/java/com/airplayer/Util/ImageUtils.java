@@ -1,4 +1,4 @@
-package com.airplayer.Util;
+package com.airplayer.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,16 +8,19 @@ import android.graphics.BitmapFactory;
  */
 public class ImageUtils {
 
-    public static Bitmap getAlbumArt(String artPath){
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 1;
-        options.inJustDecodeBounds = false;
-        options.inDither = false;
-        try {
-            return BitmapFactory.decodeFile(artPath, options);
-        } catch (NullPointerException e) {
+    public static Bitmap getListItemThumbnail (String artPath){
+        if (artPath != null) {
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 1;
+                options.inJustDecodeBounds = false;
+                options.inDither = false;
+                return BitmapFactory.decodeFile(artPath, options);
+            } catch (NullPointerException e) {
+                return null;
+            }
+        } else {
             return null;
         }
-//        return null;
     }
 }

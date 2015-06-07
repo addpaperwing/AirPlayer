@@ -1,4 +1,4 @@
-package com.airplayer.Fragment;
+package com.airplayer.fragment;
 
 
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airplayer.R;
-import com.airplayer.Google.SlidingTabLayout;
+import com.airplayer.google.SlidingTabLayout;
 
 /**
  * Created by ZiyiTsang on 15/6/2.
@@ -47,11 +47,11 @@ public class MyLibraryFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ArtistListFragment();
+                    return LibraryListFragment.newInstance(0);
                 case 1:
-                    return new AlbumListFragment();
+                    return LibraryListFragment.newInstance(1);
                 case 2:
-                    return new SongListFragment();
+                    return LibraryListFragment.newInstance(2);
                 default:
                     return null;
             }

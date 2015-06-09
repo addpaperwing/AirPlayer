@@ -18,10 +18,12 @@ public class QueryUtils {
                 new String[]{String.valueOf(albumId)},
                 null);
         if (cursor != null) {
-            cursor.moveToFirst();
-            String path = cursor.getString(0);
-            cursor.close();
-            return path;
+            if (cursor.moveToFirst()) {
+                String path = cursor.getString(0);
+                cursor.close();
+                return path;
+            }
+            return "";
         } else {
             return "";
         }

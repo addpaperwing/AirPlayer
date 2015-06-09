@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
  */
 public class ImageUtils {
 
-    public static Bitmap getListItemThumbnail (String artPath){
+    public static Bitmap getListItemThumbnail (String artPath) {
         if (artPath != null) {
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();

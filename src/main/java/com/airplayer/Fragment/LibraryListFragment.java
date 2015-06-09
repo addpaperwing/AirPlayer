@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import com.airplayer.R;
@@ -51,6 +52,7 @@ public class LibraryListFragment extends Fragment {
 
         listType = getArguments().getInt(CHILD_FRAGMENT_LIST_TYPE);
         db = AirPlayerDB.newInstance(getParentFragment().getActivity());
+
 
         setList();
 

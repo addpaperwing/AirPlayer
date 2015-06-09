@@ -10,8 +10,8 @@ public class Music {
     private String artist;
     private int duration;
     private String path;
-    private String albumArt;
-    private String artistImage;
+    private String albumArt = "";
+    private String artistImage = "";
 
     public int getId() {
         return id;
@@ -66,7 +66,9 @@ public class Music {
     }
 
     public void setAlbumArt(String albumArt) {
-        this.albumArt = albumArt;
+        if (albumArt != null) {
+            this.albumArt = albumArt;
+        }
     }
 
     public String getArtistImage() {
@@ -74,6 +76,8 @@ public class Music {
     }
 
     public void setArtistImage(String artistImage) {
-        this.artistImage = artistImage;
+        if (artistImage != null) {
+            this.artistImage = artistImage;
+        }
     }
 }

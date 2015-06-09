@@ -15,6 +15,7 @@ import com.airplayer.model.Music;
 
 import java.util.List;
 
+
 /**
  * Created by ZiyiTsang on 15/6/7.
  */
@@ -42,45 +43,56 @@ public class LibraryListAdapter extends ArrayAdapter<Music> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View view;
 
 
         if (convertView == null) {
-            view = LayoutInflater.from(getContext()).inflate(resourceId, null);
+            convertView = LayoutInflater.from(getContext()).inflate(resourceId, null);
             viewHolder = new ViewHolder();
-            viewHolder.holdImage = (ImageView) view.findViewById(R.id.list_item_image);
-            viewHolder.holdText = (TextView) view.findViewById(R.id.list_item_title);
-            view.setTag(viewHolder);
+            viewHolder.holdImage = (ImageView) convertView.findViewById(R.id.list_item_image);
+            viewHolder.holdText = (TextView) convertView.findViewById(R.id.list_item_title);
+            convertView.setTag(viewHolder);
         } else {
-            view = convertView;
-            viewHolder = (ViewHolder) view.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        setListItemText(viewHolder, position);
+        setListItemText(position);
 
-        new SetArtTask().execute(position);
+        Music music = getItem(position);
+        String path = "";
+        switch (listType) {
+            case 0:
+                path = music.getArtistImage();
+                break;
+            case 1:
+                path = music.getAlbumArt();
+                break;
+            case 2:
+                path = music.getAlbumArt();
+                break;
+        }
+        viewHolder.holdImage.setTag(path);
+        viewHolder.holdImage.setImageResource(android.R.drawable.ic_menu_gallery);
 
-        return view;
+
+        new SetArtTask().execute(path);
+
+        return convertView;
     }
+
 
     class ViewHolder {
         public ImageView holdImage;
         public TextView holdText;
     }
 
-    class SetArtTask extends AsyncTask<Integer, Void, Bitmap> {
+
+    class SetArtTask extends AsyncTask<String, Void, Bitmap> {
         @Override
-        protected synchronized Bitmap doInBackground(Integer... params) {
-            switch (listType) {
-                case ARTIST_LIST:
-                    return ImageUtils.getListItemThumbnail(list.get(params[0]).getArtistImage());
-                case ALBUM_LIST:
-                    return ImageUtils.getListItemThumbnail(list.get(params[0]).getAlbumArt());
-                case SONG_LIST:
-                    return ImageUtils.getListItemThumbnail(list.get(params[0]).getAlbumArt());
-                default:
-                    return null;
+        protected synchronized Bitmap doInBackground(String... params) {
+            if (params[0].equals(viewHolder.holdImage.getTag())) {
+                return ImageUtils.getListItemThumbnail(params[0]);
             }
+            return null;
         }
 
         @Override
@@ -91,7 +103,7 @@ public class LibraryListAdapter extends ArrayAdapter<Music> {
         }
     }
 
-    private void setListItemText(ViewHolder viewHolder, int position) {
+    private void setListItemText(int position) {
         String itemText;
         switch (listType) {
             case ARTIST_LIST:

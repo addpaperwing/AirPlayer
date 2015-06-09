@@ -17,6 +17,8 @@ import com.airplayer.util.LibraryListAdapter;
 
 import java.util.List;
 
+import cn.trinea.android.common.service.impl.ImageCache;
+
 /**
  * Created by ZiyiTsang on 15/6/5.
  */
@@ -45,7 +47,6 @@ public class ArtistActivity extends Activity {
                 new String[] { artistName },
                 1
         );
-
 
         mImageView = (ImageView) findViewById(R.id.activity_artist_image);
 

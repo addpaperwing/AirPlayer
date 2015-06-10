@@ -47,11 +47,11 @@ public class MyLibraryFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return LibraryListFragment.newInstance(0);
+                    return new ArtistFragment();
                 case 1:
-                    return LibraryListFragment.newInstance(1);
+                    return new AlbumFragment();
                 case 2:
-                    return LibraryListFragment.newInstance(2);
+                    return new SongFragment();
                 default:
                     return null;
             }

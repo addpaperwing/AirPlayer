@@ -33,14 +33,14 @@ public class AirPlayerDB {
 
     private SQLiteDatabase db;
 
-    private AirPlayerDB(Context context) {
-        AirPlayerOpenHelper helper = new AirPlayerOpenHelper(context, DB_NAME, null, VERSION);
+    private AirPlayerDB(Context context, int version) {
+        AirPlayerOpenHelper helper = new AirPlayerOpenHelper(context, DB_NAME, null, version);
         db = helper.getWritableDatabase();
     }
 
-    public synchronized static AirPlayerDB newInstance(Context context) {
+    public synchronized static AirPlayerDB newInstance(Context context, int version) {
         if (airPlayerDB == null) {
-            airPlayerDB = new AirPlayerDB(context);
+            airPlayerDB = new AirPlayerDB(context, version);
         }
         return airPlayerDB;
     }

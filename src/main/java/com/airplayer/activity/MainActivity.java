@@ -2,7 +2,6 @@ package com.airplayer.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,14 +12,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.airplayer.database.AirPlayerDB;
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
 import com.airplayer.fragment.NowPlayingFragment;
 import com.airplayer.R;
+import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.model.Music;
 import com.airplayer.util.QueryUtils;
 
@@ -29,6 +29,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
 
+    public static final String PREF_DATA_BASE_VERSION = "pref_data_base_version";
+
+    private SharedPreferences sp;
+
     private NavigationDrawerFragment mNavigationDrawFragment;
 
     private Toolbar mToolbar;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     private FragmentManager mFragmentManager;
 
     private AirPlayerDB db;
+
+    private int dbVersion;
 
     private ProgressDialog mProgressDialog;
 
@@ -46,16 +52,42 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mToolbar.inflateMenu(R.menu.menu_main);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_settings) {
+                    dbVersion = sp.getInt(PREF_DATA_BASE_VERSION, -1);
+                    if (dbVersion != -1) {
+                        dbVersion++;
+                        db = AirPlayerDB.newInstance(MainActivity.this, dbVersion);
+                        setUpData(MainActivity.this);
+                        sp.edit().putInt(PREF_DATA_BASE_VERSION, dbVersion).apply();
+                        Toast.makeText(MainActivity.this,
+                                "Upgrade succeed, now the db version is " + dbVersion,
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this,
+                                "Fail to set up data, please try again", Toast.LENGTH_SHORT).show();
+                    }
+                    if (mProgressDialog != null) {
+                        mProgressDialog.dismiss();
+                    }
+                }
+                if (item.getItemId() == R.id.action_testing) {
+
+                }
                 return true;
             }
         });
 
         mFragmentManager = getSupportFragmentManager();
+
+        mFragmentManager.beginTransaction()
+                .add(R.id.sliding_fragment_container, new PlayMusicFragment()).commit();
 
         mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
                 .findFragmentById(R.id.navigation_drawer);
@@ -63,16 +95,17 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         mNavigationDrawFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        isFirstOpen = sp.getBoolean(PREF_IS_FIRST_OPEN, true);
 
-        db = AirPlayerDB.newInstance(this);
+        isFirstOpen = sp.getBoolean(PREF_IS_FIRST_OPEN, true);
+        dbVersion = sp.getInt(PREF_DATA_BASE_VERSION, 1);
+
+        db = AirPlayerDB.newInstance(this, dbVersion);
 
         if (isFirstOpen) {
-            setData(this);
-            Log.d("----------", "111");
+            setUpData(this);
             isFirstOpen = false;
             sp.edit().putBoolean(PREF_IS_FIRST_OPEN, isFirstOpen).apply();
+            sp.edit().putInt(PREF_DATA_BASE_VERSION, dbVersion).apply();
             if (mProgressDialog != null) {
                 mProgressDialog.dismiss();
             }
@@ -112,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
     }
 
-    private void setData(Context context) {
+    private void setUpData(Context context) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(context);
             mProgressDialog.setMessage("Loading data");

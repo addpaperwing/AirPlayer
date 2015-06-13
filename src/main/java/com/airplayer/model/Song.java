@@ -1,17 +1,17 @@
 package com.airplayer.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ZiyiTsang on 15/6/7.
  */
-public class Music {
+public class Song implements Serializable {
     private int id;
     private String title;
     private String album;
     private String artist;
     private int duration;
     private String path;
-    private String albumArt = "";
-    private String artistImage = "";
 
     public int getId() {
         return id;
@@ -59,25 +59,5 @@ public class Music {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getAlbumArt() {
-        return albumArt;
-    }
-
-    public void setAlbumArt(String albumArt) {
-        if (albumArt != null) {
-            this.albumArt = albumArt;
-        }
-    }
-
-    public String getArtistImage() {
-        return artistImage;
-    }
-
-    public void setArtistImage(String artistImage) {
-        if (artistImage != null) {
-            this.artistImage = artistImage;
-        }
     }
 }

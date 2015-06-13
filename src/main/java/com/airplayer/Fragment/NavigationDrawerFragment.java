@@ -18,7 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.airplayer.R;
-import com.airplayer.activity.MainActivity;
+import com.airplayer.activity.AirMainActivity;
 
 /**
  * Created by ZiyiTsang on 15/6/1.
@@ -112,7 +112,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
-        Toolbar toolbar = ((MainActivity) getActivity()).getToolbar();
+        Toolbar toolbar = ((AirMainActivity) getActivity()).getToolbar();
 
         toggle = new ActionBarDrawerToggle(
                 getActivity(),

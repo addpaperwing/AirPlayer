@@ -21,21 +21,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ArtistActivity"
-            android:parentActivityName=".activity.AirMainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.AirMainActivity"
-                />
-        </activity>
-
-        <activity android:name=".activity.AlbumActivity"
-            android:parentActivityName=".activity.AirMainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.AirMainActivity"/>
-        </activity>
-
         <service android:name=".service.PlayMusicService"/>
 
     </application>

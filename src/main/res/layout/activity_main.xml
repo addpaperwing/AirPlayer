@@ -14,6 +14,7 @@
         sothree:umanoShadowHeight="4dp">
 
         <FrameLayout
+            android:id="@+id/main_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -49,7 +50,7 @@
 
     <fragment
         android:id="@+id/navigation_drawer"
-        android:layout_width="240dp"
+        android:layout_width="360dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="com.airplayer.fragment.NavigationDrawerFragment"

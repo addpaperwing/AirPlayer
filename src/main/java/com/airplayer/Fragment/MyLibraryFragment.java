@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +28,11 @@ public class MyLibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
 
+        FragmentManager fm = getChildFragmentManager();
+        fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+
         viewPager = (ViewPager) rootView.findViewById(R.id.my_library_pager);
-        viewPager.setAdapter(new LibraryPagerAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new LibraryPagerAdapter(fm));
         tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setDistributeEvenly(true);
         tabLayout.setViewPager(viewPager);
@@ -47,11 +51,11 @@ public class MyLibraryFragment extends Fragment {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return new ArtistFragment();
+                    return new ArtistGridFragment();
                 case 1:
-                    return new AlbumFragment();
+                    return new AlbumGridFragment();
                 case 2:
-                    return new SongFragment();
+                    return new SongListFragment();
                 default:
                     return null;
             }

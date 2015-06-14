@@ -10,6 +10,8 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
@@ -29,7 +31,6 @@ import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
 public class AirMainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -44,16 +45,16 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
     // user interface
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
-    private FrameLayout mSlidingFragmentContainer;
+//    private FrameLayout mSlidingFragmentContainer;
 
     private FragmentManager mFragmentManager;
 
     // data base
 //    private AirPlayerDB db;
-    private int dbVersion;
-    private ProgressDialog mProgressDialog;
+//    private int dbVersion;
+//    private ProgressDialog mProgressDialog;
 
-    private boolean isFirstOpen;
+//    private boolean isFirstOpen;
 
     // service
     private PlayMusicService.PlayerControlBinder playerControlBinder;
@@ -61,6 +62,10 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             playerControlBinder = (PlayMusicService.PlayerControlBinder) service;
+            // set up bottom sliding fragment
+            mFragmentManager.beginTransaction()
+                    .add(R.id.sliding_fragment_container,
+                            new PlayMusicFragment()).commit();
             Log.d(TAG, "service has connected");
         }
 
@@ -71,7 +76,6 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
     };
 
     // receiver
-    private SlidingPanelControlReceiver mSlidingPanelControlReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,31 +109,25 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         // set up sliding up panel
-        mSlidingFragmentContainer = (FrameLayout) findViewById(R.id.sliding_fragment_container);
-//        mSlidingFragmentContainer.setVisibility(View.INVISIBLE);
+//        mSlidingFragmentContainer = (FrameLayout) findViewById(R.id.sliding_fragment_container);
 
         // get data from share preference
         sp = PreferenceManager.getDefaultSharedPreferences(this);
-        isFirstOpen = sp.getBoolean(PREF_IS_FIRST_OPEN, true);
-        dbVersion = sp.getInt(PREF_DATA_BASE_VERSION, 1);
+//        isFirstOpen = sp.getBoolean(PREF_IS_FIRST_OPEN, true);
+//        dbVersion = sp.getInt(PREF_DATA_BASE_VERSION, 1);
 
 //        db = AirPlayerDB.newInstance(this, dbVersion);
 
-        if (isFirstOpen) {
-            isFirstOpen = false;
-            sp.edit().putBoolean(PREF_IS_FIRST_OPEN, isFirstOpen).apply();
-            sp.edit().putInt(PREF_DATA_BASE_VERSION, dbVersion).apply();
-        }
+//        if (isFirstOpen) {
+//            isFirstOpen = false;
+//            sp.edit().putBoolean(PREF_IS_FIRST_OPEN, isFirstOpen).apply();
+//            sp.edit().putInt(PREF_DATA_BASE_VERSION, dbVersion).apply();
+//        }
 
-        mSlidingPanelControlReceiver = new SlidingPanelControlReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(PlayMusicService.START_TO_PLAY_MUSIC);
-        registerReceiver(mSlidingPanelControlReceiver, filter);
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(mSlidingPanelControlReceiver);
         unbindService(connection);
         super.onDestroy();
     }
@@ -150,20 +148,6 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
 
     public PlayMusicService.PlayerControlBinder getPlayerControlBinder() {
         return playerControlBinder;
-    }
-
-    public class SlidingPanelControlReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Song songPlaying = playerControlBinder.getSongPlaying();
-//            mSlidingFragmentContainer.setVisibility(View.VISIBLE);
-            // set up bottom sliding fragment
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.sliding_fragment_container,
-                            PlayMusicFragment.newInstance(songPlaying)).commit();
-            Toast.makeText(context, songPlaying.getTitle(), Toast.LENGTH_SHORT).show();
-        }
     }
 
     /**

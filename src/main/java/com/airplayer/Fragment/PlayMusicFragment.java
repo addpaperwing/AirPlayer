@@ -1,5 +1,9 @@
 package com.airplayer.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -39,19 +43,23 @@ public class PlayMusicFragment extends Fragment {
 
     private boolean isLooping = false;
 
-    public static PlayMusicFragment newInstance(Song song) {
-        PlayMusicFragment fragment = new PlayMusicFragment();
-        Bundle args = new Bundle();
-        args.putSerializable("song", song);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    GetSongReceiver receiver;
+
+//    public static PlayMusicFragment newInstance(Song song) {
+//        PlayMusicFragment fragment = new PlayMusicFragment();
+//        Bundle args = new Bundle();
+//        args.putSerializable("song", song);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSong = (Song) getArguments().getSerializable("song");
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
+        receiver = new GetSongReceiver();
+        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_MUSIC);
+        getActivity().registerReceiver(receiver, filter);
     }
 
     @Nullable
@@ -60,16 +68,9 @@ public class PlayMusicFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.sliding_fragment, container, false);
 
         mTitleImageView = (ImageView) rootView.findViewById(R.id.sliding_layout_title_image);
-        mTitleImageView.setImageBitmap(
-                ImageUtils.getListItemThumbnail(
-                        QueryUtils.getAlbumArtPath(
-                                getActivity(), mSong.getAlbum())));
-
         mTitleTextView = (TextView) rootView.findViewById(R.id.sliding_layout_title_song_title);
-        mTitleTextView.setText(mSong.getTitle());
-
         mArtistTextView = (TextView) rootView.findViewById(R.id.sliding_layout_title_artist_name);
-        mArtistTextView.setText(mSong.getArtist());
+
 
         mTitlePlayButton = (ImageView) rootView.findViewById(R.id.sliding_layout_title_play_button);
         mTitlePlayButton.setOnClickListener(new View.OnClickListener() {
@@ -99,5 +100,25 @@ public class PlayMusicFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(receiver);
+        super.onDestroy();
+    }
+
+    public class GetSongReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mSong = mBinder.getSongPlaying();
+            mTitleImageView.setImageBitmap(
+                    ImageUtils.getListItemThumbnail(
+                            QueryUtils.getAlbumArtPath(
+                                    getActivity(), mSong.getAlbum())));
+            mTitleTextView.setText(mSong.getTitle());
+            mArtistTextView.setText(mSong.getArtist());
+        }
     }
 }

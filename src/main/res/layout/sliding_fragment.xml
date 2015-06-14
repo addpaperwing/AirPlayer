@@ -14,50 +14,59 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/sliding_layout_title_image"
-            android:background="@color/wave_background"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            />
+            <ImageView
+                android:id="@+id/sliding_layout_title_image"
+                android:background="@color/wave_background"
+                 android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                />
 
-        <TextView
-            android:id="@+id/sliding_layout_title_song_title"
-            android:text="title"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@+id/sliding_layout_title_image"
-            android:layout_toEndOf="@+id/sliding_layout_title_image"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/sliding_layout_title_image"
+                android:layout_toEndOf="@+id/sliding_layout_title_image"
+                android:layout_centerVertical="true"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
+                >
 
-        <TextView
-            android:id="@+id/sliding_layout_title_artist_name"
-            android:text="artist"
-            android:textSize="14sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sliding_layout_title_song_title"
-            android:layout_toRightOf="@+id/sliding_layout_title_image"
-            android:layout_toEndOf="@+id/sliding_layout_title_image"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            />
+                <TextView
+                    android:id="@+id/sliding_layout_title_song_title"
+                    android:text="title"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <ImageView
-            android:id="@+id/sliding_layout_title_play_button"
-            android:src="@android:drawable/ic_media_play"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+                    />
+
+                <TextView
+                    android:id="@+id/sliding_layout_title_artist_name"
+                    android:text="artist"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/sliding_layout_title_play_button"
+                android:src="@android:drawable/ic_media_play"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                />
+
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>

@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/9.
  */
-public class SongFragment extends Fragment {
+public class SongListFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
 

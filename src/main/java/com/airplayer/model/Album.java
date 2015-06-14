@@ -1,9 +1,11 @@
 package com.airplayer.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ZiyiTsang on 15/6/10.
  */
-public class Album {
+public class Album implements Serializable{
 
     private String title;
     private String albumArt;

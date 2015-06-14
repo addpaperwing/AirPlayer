@@ -2,6 +2,7 @@ package com.airplayer.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
-import com.airplayer.activity.AlbumActivity;
+import com.airplayer.activity.AirMainActivity;
+import com.airplayer.fragment.AlbumFragment;
 import com.airplayer.model.Album;
 import com.airplayer.util.ImageUtils;
 
@@ -41,9 +43,15 @@ public class AlbumAdapter extends AirAdapter<Album> {
         albumViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AlbumActivity.class);
-                intent.putExtra("album_title", getList().get(i).getTitle());
-                getContext().startActivity(intent);
+//                Intent intent = new Intent(getContext(), AlbumActivity.class);
+//                intent.putExtra("album_title", getList().get(i).getTitle());
+//                getContext().startActivity(intent);
+                FragmentTransaction ft = ((AirMainActivity) getContext())
+                        .getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(getList().get(i)));
+                ft.addToBackStack(null);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
             }
         });
     }

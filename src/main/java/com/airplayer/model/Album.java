@@ -1,5 +1,7 @@
 package com.airplayer.model;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 
 /**
@@ -7,8 +9,17 @@ import java.io.Serializable;
  */
 public class Album implements Serializable{
 
+    private int id;
     private String title;
     private String albumArt;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -24,5 +35,9 @@ public class Album implements Serializable{
 
     public void setAlbumArt(String albumArt) {
         this.albumArt = albumArt;
+    }
+
+    public Uri getAlbumArtUri() {
+        return Uri.parse("content://media/external/audio/albumart/" + id);
     }
 }

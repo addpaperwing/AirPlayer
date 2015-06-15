@@ -59,7 +59,11 @@ public class QueryUtils {
         List<Album> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ALBUM_ART },
+                new String[]{
+                        MediaStore.Audio.Albums.ALBUM,
+                        MediaStore.Audio.Albums.ALBUM_ART,
+                        MediaStore.Audio.Albums._ID
+                },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
@@ -67,6 +71,7 @@ public class QueryUtils {
                     Album album = new Album();
                     album.setTitle(cursor.getString(0));
                     album.setAlbumArt(cursor.getString(1));
+                    album.setId(cursor.getInt(2));
                     list.add(album);
                 } while (cursor.moveToNext());
             }

@@ -1,23 +1,19 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.airplayer.util.ImageUtils;
-import com.airplayer.util.QueryUtils;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,13 +24,8 @@ public class SongAdapter extends AirAdapter<Song> {
 
     private PlayMusicService.PlayerControlBinder mBinder;
 
-    private Context mContext;
-
-    private ImageView mImageView;
-
     public SongAdapter(Context context, List<Song> list) {
         super(context, list);
-        mContext = context;
     }
 
     public SongAdapter(Context context, List<Song> list, PlayMusicService.PlayerControlBinder binder) {
@@ -44,62 +35,76 @@ public class SongAdapter extends AirAdapter<Song> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new SongViewHolder(getLayoutInflater().inflate(R.layout.recycler_song_item, parent, false));
+        switch (viewType) {
+            case AirAdapter.TYPE_HEADER:
+                return new SongViewTextHeaderHolder(
+                        getLayoutInflater().inflate(R.layout.recycler_header_text, parent, false));
+            case AirAdapter.TYPE_ITEM:
+                return new SongViewItemHolder(
+                        getLayoutInflater().inflate(R.layout.recycler_item_song, parent, false));
+            default:
+                throw new RuntimeException("no type match, make sure you use types correctly. " +
+                        "unmatchable viewType : " + viewType);
+        }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        SongViewHolder songViewHolder = (SongViewHolder) viewHolder;
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        songViewHolder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
-        mImageView = songViewHolder.imageView;
-        mImageView.setTag(getList().get(position).getAlbum());
+        // when holder is a SongViewItemHolder
+        if (holder instanceof SongViewItemHolder) {
+            SongViewItemHolder songViewItemHolder = (SongViewItemHolder) holder;
+
+            songViewItemHolder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+
+            songViewItemHolder.titleText.setText(getList().get(position - 1).getTitle());
+            songViewItemHolder.artistText.setText(getList().get(position - 1).getArtist());
+            songViewItemHolder.durationText.setText(formatTime(getList().get(position - 1).getDuration()));
+            songViewItemHolder.listItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBinder.playMusic(position - 1, getList());
+                }
+            });
 
 
-        songViewHolder.titleText.setText(getList().get(position).getTitle());
-        songViewHolder.artistText.setText(getList().get(position).getArtist());
-        songViewHolder.durationText.setText(formatTime(getList().get(position).getDuration()));
-        songViewHolder.listItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBinder.playMusic(position, getList());
-            }
-        });
-        new FindImageTask().execute(getList().get(position).getAlbum());
-    }
-
-    public class FindImageTask extends AsyncTask<String, Void, Bitmap> {
-
-        String albumTitle;
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            albumTitle = params[0];
-            return ImageUtils.getListItemThumbnail(QueryUtils.getAlbumArtPath(mContext, albumTitle));
+            Picasso.with(getContext())
+                    .load(getList().get(position - 1).getAlbumArtUri())
+                    .into(songViewItemHolder.imageView);
         }
 
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (albumTitle.equals(mImageView.getTag())) {
-                mImageView.setImageBitmap(bitmap);
-            }
+        //when holder is a SongViewTextHeaderHolder
+        if (holder instanceof SongViewTextHeaderHolder) {
+            SongViewTextHeaderHolder songViewTextHeaderHolder = (SongViewTextHeaderHolder) holder;
+            songViewTextHeaderHolder.headerText.setText("Shuffle All");
         }
+
     }
 
-    public static class SongViewHolder extends RecyclerView.ViewHolder {
+    public static class SongViewItemHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView titleText;
         TextView artistText;
         TextView durationText;
         Toolbar listItem;
 
-        public SongViewHolder(View itemView) {
+        public SongViewItemHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.song_imageView);
             titleText = (TextView) itemView.findViewById(R.id.song_title);
             artistText = (TextView) itemView.findViewById(R.id.song_artist_name);
             durationText = (TextView) itemView.findViewById(R.id.song_duration);
             listItem = (Toolbar) itemView.findViewById(R.id.song_item);
+        }
+    }
+
+    public static class SongViewTextHeaderHolder extends RecyclerView.ViewHolder {
+
+        TextView headerText;
+
+        public SongViewTextHeaderHolder(View itemView) {
+            super(itemView);
+            headerText =(TextView) itemView.findViewById(R.id.header_text);
         }
     }
 

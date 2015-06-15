@@ -13,6 +13,9 @@ import java.util.List;
  */
 public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int TYPE_HEADER = 0;
+    public static final int TYPE_ITEM = 1;
+
     private LayoutInflater mLayoutInflater;
 
     private Context mContext;
@@ -33,6 +36,14 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
         return mContext;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == TYPE_HEADER) {
+            return TYPE_HEADER;
+        }
+        return TYPE_ITEM;
+    }
+
     public List<T> getList() {
         return mList;
     }
@@ -42,6 +53,6 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public int getItemCount() {
-        return mList == null ? 0 : mList.size();
+        return mList == null ? 0 : mList.size() + 1;
     }
 }

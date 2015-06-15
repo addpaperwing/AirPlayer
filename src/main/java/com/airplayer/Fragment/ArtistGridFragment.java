@@ -1,7 +1,6 @@
 package com.airplayer.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,11 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.util.ImageUtils;
@@ -57,7 +54,7 @@ public class ArtistGridFragment extends Fragment {
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ArtistViewHolder(getLayoutInflater().inflate(R.layout.recycler_artist_item, parent, false));
+            return new ArtistViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_artist, parent, false));
         }
 
         @Override

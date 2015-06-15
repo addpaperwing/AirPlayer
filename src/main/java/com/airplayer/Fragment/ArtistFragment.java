@@ -30,8 +30,6 @@ public class ArtistFragment extends Fragment {
 
     private Artist mArtist;
 
-    private RecyclerView mRecyclerView;
-
     public static ArtistFragment newInstance(Artist artist) {
         ArtistFragment fragment = new ArtistFragment();
         Bundle args = new Bundle();
@@ -52,18 +50,15 @@ public class ArtistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.cover_fragment, container, false);
 
-        TextView artistName = (TextView) rootView.findViewById(R.id.cover_fragment_title);
-        artistName.setText(mArtist.getName());
+//        TextView artistName = (TextView) rootView.findViewById(R.id.cover_fragment_title);
+//        artistName.setText(mArtist.getName());
 
-        ImageView artistImage = (ImageView) rootView.findViewById(R.id.cover_fragment_image);
-        artistImage.setImageBitmap(ImageUtils.getListItemThumbnail(mArtist.getImagePath()));
+//        ImageView artistImage = (ImageView) rootView.findViewById(R.id.cover_fragment_image);
+//        artistImage.setImageBitmap(ImageUtils.getListItemThumbnail(mArtist.getImagePath()));
 
         List<Album> albumList = QueryUtils.loadAlbumList(getActivity(),
                 "artist = ?", new String[] { mArtist.getName() }, MediaStore.Audio.Albums.FIRST_YEAR);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cover_fragment_recycler_view);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        mRecyclerView.setAdapter(new AlbumAdapter(getActivity(), albumList));
 
         return rootView;
     }

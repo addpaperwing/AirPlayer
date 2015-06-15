@@ -1,21 +1,19 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.fragment.AlbumFragment;
 import com.airplayer.model.Album;
-import com.airplayer.util.ImageUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -32,13 +30,13 @@ public class AlbumAdapter extends AirAdapter<Album> {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AlbumViewHolder(getLayoutInflater().inflate(R.layout.recycler_album_item, parent, false));
+        return new AlbumViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_album, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
         AlbumViewHolder albumViewHolder = (AlbumViewHolder) viewHolder;
-        albumViewHolder.imageView.setImageBitmap(ImageUtils.getListItemThumbnail(getList().get(i).getAlbumArt()));
+//        albumViewHolder.imageView.setImageBitmap(ImageUtils.getListItemThumbnail(getList().get(i).getAlbumArt()));
         albumViewHolder.textView.setText(getList().get(i).getTitle());
         albumViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +52,12 @@ public class AlbumAdapter extends AirAdapter<Album> {
                 ft.commit();
             }
         });
+
+//        int width = albumViewHolder.imageView.getWidth();
+//        int height = albumViewHolder.imageView.getHeight();
+        Picasso.with(getContext()).load(getList().get(i).getAlbumArtUri())
+//                .centerCrop()
+                .into(albumViewHolder.imageView);
     }
 
 

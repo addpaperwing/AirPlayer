@@ -1,5 +1,7 @@
 package com.airplayer.model;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 
 /**
@@ -59,5 +61,9 @@ public class Song implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public Uri getAlbumArtUri() {
+        return Uri.parse("content://media/external/audio/media/" + id + "/albumart");
     }
 }

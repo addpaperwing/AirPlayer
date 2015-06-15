@@ -1,17 +1,11 @@
 package com.airplayer.activity;
 
-import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
@@ -20,16 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
 import com.airplayer.fragment.NowPlayingFragment;
 import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
-import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 
 
@@ -45,7 +35,6 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
     // user interface
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
-//    private FrameLayout mSlidingFragmentContainer;
 
     private FragmentManager mFragmentManager;
 
@@ -97,6 +86,9 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.action_testing) {
+
+                }
                 return true;
             }
         });

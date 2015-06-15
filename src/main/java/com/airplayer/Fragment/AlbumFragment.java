@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
@@ -34,8 +35,6 @@ public class AlbumFragment extends Fragment {
 
     private Album mAlbum;
 
-    private RecyclerView mRecyclerView;
-
     private PlayMusicService.PlayerControlBinder mBinder;
 
     public static AlbumFragment newInstance(Album album) {
@@ -58,18 +57,9 @@ public class AlbumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.cover_fragment, container, false);
 
-        TextView albumTitle = (TextView) rootView.findViewById(R.id.cover_fragment_title);
-        albumTitle.setText(mAlbum.getTitle());
-
-        ImageView albumArt = (ImageView) rootView.findViewById(R.id.cover_fragment_image);
-        albumArt.setImageBitmap(ImageUtils.getListItemThumbnail(mAlbum.getAlbumArt()));
-
         List<Song> songList = QueryUtils.loadSongList(getActivity(),
                 "album = ?", new String[]{ mAlbum.getTitle() }, MediaStore.Audio.Media.TRACK);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.cover_fragment_recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(new SongAdapter(getActivity(), songList, mBinder));
 
         return rootView;
     }

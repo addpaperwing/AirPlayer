@@ -6,12 +6,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.model.Song;
-import com.airplayer.service.PlayMusicService;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,33 +20,30 @@ import java.util.List;
 
 public class SongAdapter extends AirAdapter<Song> {
 
+    private HeaderSetter headerSetter;
+
     public SongAdapter(Context context, List<Song> list) {
         super(context, list);
     }
 
     @Override
-    public AirAdapter.AirViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        switch (viewType) {
-            case AirAdapter.TYPE_HEADER:
-                return new SongViewTextHeaderHolder(
-                        getLayoutInflater().inflate(R.layout.recycler_header_text, parent, false),
-                        AirAdapter.TYPE_HEADER);
-            case AirAdapter.TYPE_ITEM:
-                return new SongViewItemHolder(
-                        getLayoutInflater().inflate(R.layout.recycler_item_song, parent, false),
-                        AirAdapter.TYPE_ITEM);
-            default:
-                throw new RuntimeException("no type match, make sure you use types correctly. " +
-                        "unmatchable viewType : " + viewType);
-        }
+    public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+        return new SongItemViewTextHeaderHolder(
+                getLayoutInflater().inflate(R.layout.recycler_header_text, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(AirAdapter.AirViewHolder holder, final int position) {
+    public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {
+        return new SongItemViewItemHolder(
+                getLayoutInflater().inflate(R.layout.recycler_item_song, parent, false));
+    }
 
-        // when holder is a SongViewItemHolder
-        if (holder instanceof SongViewItemHolder) {
-            SongViewItemHolder songViewItemHolder = (SongViewItemHolder) holder;
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+
+        // when holder is a SongItemViewItemHolder
+        if (holder instanceof SongItemViewItemHolder) {
+            SongItemViewItemHolder songViewItemHolder = (SongItemViewItemHolder) holder;
 
             songViewItemHolder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
 
@@ -61,23 +56,33 @@ public class SongAdapter extends AirAdapter<Song> {
                     .into(songViewItemHolder.imageView);
         }
 
-        //when holder is a SongViewTextHeaderHolder
-        if (holder instanceof SongViewTextHeaderHolder) {
-            SongViewTextHeaderHolder songViewTextHeaderHolder = (SongViewTextHeaderHolder) holder;
-            songViewTextHeaderHolder.headerText.setText("Shuffle All");
+        //when holder is a SongItemViewTextHeaderHolder
+        if (holder instanceof SongItemViewTextHeaderHolder) {
+            SongItemViewTextHeaderHolder songViewTextHeaderHolder = (SongItemViewTextHeaderHolder) holder;
+            if (headerSetter != null) {
+                headerSetter.setUpHeader(
+                        songViewTextHeaderHolder.headerImage,
+                        songViewTextHeaderHolder.mainHeaderText,
+                        songViewTextHeaderHolder.secondaryHeaderText
+                );
+            }
         }
 
     }
 
-    public class SongViewItemHolder extends AirAdapter.AirViewHolder {
+    public void setHeadSetter(HeaderSetter headerSetter) {
+        this.headerSetter = headerSetter;
+    }
+
+    public class SongItemViewItemHolder extends AirItemViewHolder {
         ImageView imageView;
         TextView titleText;
         TextView artistText;
         TextView durationText;
         Toolbar listItem;
 
-        public SongViewItemHolder(View itemView, int holderType) {
-            super(itemView, holderType);
+        public SongItemViewItemHolder(View itemView) {
+            super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.song_imageView);
             titleText = (TextView) itemView.findViewById(R.id.song_title);
             artistText = (TextView) itemView.findViewById(R.id.song_artist_name);
@@ -86,14 +91,22 @@ public class SongAdapter extends AirAdapter<Song> {
         }
     }
 
-    public class SongViewTextHeaderHolder extends AirAdapter.AirViewHolder {
+    public class SongItemViewTextHeaderHolder extends AirHeadViewHolder {
 
-        TextView headerText;
+        ImageView headerImage;
+        TextView mainHeaderText;
+        TextView secondaryHeaderText;
 
-        public SongViewTextHeaderHolder(View itemView, int holderType) {
-            super(itemView, holderType);
-            headerText =(TextView) itemView.findViewById(R.id.header_text);
+        public SongItemViewTextHeaderHolder(View itemView) {
+            super(itemView);
+            headerImage = (ImageView) itemView.findViewById(R.id.header_image);
+            mainHeaderText = (TextView) itemView.findViewById(R.id.header_text_title);
+            secondaryHeaderText = (TextView) itemView.findViewById(R.id.header_text_desc);
         }
+    }
+
+    public interface HeaderSetter {
+        void setUpHeader(ImageView headImage, TextView mainHeadText, TextView secondaryHeadText);
     }
 
     private String formatTime(int duration) {

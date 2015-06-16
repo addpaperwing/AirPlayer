@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
@@ -17,14 +19,16 @@ import com.airplayer.adapter.SongAdapter;
 import com.airplayer.model.Album;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
+import com.airplayer.util.ImageUtils;
 import com.airplayer.util.QueryUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/6/14.
  */
-public class AlbumFragment extends Fragment {
+public class AlbumFragment extends Fragment implements SongAdapter.HeaderSetter{
 
     public static final String ALBUM_RECEIVED = "artist_received";
 
@@ -73,8 +77,17 @@ public class AlbumFragment extends Fragment {
 
             }
         });
+        adapter.setHeadSetter(this);
+
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void setUpHeader(ImageView headImage, TextView mainHeadText, TextView secondaryHeadText) {
+        Picasso.with(getActivity()).load(mAlbum.getAlbumArtUri()).into(headImage);
+        mainHeadText.setText(mAlbum.getTitle());
+        secondaryHeadText.setText(mSongList.size() + " songs");
     }
 }

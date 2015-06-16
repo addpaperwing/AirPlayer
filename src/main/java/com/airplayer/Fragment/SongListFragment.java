@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/9.
  */
-public class SongListFragment extends Fragment {
+public class SongListFragment extends Fragment implements SongAdapter.HeaderSetter{
 
     private RecyclerView mRecyclerView;
 
@@ -61,11 +61,19 @@ public class SongListFragment extends Fragment {
 
             @Override
             public void headerClicked(View view) {
+                mBinder.playMusic((int) Math.round(Math.random() * mList.size()), mList);
 
             }
         });
+        adapter.setHeadSetter(this);
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void setUpHeader(ImageView headImage, TextView mainHeadText, TextView secondaryHeadText) {
+        mainHeadText.setText("Shuffle All");
+        secondaryHeadText.setText(mList.size() + " songs");
     }
 }

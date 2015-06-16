@@ -74,7 +74,7 @@ public class ArtistFragment extends Fragment {
             public void itemClicked(View view, int position) {
                 FragmentTransaction ft = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mAlbumList.get(position)));
+                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mAlbumList.get(position - 1)));
                 ft.addToBackStack(null);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();

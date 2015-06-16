@@ -17,6 +17,7 @@
             android:id="@+id/song_imageView"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:layout_centerVertical="true"
             />
 
         <LinearLayout

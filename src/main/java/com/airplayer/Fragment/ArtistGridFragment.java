@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -79,26 +78,21 @@ public class ArtistGridFragment extends Fragment {
         }
 
         @Override
-        public AirAdapter.AirViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            switch (viewType) {
-                case AirAdapter.TYPE_HEADER:
-                    return new ArtistHeaderViewHolder(getLayoutInflater()
-                            .inflate(R.layout.recycler_header_text, parent, false),
-                            AirAdapter.TYPE_HEADER);
-                case AirAdapter.TYPE_ITEM:
-                    return new ArtistViewHolder(getLayoutInflater()
-                            .inflate(R.layout.recycler_item_artist, parent, false),
-                            AirAdapter.TYPE_ITEM);
-                default:
-                    throw new RuntimeException("no type match, make sure you use types correctly. " +
-                            "unmatchable viewType : " + viewType);
-            }
+        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new ArtistHeaderViewHolder(getLayoutInflater()
+                    .inflate(R.layout.recycler_header, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(AirAdapter.AirViewHolder holder, final int i) {
-            if (holder instanceof ArtistViewHolder) {
-                ArtistViewHolder artistViewHolder = (ArtistViewHolder) holder;
+        public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {
+            return new ArtistItemViewHolder(getLayoutInflater()
+                    .inflate(R.layout.recycler_item_artist, parent, false));
+        }
+
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int i) {
+            if (holder instanceof ArtistItemViewHolder) {
+                ArtistItemViewHolder artistViewHolder = (ArtistItemViewHolder) holder;
                 artistViewHolder.imageView.setImageBitmap(
                         ImageUtils.getListItemThumbnail(
                                 getList().get(i - 1).getImagePath()
@@ -111,21 +105,21 @@ public class ArtistGridFragment extends Fragment {
             }
         }
 
-        public class ArtistViewHolder extends AirAdapter.AirViewHolder {
+        public class ArtistItemViewHolder extends AirItemViewHolder {
             ImageView imageView;
             TextView textView;
 
-            public ArtistViewHolder(View itemView, int holderType) {
-                super(itemView, holderType);
+            public ArtistItemViewHolder(View itemView) {
+                super(itemView);
                 imageView = (ImageView) itemView.findViewById(R.id.artist_image);
                 textView = (TextView) itemView.findViewById(R.id.artist_name);
             }
         }
 
-        public class ArtistHeaderViewHolder extends AirAdapter.AirViewHolder {
+        public class ArtistHeaderViewHolder extends AirHeadViewHolder {
 
-            public ArtistHeaderViewHolder(View itemView, int holderType) {
-                super(itemView, holderType);
+            public ArtistHeaderViewHolder(View itemView) {
+                super(itemView);
             }
         }
     }

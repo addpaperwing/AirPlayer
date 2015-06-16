@@ -36,8 +36,8 @@
 
             <TextView
                 android:id="@+id/song_title"
-                android:text="titletitle"
                 android:textSize="16sp"
+                android:textColor="@color/air_primary_text"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_width="match_parent"
@@ -46,7 +46,6 @@
 
             <TextView
                 android:id="@+id/song_artist_name"
-                android:text="artistartist"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textColor="@android:color/darker_gray"
@@ -58,7 +57,7 @@
 
         <TextView
             android:id="@+id/song_duration"
-            android:text="111111"
+            android:textColor="@color/air_primary_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"

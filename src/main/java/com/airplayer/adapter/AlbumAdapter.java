@@ -51,7 +51,7 @@ public class AlbumAdapter extends AirAdapter<Album> {
         if (holder instanceof AlbumViewHolder) {
             AlbumViewHolder albumViewHolder = (AlbumViewHolder) holder;
             albumViewHolder.textView.setText(getList().get(i - 1).getTitle());
-            albumViewHolder.textView.setContentDescription("testing");
+            albumViewHolder.artistText.setText(getList().get(i - 1).getAlbumArtist());
 
             Picasso.with(getContext()).load(getList().get(i - 1).getAlbumArtUri())
                     .into(albumViewHolder.imageView);
@@ -66,11 +66,13 @@ public class AlbumAdapter extends AirAdapter<Album> {
     public class AlbumViewHolder extends AirAdapter.AirViewHolder {
         ImageView imageView;
         TextView textView;
+        TextView artistText;
 
         public AlbumViewHolder(View itemView, int holderType) {
             super(itemView, holderType);
             imageView = (ImageView) itemView.findViewById(R.id.album_art);
             textView = (TextView) itemView.findViewById(R.id.album_title);
+            artistText = (TextView) itemView.findViewById(R.id.album_artist_name);
         }
     }
 

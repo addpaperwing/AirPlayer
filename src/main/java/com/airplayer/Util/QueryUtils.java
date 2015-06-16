@@ -61,8 +61,8 @@ public class QueryUtils {
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 new String[]{
                         MediaStore.Audio.Albums.ALBUM,
-                        MediaStore.Audio.Albums.ALBUM_ART,
-                        MediaStore.Audio.Albums._ID
+                        MediaStore.Audio.Albums._ID,
+                        MediaStore.Audio.Albums.ARTIST
                 },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
@@ -70,8 +70,8 @@ public class QueryUtils {
                 do {
                     Album album = new Album();
                     album.setTitle(cursor.getString(0));
-                    album.setAlbumArt(cursor.getString(1));
-                    album.setId(cursor.getInt(2));
+                    album.setId(cursor.getInt(1));
+                    album.setAlbumArtist(cursor.getString(2));
                     list.add(album);
                 } while (cursor.moveToNext());
             }

@@ -8,7 +8,7 @@
 
     <com.airplayer.google.SlidingTabLayout
         android:id="@+id/tabs"
-        android:background="@color/wave_color4"
+        android:background="@color/air_dark_primary_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="5dp"

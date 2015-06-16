@@ -1,7 +1,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="AirTheme"/>
+    
+    <style name="AirTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        
         <!-- Customize your theme here. -->
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -10,8 +13,14 @@
         <item name="windowActionBar">false</item>
         <item name="android:windowActionBar">false</item>
 
+        <item name="colorPrimary">@color/air_dark_primary_color</item>
 
+        <item name="android:textColor">@color/air_text_and_icon</item>
 
+        <item name="colorAccent">@color/air_accent_color</item>
+
+        <item name="android:textColorPrimary">@color/air_text_and_icon</item>
+
+        <item name="android:textColorSecondary">@color/air_text_and_icon</item>
     </style>
-
 </resources>

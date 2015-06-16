@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
@@ -43,15 +44,27 @@ public class SongListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_song_recycler, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
 
         // get data base and load a list from it
         mList = QueryUtils.loadSongList(getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE);
 
         //find a recycler view and set it up
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.song_recycler_view);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getParentFragment().getActivity()));
-        mRecyclerView.setAdapter(new SongAdapter(getParentFragment().getActivity(), mList, mBinder));
+        SongAdapter adapter = new SongAdapter(getParentFragment().getActivity(), mList);
+        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+            @Override
+            public void itemClicked(View view, int position) {
+                mBinder.playMusic(position - 1, mList);
+            }
+
+            @Override
+            public void headerClicked(View view) {
+
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
 
         return rootView;
     }

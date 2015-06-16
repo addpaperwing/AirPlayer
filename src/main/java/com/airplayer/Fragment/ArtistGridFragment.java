@@ -29,7 +29,7 @@ public class ArtistGridFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
 
-    private List<Artist> getList;
+    private List<Artist> mList;
 
     @Nullable
     @Override
@@ -37,12 +37,38 @@ public class ArtistGridFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
 
         // load a list from Media data base
-        getList = QueryUtils.loadArtistList(getParentFragment().getActivity());
+        mList = QueryUtils.loadArtistList(getParentFragment().getActivity());
 
         //find a recycler view and set it up
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getParentFragment().getActivity(), 2));
-        mRecyclerView.setAdapter(new ArtistAdapter(getParentFragment().getActivity(), getList));
+        final GridLayoutManager manager = new GridLayoutManager(getParentFragment().getActivity(), 2);
+        manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                return position == 0 ? manager.getSpanCount() : 1;
+            }
+        });
+        mRecyclerView.setLayoutManager(manager);
+
+
+        ArtistAdapter adapter = new ArtistAdapter(getParentFragment().getActivity(), mList);
+        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+            @Override
+            public void itemClicked(View view, int position) {
+                FragmentTransaction ft = getParentFragment().getActivity()
+                        .getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, ArtistFragment.newInstance(mList.get(position - 1)));
+                ft.addToBackStack(null);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.commit();
+            }
+
+            @Override
+            public void headerClicked(View view) {
+
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
         return rootView;
     }
 
@@ -53,42 +79,55 @@ public class ArtistGridFragment extends Fragment {
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return new ArtistViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_artist, parent, false));
+        public AirAdapter.AirViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            switch (viewType) {
+                case AirAdapter.TYPE_HEADER:
+                    return new ArtistHeaderViewHolder(getLayoutInflater()
+                            .inflate(R.layout.recycler_header_text, parent, false),
+                            AirAdapter.TYPE_HEADER);
+                case AirAdapter.TYPE_ITEM:
+                    return new ArtistViewHolder(getLayoutInflater()
+                            .inflate(R.layout.recycler_item_artist, parent, false),
+                            AirAdapter.TYPE_ITEM);
+                default:
+                    throw new RuntimeException("no type match, make sure you use types correctly. " +
+                            "unmatchable viewType : " + viewType);
+            }
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
-            ArtistViewHolder artistViewHolder = (ArtistViewHolder) viewHolder;
-            artistViewHolder.imageView.setImageBitmap(ImageUtils.getListItemThumbnail(getList().get(i).getImagePath()));
-            artistViewHolder.textView.setText(getList().get(i).getName());
-            artistViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    Intent intent = new Intent(getContext(), ArtistActivity.class);
-//                    intent.putExtra("artist_name", getList().get(i).getName());
-//                    startActivity(intent);
-                    FragmentTransaction ft = getParentFragment().getActivity()
-                            .getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.fragment_container, ArtistFragment.newInstance(getList.get(i)));
-                    ft.addToBackStack(null);
-                    ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    ft.commit();
-                }
-            });
+        public void onBindViewHolder(AirAdapter.AirViewHolder holder, final int i) {
+            if (holder instanceof ArtistViewHolder) {
+                ArtistViewHolder artistViewHolder = (ArtistViewHolder) holder;
+                artistViewHolder.imageView.setImageBitmap(
+                        ImageUtils.getListItemThumbnail(
+                                getList().get(i - 1).getImagePath()
+                        ));
+                artistViewHolder.textView.setText(getList().get(i - 1).getName());
+            }
+
+            if (holder instanceof ArtistHeaderViewHolder) {
+
+            }
+        }
+
+        public class ArtistViewHolder extends AirAdapter.AirViewHolder {
+            ImageView imageView;
+            TextView textView;
+
+            public ArtistViewHolder(View itemView, int holderType) {
+                super(itemView, holderType);
+                imageView = (ImageView) itemView.findViewById(R.id.artist_image);
+                textView = (TextView) itemView.findViewById(R.id.artist_name);
+            }
+        }
+
+        public class ArtistHeaderViewHolder extends AirAdapter.AirViewHolder {
+
+            public ArtistHeaderViewHolder(View itemView, int holderType) {
+                super(itemView, holderType);
+            }
         }
     }
 
-    public static class ArtistViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView;
-        CardView cardView;
-
-        public ArtistViewHolder(View itemView) {
-            super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.artist_image);
-            textView = (TextView) itemView.findViewById(R.id.artist_name);
-            cardView = (CardView) itemView.findViewById(R.id.artist_item);
-        }
-    }
 }

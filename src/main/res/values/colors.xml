@@ -7,4 +7,17 @@
     <color name="wave_color4">#B39DDB</color>
     <color name="wave_color5">#D1C4E9</color>
     <color name="wave_color6">#EDE7F6</color>
+
+    <color name="rare_gray">#A6A89C</color>
+    <color name="outer_space">#545C64</color>
+    <color name="rustic_red">#794742</color>
+    <color name="chamois">#AD8D54</color>
+    <color name="mink">#867E79</color>
+    <color name="loyal_blue">#113F60</color>
+    <color name="roy_croft_bottle_green">#314038</color>
+    <color name="rook_wood_dark_red">#492221</color>
+    <color name="old_world_gold">#93744E</color>
+    <color name="plum_brown">#4F4247</color>
+
+    <color name="color_control_high_light">#B6B6B6</color>
 </resources>

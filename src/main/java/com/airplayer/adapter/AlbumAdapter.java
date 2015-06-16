@@ -29,48 +29,56 @@ public class AlbumAdapter extends AirAdapter<Album> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AlbumViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_album, parent, false));
+    public AirAdapter.AirViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        switch (viewType) {
+            case AirAdapter.TYPE_HEADER:
+                return new AlbumHeaderViewHolder(getLayoutInflater()
+                        .inflate(R.layout.recycler_header_text, parent, false),
+                        AirAdapter.TYPE_HEADER);
+            case AirAdapter.TYPE_ITEM:
+                return new AlbumViewHolder(getLayoutInflater()
+                        .inflate(R.layout.recycler_item_album, parent, false),
+                        AirAdapter.TYPE_ITEM);
+            default:
+                throw new RuntimeException("no type match, make sure you use types correctly. " +
+                        "unmatchable viewType : " + viewType);
+        }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int i) {
-        AlbumViewHolder albumViewHolder = (AlbumViewHolder) viewHolder;
-//        albumViewHolder.imageView.setImageBitmap(ImageUtils.getListItemThumbnail(getList().get(i).getAlbumArt()));
-        albumViewHolder.textView.setText(getList().get(i).getTitle());
-        albumViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent(getContext(), AlbumActivity.class);
-//                intent.putExtra("album_title", getList().get(i).getTitle());
-//                getContext().startActivity(intent);
-                FragmentTransaction ft = ((AirMainActivity) getContext())
-                        .getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(getList().get(i)));
-                ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                ft.commit();
-            }
-        });
+    public void onBindViewHolder(AirAdapter.AirViewHolder holder, final int i) {
 
-//        int width = albumViewHolder.imageView.getWidth();
-//        int height = albumViewHolder.imageView.getHeight();
-        Picasso.with(getContext()).load(getList().get(i).getAlbumArtUri())
-//                .centerCrop()
-                .into(albumViewHolder.imageView);
-    }
+        if (holder instanceof AlbumViewHolder) {
+            AlbumViewHolder albumViewHolder = (AlbumViewHolder) holder;
+            albumViewHolder.textView.setText(getList().get(i - 1).getTitle());
+            albumViewHolder.textView.setContentDescription("testing");
 
+            Picasso.with(getContext()).load(getList().get(i - 1).getAlbumArtUri())
+                    .into(albumViewHolder.imageView);
+        }
 
-    public static class AlbumViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
-        TextView textView;
-        CardView cardView;
+        if (holder instanceof AlbumHeaderViewHolder) {
 
-        public AlbumViewHolder(View itemView) {
-            super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.album_art);
-            textView = (TextView) itemView.findViewById(R.id.album_title);
-            cardView = (CardView) itemView.findViewById(R.id.album_item);
         }
     }
+
+
+    public class AlbumViewHolder extends AirAdapter.AirViewHolder {
+        ImageView imageView;
+        TextView textView;
+
+        public AlbumViewHolder(View itemView, int holderType) {
+            super(itemView, holderType);
+            imageView = (ImageView) itemView.findViewById(R.id.album_art);
+            textView = (TextView) itemView.findViewById(R.id.album_title);
+        }
+    }
+
+    public class AlbumHeaderViewHolder extends AirAdapter.AirViewHolder {
+
+        public AlbumHeaderViewHolder(View itemView, int holderType) {
+            super(itemView, holderType);
+        }
+    }
+
 }

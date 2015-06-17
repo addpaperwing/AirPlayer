@@ -93,10 +93,6 @@ public class ArtistGridFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, final int i) {
             if (holder instanceof ArtistItemViewHolder) {
                 ArtistItemViewHolder artistViewHolder = (ArtistItemViewHolder) holder;
-                artistViewHolder.imageView.setImageBitmap(
-                        ImageUtils.getListItemThumbnail(
-                                getList().get(i - 1).getImagePath()
-                        ));
                 artistViewHolder.textView.setText(getList().get(i - 1).getName());
             }
 

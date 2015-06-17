@@ -12,6 +12,8 @@ public class Album implements Serializable{
     private int id;
     private String title;
     private String albumArtist;
+    private String year;
+    private String albumArtPath;
 
     public int getId() {
         return id;
@@ -35,6 +37,22 @@ public class Album implements Serializable{
 
     public void setAlbumArtist(String albumArtist) {
         this.albumArtist = albumArtist;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getAlbumArtPath() {
+        return albumArtPath;
+    }
+
+    public void setAlbumArtPath(String albumArtPath) {
+        this.albumArtPath = albumArtPath;
     }
 
     public Uri getAlbumArtUri() {

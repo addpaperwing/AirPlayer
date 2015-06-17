@@ -18,16 +18,10 @@ import java.util.List;
  */
 
 
-public class AlbumAdapter extends AirAdapter<Album> {
+public abstract class AlbumAdapter extends AirAdapter<Album> {
 
     public AlbumAdapter(Context context, List<Album> list) {
         super(context, list);
-    }
-
-    @Override
-    public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-        return new AlbumHeaderViewHolder(getLayoutInflater()
-                .inflate(R.layout.recycler_header_text, parent, false));
     }
 
     @Override
@@ -49,9 +43,12 @@ public class AlbumAdapter extends AirAdapter<Album> {
         }
 
         if (holder instanceof AlbumHeaderViewHolder) {
-
+            AlbumHeaderViewHolder albumHeaderViewHolder = (AlbumHeaderViewHolder) holder;
+            setUpViewHolder(albumHeaderViewHolder);
         }
     }
+
+    public abstract void setUpViewHolder(AlbumHeaderViewHolder holder);
 
     public class AlbumItemViewHolder extends AirItemViewHolder {
         ImageView imageView;

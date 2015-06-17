@@ -53,7 +53,7 @@ public class AlbumGridFragment extends Fragment {
         });
         mRecyclerView.setLayoutManager(manager);
 
-        AlbumAdapter adapter = new AlbumAdapter(getParentFragment().getActivity(), mList);
+        AlbumAdapter adapter = new AlbumGridAdapter(getParentFragment().getActivity(), mList);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
             public void itemClicked(View view, int position) {
@@ -73,5 +73,22 @@ public class AlbumGridFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    private class AlbumGridAdapter extends AlbumAdapter {
+        public AlbumGridAdapter(Context context, List<Album> list) {
+            super(context, list);
+        }
+
+        @Override
+        public void setUpViewHolder(AlbumHeaderViewHolder holder) {
+
+        }
+
+        @Override
+        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new AlbumHeaderViewHolder(getLayoutInflater()
+                    .inflate(R.layout.recycler_header, parent, false));
+        }
     }
 }

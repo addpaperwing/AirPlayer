@@ -14,6 +14,7 @@ public class Song implements Serializable {
     private String artist;
     private int duration;
     private String path;
+    private int track;
 
     public int getId() {
         return id;
@@ -61,6 +62,14 @@ public class Song implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public int getTrack() {
+        return track;
+    }
+
+    public void setTrack(int track) {
+        this.track = track;
     }
 
     public Uri getAlbumArtUri() {

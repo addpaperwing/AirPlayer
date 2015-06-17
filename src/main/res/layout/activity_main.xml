@@ -18,26 +18,20 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <FrameLayout
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/air_dark_primary_color"
-                    android:elevation="5dp"
-                    />
-
-            </FrameLayout>
+                android:layout_height="wrap_content"
+                android:background="@color/air_dark_primary_color"
+                android:elevation="5dp"
+                />
 
             <FrameLayout
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal|top"
-                android:paddingTop="55dp"/>
+                />
 
         </FrameLayout>
 
@@ -50,7 +44,7 @@
 
     <fragment
         android:id="@+id/navigation_drawer"
-        android:layout_width="360dp"
+        android:layout_width="324dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="com.airplayer.fragment.NavigationDrawerFragment"

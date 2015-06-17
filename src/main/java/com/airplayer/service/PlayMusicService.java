@@ -107,9 +107,11 @@ public class PlayMusicService extends Service {
     public class PlayerControlBinder extends Binder {
 
         public void playMusic(int position, List<Song> playList) {
-            play(playList.get(position));
-            mPosition = position;
-            mPlayList = playList;
+            if (playList != null) {
+                play(playList.get(position));
+                mPosition = position;
+                mPlayList = playList;
+            }
         }
 
         public void stopMusic() {

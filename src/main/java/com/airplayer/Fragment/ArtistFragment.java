@@ -1,5 +1,6 @@
 package com.airplayer.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -12,8 +13,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.airplayer.R;
+import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.model.Album;
@@ -55,6 +58,8 @@ public class ArtistFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
+        rootView.setPadding(0, 0, 0, 0);
+        ((AirMainActivity)getActivity()).getToolbar().setVisibility(View.INVISIBLE);
 
         mAlbumList = QueryUtils.loadAlbumList(getActivity(),
                 "artist = ?", new String[] { mArtist.getName() }, MediaStore.Audio.Albums.FIRST_YEAR);
@@ -68,7 +73,7 @@ public class ArtistFragment extends Fragment {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-        AlbumAdapter adapter = new AlbumAdapter(getActivity(), mAlbumList);
+        AlbumAdapter adapter = new ArtistAlbumAdapter(getActivity(), mAlbumList);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
             public void itemClicked(View view, int position) {
@@ -89,5 +94,39 @@ public class ArtistFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    private class ArtistAlbumAdapter extends AlbumAdapter {
+
+        public ArtistAlbumAdapter(Context context, List<Album> list) {
+            super(context, list);
+        }
+
+        @Override
+        public void setUpViewHolder(AlbumHeaderViewHolder holder) {
+            ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
+            header.name.setText(mArtist.getName());
+            header.albumCount.setText(mAlbumList.size() + " albums");
+        }
+
+        @Override
+        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new ArtistAlbumHeader(getLayoutInflater()
+                    .inflate(R.layout.recycler_header_image, parent, false));
+        }
+
+        private class ArtistAlbumHeader extends AlbumAdapter.AlbumHeaderViewHolder {
+
+            private ImageView image;
+            private TextView name;
+            private TextView albumCount;
+
+            public ArtistAlbumHeader(View itemView) {
+                super(itemView);
+                image = (ImageView) itemView.findViewById(R.id.header_image);
+                name = (TextView) itemView.findViewById(R.id.header_title);
+                albumCount = (TextView) itemView.findViewById(R.id.header_sub_title);
+            }
+        }
     }
 }

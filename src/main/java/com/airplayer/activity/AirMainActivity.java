@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -14,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
@@ -23,7 +25,8 @@ import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.service.PlayMusicService;
 
 
-public class AirMainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class AirMainActivity extends AppCompatActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String TAG = "AirMainActivity";
 
@@ -151,9 +154,15 @@ public class AirMainActivity extends AppCompatActivity implements NavigationDraw
         switch (position) {
             case 0:
                 mToolbar.setTitle("Now Playing");
+                if (Build.VERSION.SDK_INT >= 21) {
+                    mToolbar.setElevation(16);
+                }
                 return new NowPlayingFragment();
             case 1:
                 mToolbar.setTitle("My Library");
+                if (Build.VERSION.SDK_INT >= 21) {
+                    mToolbar.setElevation(0);
+                }
                 return new MyLibraryFragment();
             default:
                 return null;

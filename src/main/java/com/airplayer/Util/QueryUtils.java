@@ -62,7 +62,9 @@ public class QueryUtils {
                 new String[]{
                         MediaStore.Audio.Albums.ALBUM,
                         MediaStore.Audio.Albums._ID,
-                        MediaStore.Audio.Albums.ARTIST
+                        MediaStore.Audio.Albums.ARTIST,
+                        MediaStore.Audio.Albums.LAST_YEAR,
+                        MediaStore.Audio.Albums.ALBUM_ART
                 },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
@@ -72,6 +74,8 @@ public class QueryUtils {
                     album.setTitle(cursor.getString(0));
                     album.setId(cursor.getInt(1));
                     album.setAlbumArtist(cursor.getString(2));
+                    album.setYear(cursor.getString(3));
+                    album.setAlbumArtPath(cursor.getString(4));
                     list.add(album);
                 } while (cursor.moveToNext());
             }
@@ -92,6 +96,7 @@ public class QueryUtils {
                         MediaStore.Audio.Media.ARTIST,      /* for displaying */
                         MediaStore.Audio.Media.DURATION,    /* for displaying */
                         MediaStore.Audio.Media.DATA,        /* for playing */
+                        MediaStore.Audio.Media.TRACK        /* for displaying in album fragment */
                 },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
@@ -105,6 +110,7 @@ public class QueryUtils {
                         song.setArtist(cursor.getString(4));
                         song.setDuration(cursor.getInt(5));
                         song.setPath(cursor.getString(6));
+                        song.setTrack(cursor.getInt(7));
                         list.add(song);
                     }
                 } while (cursor.moveToNext());

@@ -3,6 +3,7 @@ package com.airplayer.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,95 +19,79 @@ import java.util.List;
  * Created by ZiyiTsang on 15/6/11.
  */
 
-public class SongAdapter extends AirAdapter<Song> {
+public abstract class SongAdapter extends AirAdapter<Song> {
 
-    private HeaderSetter headerSetter;
+    private boolean showImage = true;
+
+    public void setShowImage(boolean showImage) {
+        this.showImage = showImage;
+    }
 
     public SongAdapter(Context context, List<Song> list) {
         super(context, list);
     }
 
     @Override
-    public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-        return new SongItemViewTextHeaderHolder(
-                getLayoutInflater().inflate(R.layout.recycler_header_text, parent, false));
-    }
-
-    @Override
     public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {
-        return new SongItemViewItemHolder(
+        return new SongItemViewHolder(
                 getLayoutInflater().inflate(R.layout.recycler_item_song, parent, false));
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
-        // when holder is a SongItemViewItemHolder
-        if (holder instanceof SongItemViewItemHolder) {
-            SongItemViewItemHolder songViewItemHolder = (SongItemViewItemHolder) holder;
-
-            songViewItemHolder.imageView.setImageResource(android.R.drawable.ic_menu_gallery);
+        // when holder is a SongItemViewHolder
+        if (holder instanceof SongItemViewHolder) {
+            SongItemViewHolder songViewItemHolder = (SongItemViewHolder) holder;
 
             songViewItemHolder.titleText.setText(getList().get(position - 1).getTitle());
             songViewItemHolder.artistText.setText(getList().get(position - 1).getArtist());
             songViewItemHolder.durationText.setText(formatTime(getList().get(position - 1).getDuration()));
 
-            Picasso.with(getContext())
-                    .load(getList().get(position - 1).getAlbumArtUri())
-                    .into(songViewItemHolder.imageView);
-        }
-
-        //when holder is a SongItemViewTextHeaderHolder
-        if (holder instanceof SongItemViewTextHeaderHolder) {
-            SongItemViewTextHeaderHolder songViewTextHeaderHolder = (SongItemViewTextHeaderHolder) holder;
-            if (headerSetter != null) {
-                headerSetter.setUpHeader(
-                        songViewTextHeaderHolder.headerImage,
-                        songViewTextHeaderHolder.mainHeaderText,
-                        songViewTextHeaderHolder.secondaryHeaderText
-                );
+            if (showImage) {
+                Picasso.with(getContext())
+                        .load(getList().get(position - 1).getAlbumArtUri())
+                        .into(songViewItemHolder.imageView);
+            } else {
+                int track = getList().get(position - 1).getTrack();
+                songViewItemHolder.trackNum.setText(track % 1000 + "");
             }
         }
 
+        //when holder is a SongHeadViewHolder
+        if (holder instanceof SongHeadViewHolder) {
+            SongHeadViewHolder songHeadViewHolder = (SongHeadViewHolder) holder;
+            setUpViewHolder(songHeadViewHolder);
+        }
+
     }
 
-    public void setHeadSetter(HeaderSetter headerSetter) {
-        this.headerSetter = headerSetter;
-    }
+    public abstract void setUpViewHolder(SongHeadViewHolder holder);
 
-    public class SongItemViewItemHolder extends AirItemViewHolder {
+    public class SongItemViewHolder extends AirItemViewHolder {
         ImageView imageView;
         TextView titleText;
         TextView artistText;
         TextView durationText;
         Toolbar listItem;
+        TextView trackNum;
 
-        public SongItemViewItemHolder(View itemView) {
+        public SongItemViewHolder(View itemView) {
             super(itemView);
             imageView = (ImageView) itemView.findViewById(R.id.song_imageView);
             titleText = (TextView) itemView.findViewById(R.id.song_title);
             artistText = (TextView) itemView.findViewById(R.id.song_artist_name);
             durationText = (TextView) itemView.findViewById(R.id.song_duration);
             listItem = (Toolbar) itemView.findViewById(R.id.song_item);
+            trackNum = (TextView) itemView.findViewById(R.id.song_track_number);
         }
     }
 
-    public class SongItemViewTextHeaderHolder extends AirHeadViewHolder {
+    public class SongHeadViewHolder extends AirHeadViewHolder {
 
-        ImageView headerImage;
-        TextView mainHeaderText;
-        TextView secondaryHeaderText;
-
-        public SongItemViewTextHeaderHolder(View itemView) {
+        public SongHeadViewHolder(View itemView) {
             super(itemView);
-            headerImage = (ImageView) itemView.findViewById(R.id.header_image);
-            mainHeaderText = (TextView) itemView.findViewById(R.id.header_text_title);
-            secondaryHeaderText = (TextView) itemView.findViewById(R.id.header_text_desc);
         }
-    }
-
-    public interface HeaderSetter {
-        void setUpHeader(ImageView headImage, TextView mainHeadText, TextView secondaryHeadText);
     }
 
     private String formatTime(int duration) {

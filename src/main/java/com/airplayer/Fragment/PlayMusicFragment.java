@@ -114,7 +114,7 @@ public class PlayMusicFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             mSong = mBinder.getSongPlaying();
             mTitleImageView.setImageBitmap(
-                    ImageUtils.getListItemThumbnail(
+                    ImageUtils.getListItemThumbnail(getActivity(),
                             QueryUtils.getAlbumArtPath(
                                     getActivity(), mSong.getAlbum())));
             mTitleTextView.setText(mSong.getTitle());

@@ -15,9 +15,8 @@ import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/6/11.
+ * an abstract class, which is used by recycler view that shows a album grid
  */
-
-
 public abstract class AlbumAdapter extends AirAdapter<Album> {
 
     public AlbumAdapter(Context context, List<Album> list) {
@@ -48,6 +47,10 @@ public abstract class AlbumAdapter extends AirAdapter<Album> {
         }
     }
 
+    /**
+     * an abstract method to set up different header
+     * @param holder use for setting up the views in header
+     */
     public abstract void setUpViewHolder(AlbumHeaderViewHolder holder);
 
     public class AlbumItemViewHolder extends AirItemViewHolder {

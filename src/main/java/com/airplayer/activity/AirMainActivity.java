@@ -30,25 +30,16 @@ public class AirMainActivity extends AppCompatActivity
 
     public static final String TAG = "AirMainActivity";
 
-    // shared preference
+    /* shared preference */
     public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
     public static final String PREF_DATA_BASE_VERSION = "pref_data_base_version";
     private SharedPreferences sp;
 
-    // user interface
+    /* user interface */
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
 
-    private FragmentManager mFragmentManager;
-
-    // data base
-//    private AirPlayerDB db;
-//    private int dbVersion;
-//    private ProgressDialog mProgressDialog;
-
-//    private boolean isFirstOpen;
-
-    // service
+    /* service */
     private PlayMusicService.PlayerControlBinder playerControlBinder;
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -67,7 +58,8 @@ public class AirMainActivity extends AppCompatActivity
         }
     };
 
-    // receiver
+    /* others */
+    private FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,27 +94,11 @@ public class AirMainActivity extends AppCompatActivity
 
         mNavigationDrawFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        // set up sliding up panel
-//        mSlidingFragmentContainer = (FrameLayout) findViewById(R.id.sliding_fragment_container);
-
-        // get data from share preference
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-//        isFirstOpen = sp.getBoolean(PREF_IS_FIRST_OPEN, true);
-//        dbVersion = sp.getInt(PREF_DATA_BASE_VERSION, 1);
-
-//        db = AirPlayerDB.newInstance(this, dbVersion);
-
-//        if (isFirstOpen) {
-//            isFirstOpen = false;
-//            sp.edit().putBoolean(PREF_IS_FIRST_OPEN, isFirstOpen).apply();
-//            sp.edit().putInt(PREF_DATA_BASE_VERSION, dbVersion).apply();
-//        }
-
     }
 
     @Override
     protected void onDestroy() {
+        // un bind service when destroy activity
         unbindService(connection);
         super.onDestroy();
     }
@@ -137,17 +113,25 @@ public class AirMainActivity extends AppCompatActivity
                 .replace(R.id.fragment_container, switchFragment(position)).commit();
     }
 
+    /**
+     * getter of main tool bar
+     * @return tool bar of the hole app
+     */
     public Toolbar getToolbar() {
         return mToolbar;
     }
 
+    /**
+     * getter of binder of service
+     * @return service which control the music player and music play action
+     */
     public PlayMusicService.PlayerControlBinder getPlayerControlBinder() {
         return playerControlBinder;
     }
 
     /**
      * a convenient method to switch fragment with the position of selected item
-     * @param position position of selected item
+     * @param position of selected item
      * @return a new Fragment whose name was selected in NavigationDrawer
      */
     private Fragment switchFragment(int position) {
@@ -168,6 +152,4 @@ public class AirMainActivity extends AppCompatActivity
                 return null;
         }
     }
-
-
 }

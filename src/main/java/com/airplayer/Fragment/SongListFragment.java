@@ -62,7 +62,6 @@ public class SongListFragment extends Fragment {
             @Override
             public void headerClicked(View view) {
                 mBinder.playMusic((int) Math.round(Math.random() * (mList.size() - 1)), mList);
-
             }
         });
         mRecyclerView.setAdapter(adapter);

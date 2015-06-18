@@ -10,9 +10,11 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.airplayer.model.Song;
+import com.airplayer.util.QueryUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,35 +27,25 @@ public class PlayMusicService extends Service {
 
     public static final String TAG = "PlayMusicService";
 
-    // keys for widget
-    public static final String SELECTED_MUSIC_POSITION = "selected_music_position";
-    public static final String PLAY_LIST = "play_list";
-    public static final String KEY_OF_PLAY_MODE = "key_of_play_mode";
-
-    // keys for sliding up panel
-    public static final String ALBUM_ART_OF_SONG_PLAYING = "album_art_of_song_playing";
-    public static final String TITLE_OF_SONG_PLAYING = "title_of_song_playing";
-    public static final String DURATION_OF_SONG_PLAYING = "duration_of_song_playing";
-
-
     // broadcast action
     public static final String START_TO_PLAY_MUSIC = "com.airplayer.START_TO_PLAY_MUSIC";
-    public static final String PLAY_MODE_CHANGE = "com.airplayer.PLAY_MODE_CHANGE";
-    public static final String PLAYER_OPERATION = "com.airplayer.PLAYER_OPERATION";
 
     // play mode
     public static final int SINGLE_REPEAT_MODE = 0;
     public static final int ACCORDING_TO_PRIORITY_MODE = 1;
-    public static final int SHUFFLE_PLAY_MODE = 2;
 
     private PlayerControlBinder mBinder = new PlayerControlBinder();
-    private PlayModeReceiver receiver;
     private MediaPlayer mPlayer;
 
     private List<Song> mPlayList = new ArrayList<>();
+    private List<Song> mOrderList = new ArrayList<>();
+
     private int mPosition;
-    private int mPlayMode = 2;
+    private int mPlayMode = 1;
     private Song songPlaying;
+
+    private boolean isListShuffled;
+    private boolean isPause = false;
 
     @Override
     public void onCreate() {
@@ -64,27 +56,22 @@ public class PlayMusicService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 switch (mPlayMode) {
                     case 0:
-                        Log.d(TAG, "on completion, and play mode is " + mPlayMode);
-                        break;
-                    case 1:
-                        mPosition = mPosition > mPlayList.size()? 0: mPosition++;
                         play(mPlayList.get(mPosition));
                         Log.d(TAG, "on completion, and play mode is " + mPlayMode);
                         break;
-                    case 2:
-                        int random = (int) Math.round(Math.random() * mPlayList.size());
-                        play(mPlayList.get(random));
-                        mPlayList.remove(random);
+                    case 1:
+                        if (mPosition > mPlayList.size()) {
+                            mPosition = 0;
+                        } else {
+                            mPosition++;
+                        }
+                        play(mPlayList.get(mPosition));
                         Log.d(TAG, "on completion, and play mode is " + mPlayMode);
                         break;
                 }
             }
         });
-
-        receiver = new PlayModeReceiver();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(PLAY_MODE_CHANGE);
-        registerReceiver(receiver, filter);
+        mOrderList = QueryUtils.loadSongList(this, null, null, MediaStore.Audio.Media.TITLE);
     }
 
     @Override
@@ -99,7 +86,6 @@ public class PlayMusicService extends Service {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(receiver);
         mPlayer.release();
         super.onDestroy();
     }
@@ -107,84 +93,91 @@ public class PlayMusicService extends Service {
     public class PlayerControlBinder extends Binder {
 
         public void playMusic(int position, List<Song> playList) {
-            if (playList != null) {
-                play(playList.get(position));
-                mPosition = position;
-                mPlayList = playList;
-            }
-        }
-
-        public void stopMusic() {
-            if (mPlayer != null) {
-                mPlayer.stop();
-            }
+            mPosition = position;
+            mPlayList = playList == null ? mOrderList : playList;
+            play(mPlayList.get(mPosition));
         }
 
         public void resumeMusic() {
             if (mPlayer != null) {
                 mPlayer.start();
+                isPause = false;
             }
         }
 
         public void pauseMusic() {
             if (mPlayer != null && mPlayer.isPlaying()) {
                 mPlayer.pause();
+                isPause = true;
+                Log.d(TAG, "player is paused");
             }
         }
 
-        public double getProgress() {
-            return mPlayer.getCurrentPosition() / mPlayer.getDuration();
+        public float getProgress() {
+            float d = ((float)mPlayer.getCurrentPosition()) / ((float)mPlayer.getDuration());
+            Log.d(TAG, mPlayer.getCurrentPosition() + " / " + mPlayer.getDuration() + " = " + d);
+            return d;
         }
 
-        public void setProgress(int p) {
-            mPlayer.seekTo(mPlayer.getDuration() * p);
+        public void setProgress(double p) {
+            mPlayer.seekTo((int)(mPlayer.getDuration() * p));
         }
 
-        public void setSingleRepeat(boolean isLoop) {
-            mPlayer.setLooping(isLoop);
+        public void switchPlayMode(boolean isLoop) {
             if (isLoop) {
                 mPlayMode = SINGLE_REPEAT_MODE;
             } else {
                 mPlayMode = ACCORDING_TO_PRIORITY_MODE;
             }
-            Log.d(TAG, "set loop succeed now loop is " + mPlayer.isLooping());
+            Log.d(TAG, "set loop succeed, now play mode is " + mPlayMode);
         }
 
-        public void setAccordingToPriority() {
-            mPlayMode = ACCORDING_TO_PRIORITY_MODE;
+        public void switchShuffleList(boolean shuffle) {
+            if (shuffle) {
+                List<Song> shuffleList = new ArrayList<>();
+                if (songPlaying != null) {
+                    shuffleList.add(songPlaying);
+                    mPlayList.remove(songPlaying);
+                }
+                do {
+                    int random = (int) Math.round(Math.random() * mPlayList.size());
+                    Song song = mPlayList.get(random);
+                    shuffleList.add(song);
+                    mPlayList.remove(random);
+                } while (mPlayList.size() == 0);
+                isListShuffled = true;
+                Log.d(TAG, mPlayList.size() + "");
+                mPlayList = shuffleList;
+                Log.d(TAG, "play list has been shuffled, play mode is " + mPlayMode);
+            } else {
+                mPlayList = mOrderList;
+                isListShuffled = false;
+                Log.d(TAG, "play list has been set back to ordered list, play mode is " + mPlayMode);
+            }
         }
 
-        public void setShufflePlay() {
-            mPlayMode = SHUFFLE_PLAY_MODE;
+        public List<Song> getPlayList() {
+            return mPlayList;
         }
 
         public Song getSongPlaying() {
             return songPlaying;
         }
-    }
 
-    public class PlayModeReceiver extends BroadcastReceiver {
-
-        public PlayModeReceiver() {
+        public int getPlayMode() {
+            return mPlayMode;
         }
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "receive broadcast");
-            String action = intent.getAction();
-            switch (action) {
-                case PLAY_MODE_CHANGE:
-                    mPlayMode = intent.getIntExtra(KEY_OF_PLAY_MODE, 1);
-                    if (mPlayMode == 0) {
-                        mPlayer.setLooping(true);
-                    } else {
-                        mPlayer.setLooping(false);
-                    }
-                    Log.d(TAG, "succeed to switch play mode to " + mPlayMode);
-                    break;
-                case PLAYER_OPERATION:
-                    break;
-            }
+        public boolean isPlaying() {
+            return mPlayer.isPlaying();
+        }
+
+        public boolean isListShuffled() {
+            return isListShuffled;
+        }
+
+        public boolean isPause() {
+            return isPause;
         }
     }
 

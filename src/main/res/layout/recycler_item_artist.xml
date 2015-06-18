@@ -5,8 +5,7 @@
     android:layout_height="120dp"
     android:layout_margin="4dp"
     android:clickable="true"
-    android:background="@drawable/custom_selector"
-    >
+    android:background="@drawable/custom_selector">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,15 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
-            />
+            android:paddingTop="4dp" />
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:background="@android:color/white"
-            >
+            android:background="@android:color/white">
 
             <TextView
                 android:id="@+id/artist_name"
@@ -35,8 +33,7 @@
                 android:layout_margin="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                />
+                android:layout_gravity="center" />
 
         </LinearLayout>
 

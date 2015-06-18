@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/6/11.
+ * an abstract class, which is used by recycler view that shows a song list
  */
 
 public abstract class SongAdapter extends AirAdapter<Song> {
@@ -66,6 +67,10 @@ public abstract class SongAdapter extends AirAdapter<Song> {
 
     }
 
+    /**
+     * an abstract method to set up different header
+     * @param holder use for setting up the views in header
+     */
     public abstract void setUpViewHolder(SongHeadViewHolder holder);
 
     public class SongItemViewHolder extends AirItemViewHolder {

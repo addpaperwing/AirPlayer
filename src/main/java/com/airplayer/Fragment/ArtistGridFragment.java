@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.airplayer.R;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;
-import com.airplayer.util.ImageUtils;
 import com.airplayer.util.QueryUtils;
 
 import java.util.List;
@@ -80,7 +79,7 @@ public class ArtistGridFragment extends Fragment {
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new ArtistHeaderViewHolder(getLayoutInflater()
-                    .inflate(R.layout.recycler_header, parent, false));
+                    .inflate(R.layout.recycler_header_empty, parent, false));
         }
 
         @Override

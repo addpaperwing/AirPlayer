@@ -11,15 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.model.Album;
-import com.airplayer.util.ImageUtils;
 import com.airplayer.util.QueryUtils;
 
 import java.util.List;
@@ -88,7 +84,7 @@ public class AlbumGridFragment extends Fragment {
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new AlbumHeaderViewHolder(getLayoutInflater()
-                    .inflate(R.layout.recycler_header, parent, false));
+                    .inflate(R.layout.recycler_header_empty, parent, false));
         }
     }
 }

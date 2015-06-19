@@ -73,7 +73,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLE_SEEK_BAR_PROGRESS:
-                    mSeekBar.setProgress(Math.round((float)msg.obj));
+                    mSeekBar.setProgress(Math.round((float) msg.obj));
                     break;
                 default:
                     break;
@@ -94,16 +94,22 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
             public void run() {
                 while (true) {
                     if (mBinder.isPlaying()) {
-                        Message msg = new Message();
-                        msg.what = HANDLE_SEEK_BAR_PROGRESS;
-                        msg.obj = mBinder.getProgress() * mSeekBar.getMax();
-                        handler.sendMessage(msg);
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            Log.e(TAG, "Fail to sleep thread " + e);
+                        if (!mBinder.isPause()) {
+                            Message msg = new Message();
+                            msg.what = HANDLE_SEEK_BAR_PROGRESS;
+                            msg.obj = mBinder.getProgress() * mSeekBar.getMax();
+                            handler.sendMessage(msg);
                         }
+                        sleepThread();
                     }
+                }
+            }
+
+            private void sleepThread() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "Fail to sleep thread " + e);
                 }
             }
         }).start();
@@ -156,22 +162,26 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        mSwitchPlayMode = (ImageView) rootView.findViewById(R.id.sliding_layout_swith_mode);
+        mSwitchPlayMode = (ImageView) rootView.findViewById(R.id.sliding_layout_switch_mode);
         mSwitchPlayMode.setImageResource((mBinder.getPlayMode() == PlayMusicService.SINGLE_REPEAT_MODE ?
                 R.drawable.btn_repeat_one : R.drawable.btn_repeat));
         mSwitchPlayMode.setOnClickListener(this);
 
         mPreviousButton = (ImageView) rootView.findViewById(R.id.sliding_layout_previous_button);
+        mPreviousButton.setOnClickListener(this);
 
         mPlayAndPauseButton = (ImageView) rootView.findViewById(R.id.sliding_layout_play_and_pause_button);
-        mPlayAndPauseButton.setImageResource(mBinder.isPlaying() ?
-                android.R.drawable.ic_media_pause : R.drawable.btn_play);
+        mPlayAndPauseButton.setImageResource(mBinder.isPause() ?
+                R.drawable.btn_play : android.R.drawable.ic_media_pause);
+        mPreviousButton.setOnClickListener(this);
 
         mNextButton = (ImageView) rootView.findViewById(R.id.sliding_layout_next_button);
+        mNextButton.setOnClickListener(this);
 
         mShuffleList = (ImageView) rootView.findViewById(R.id.sliding_layout_shuffle_play);
         mShuffleList.setImageResource(mBinder.isListShuffled() ?
                 R.drawable.btn_shuffle_all : R.drawable.btn_shuffle);
+        mShuffleList.setOnClickListener(this);
 
         return rootView;
     }
@@ -202,15 +212,15 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
             // foot player control section
             mSwitchPlayMode.setImageResource((mBinder.getPlayMode() == PlayMusicService.SINGLE_REPEAT_MODE ?
                     R.drawable.btn_repeat_one : R.drawable.btn_repeat));
-            mPlayAndPauseButton.setImageResource(mBinder.isPlaying() ?
-                    android.R.drawable.ic_media_pause : R.drawable.btn_play);
+            mPlayAndPauseButton.setImageResource(mBinder.isPause() ?
+                    R.drawable.btn_play : android.R.drawable.ic_media_pause);
         }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.sliding_layout_swith_mode:
+            case R.id.sliding_layout_switch_mode:
                 isLooping = !isLooping;
                 mBinder.switchPlayMode(isLooping);
                 mSwitchPlayMode.setImageResource(isLooping ?
@@ -219,7 +229,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
             case R.id.sliding_layout_previous_button:
                 break;
             case R.id.sliding_layout_play_and_pause_button:
-                if (mBinder.isPlaying()) {
+                if (mBinder.isPlaying() && !mBinder.isPause() ) {
                     mBinder.pauseMusic();
                 } else {
                     if (mBinder.isPause()) {

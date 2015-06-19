@@ -114,13 +114,11 @@ public class PlayMusicService extends Service {
         }
 
         public float getProgress() {
-            float d = ((float)mPlayer.getCurrentPosition()) / ((float)mPlayer.getDuration());
-            Log.d(TAG, mPlayer.getCurrentPosition() + " / " + mPlayer.getDuration() + " = " + d);
-            return d;
+            return ((float)mPlayer.getCurrentPosition()) / ((float)mPlayer.getDuration());
         }
 
         public void setProgress(double p) {
-            mPlayer.seekTo((int)(mPlayer.getDuration() * p));
+            mPlayer.seekTo((int) (mPlayer.getDuration() * p));
         }
 
         public void switchPlayMode(boolean isLoop) {
@@ -169,7 +167,7 @@ public class PlayMusicService extends Service {
         }
 
         public boolean isPlaying() {
-            return mPlayer.isPlaying();
+            return isPause() || mPlayer.isPlaying();
         }
 
         public boolean isListShuffled() {

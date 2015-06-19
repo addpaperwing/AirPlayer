@@ -6,6 +6,7 @@
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         xmlns:sothree="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/sliding_up_panel_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
@@ -34,7 +35,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:clickable="true"
             android:id="@+id/sliding_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

@@ -1,13 +1,15 @@
 package com.airplayer.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -16,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
@@ -23,6 +26,7 @@ import com.airplayer.fragment.NowPlayingFragment;
 import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.service.PlayMusicService;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
 public class AirMainActivity extends AppCompatActivity
@@ -38,6 +42,8 @@ public class AirMainActivity extends AppCompatActivity
     /* user interface */
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
+//    private FrameLayout mSlidingPanel;
+    private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
     /* service */
     private PlayMusicService.PlayerControlBinder playerControlBinder;
@@ -49,6 +55,8 @@ public class AirMainActivity extends AppCompatActivity
             mFragmentManager.beginTransaction()
                     .add(R.id.sliding_fragment_container,
                             new PlayMusicFragment()).commit();
+            mSlidingUpPanelLayout.setTouchEnabled(false);
+            mSlidingUpPanelLayout.setPanelHeight(0);
             Log.d(TAG, "service has connected");
         }
 
@@ -61,6 +69,9 @@ public class AirMainActivity extends AppCompatActivity
     /* others */
     private FragmentManager mFragmentManager;
 
+    /* receiver */
+    private PlayerStateReceiver mPlayerStateReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +82,9 @@ public class AirMainActivity extends AppCompatActivity
         playMusicServiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startService(playMusicServiceIntent);
         bindService(playMusicServiceIntent, connection, BIND_AUTO_CREATE);
+
+//        mSlidingPanel = (FrameLayout) findViewById(R.id.sliding_fragment_container);
+        mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
 
         // get fragment manager
         mFragmentManager = getSupportFragmentManager();
@@ -94,12 +108,16 @@ public class AirMainActivity extends AppCompatActivity
 
         mNavigationDrawFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mPlayerStateReceiver = new PlayerStateReceiver();
+        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_MUSIC);
+        registerReceiver(mPlayerStateReceiver, filter);
     }
 
     @Override
     protected void onDestroy() {
-        // un bind service when destroy activity
-        unbindService(connection);
+        unbindService(connection);                  /* unbind service when destroy activity */
+        unregisterReceiver(mPlayerStateReceiver);   /* unregister receiver when destroy activity */
         super.onDestroy();
     }
 
@@ -127,6 +145,14 @@ public class AirMainActivity extends AppCompatActivity
      */
     public PlayMusicService.PlayerControlBinder getPlayerControlBinder() {
         return playerControlBinder;
+    }
+
+    public class PlayerStateReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            mSlidingUpPanelLayout.setTouchEnabled(true);
+            mSlidingUpPanelLayout.setPanelHeight(256);
+        }
     }
 
     /**

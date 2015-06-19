@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
     android:id="@+id/sliding_layout_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <FrameLayout
+        android:clickable="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/sliding_layout_top_tool_bar"
+        android:layout_above="@+id/sliding_layout_bottom_control_bar">
 
         <ImageView
             android:id="@+id/sliding_layout_blurred_album_art"
             android:background="@color/air_primary_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
         <ImageView
             android:id="@+id/sliding_layout_center_album_art"
@@ -26,10 +29,10 @@
     </FrameLayout>
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/sliding_layout_top_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="@color/air_dark_primary_color"
-        >
+        android:background="@color/air_dark_primary_color">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -39,8 +42,7 @@
                 android:id="@+id/sliding_layout_title_image"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:layout_centerVertical="true"
-                />
+                android:layout_centerVertical="true" />
 
             <LinearLayout
                 android:orientation="vertical"
@@ -52,25 +54,21 @@
                 android:paddingStart="8dp"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:paddingEnd="8dp"
-                >
+                android:paddingEnd="8dp">
 
                 <TextView
                     android:id="@+id/sliding_layout_title_song_title"
                     android:text="title"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/sliding_layout_title_artist_name"
                     android:text="artist"
                     android:textSize="14sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
@@ -84,20 +82,20 @@
                 android:layout_marginEnd="30dp"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                />
+                android:layout_alignParentEnd="true" />
 
         </RelativeLayout>
 
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
+        android:id="@+id/sliding_layout_bottom_control_bar"
         android:layout_width="match_parent"
         android:layout_height="72dp"
+        android:background="@color/air_primary_text"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        >
+        android:layout_alignParentStart="true">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -105,23 +103,24 @@
                 android:layout_gravity="bottom">
 
                 <LinearLayout
+                    android:clickable="true"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:gravity="center"
                     android:layout_gravity="bottom"
                     android:background="@color/air_dark_primary_color"
-                    android:elevation="5dp"
-                    >
+                    android:elevation="5dp">
 
-                <ImageView
-                    android:id="@+id/sliding_layout_swith_mode"
-                    android:src="@drawable/btn_repeat"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginRight="48dp"
-                    android:layout_marginEnd="48dp"
-                    />
+                    <ImageView
+                        android:id="@+id/sliding_layout_switch_mode"
+                        android:src="@drawable/btn_repeat"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginRight="48dp"
+                        android:layout_marginEnd="48dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_previous_button"
@@ -130,8 +129,7 @@
                     android:layout_height="40dp"
                     android:layout_marginRight="24dp"
                     android:layout_marginEnd="24dp"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_play_and_pause_button"
@@ -142,8 +140,7 @@
                     android:layout_marginRight="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_next_button"
@@ -152,8 +149,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="24dp"
                     android:layout_marginStart="24dp"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_shuffle_play"
@@ -162,7 +158,8 @@
                     android:layout_height="24dp"
                     android:layout_marginLeft="48dp"
                     android:layout_marginStart="48dp"
-                    />
+                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp" />
 
              </LinearLayout>
 
@@ -172,8 +169,7 @@
             android:id="@+id/sliding_layout_bottom_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            />
+            android:layout_gravity="top" />
 
     </FrameLayout>
 

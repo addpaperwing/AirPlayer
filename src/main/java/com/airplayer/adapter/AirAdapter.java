@@ -68,8 +68,8 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
      *
      * 根据每一个 item 的 position 决定返回的 item 属于哪种类型 ( header 还是 普通的 item )
      * 返回值会在 { @link onCreateViewHolder } 中用来决定返回的 viewHolder 对象
-     * 参数: position 每一个 item 在 recycler view 中所处的为止, 0 为 header, 其他为 普通的item
-     * 返回值: 在类的常亮中设置好的 view 类型的值
+     * 参数: position 每一个 item 在 recycler view 中所处的位置, 0 为 header, 其他为 普通的item
+     * 返回值: 在类的常量中设置好的 view 类型的值
      */
     @Override
     public int getItemViewType(int position) {

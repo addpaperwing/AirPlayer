@@ -2,9 +2,9 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/album_item"
-    android:layout_width="192dp"
-    android:layout_height="192dp"
-    android:layout_margin="8dp"
+    android:layout_width="@dimen/dp_192_560"
+    android:layout_height="@dimen/dp_192_560"
+    android:layout_margin="@dimen/dp_4_560"
     >
 
     <FrameLayout
@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
-            android:paddingTop="4dp"
+            android:paddingTop="@dimen/dp_8_560"
             />
 
         <LinearLayout
@@ -34,10 +34,10 @@
                 android:textColor="@color/air_primary_text"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="@dimen/dp_8_560"
+                android:layout_marginRight="@dimen/dp_8_560"
+                android:layout_marginStart="@dimen/dp_8_560"
+                android:layout_marginEnd="@dimen/dp_8_560"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -49,10 +49,10 @@
                 android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="@dimen/dp_8_560"
+                android:layout_marginRight="@dimen/dp_8_560"
+                android:layout_marginStart="@dimen/dp_8_560"
+                android:layout_marginEnd="@dimen/dp_8_560"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

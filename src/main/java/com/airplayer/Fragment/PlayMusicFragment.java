@@ -43,8 +43,6 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     private TextView mArtistTextView;
     private ImageView mTitlePlayButton;
 
-    private ImageView mCenterAlbumArt;
-    private ImageView mBlurredAlbumArt;
     private TextView mPlayingTimeTextView;
     private TextView mDurationTextView;
 
@@ -86,7 +84,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
         receiver = new GetSongReceiver();
-        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_MUSIC);
+        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_A_NEW_SONG);
         getActivity().registerReceiver(receiver, filter);
 
         new Thread(new Runnable() {
@@ -107,7 +105,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
             private void sleepThread() {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Fail to sleep thread " + e);
                 }
@@ -127,16 +125,9 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
 
         mTitlePlayButton = (ImageView) rootView.findViewById(R.id.sliding_layout_title_play_button);
-        mTitlePlayButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        mTitlePlayButton.setOnClickListener(this);
 
         // background and center image section
-        mCenterAlbumArt = (ImageView) rootView.findViewById(R.id.sliding_layout_center_album_art);
-        mBlurredAlbumArt = (ImageView) rootView.findViewById(R.id.sliding_layout_blurred_album_art);
 
         // foot player control section
         mSeekBar = (SeekBar) rootView.findViewById(R.id.sliding_layout_bottom_seek_bar);
@@ -173,7 +164,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
         mPlayAndPauseButton = (ImageView) rootView.findViewById(R.id.sliding_layout_play_and_pause_button);
         mPlayAndPauseButton.setImageResource(mBinder.isPause() ?
                 R.drawable.btn_play : android.R.drawable.ic_media_pause);
-        mPreviousButton.setOnClickListener(this);
+        mPlayAndPauseButton.setOnClickListener(this);
 
         mNextButton = (ImageView) rootView.findViewById(R.id.sliding_layout_next_button);
         mNextButton.setOnClickListener(this);
@@ -206,8 +197,6 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
             mArtistTextView.setText(mSong.getArtist());
 
             // background and center image section
-            mBlurredAlbumArt.setImageBitmap(nowPlaySongArt);
-            mCenterAlbumArt.setImageBitmap(nowPlaySongArt);
 
             // foot player control section
             mSwitchPlayMode.setImageResource((mBinder.getPlayMode() == PlayMusicService.SINGLE_REPEAT_MODE ?
@@ -222,28 +211,29 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()) {
             case R.id.sliding_layout_switch_mode:
                 isLooping = !isLooping;
-                mBinder.switchPlayMode(isLooping);
+                mBinder.switchLoopMode(isLooping);
                 mSwitchPlayMode.setImageResource(isLooping ?
                         R.drawable.btn_repeat_one : R.drawable.btn_repeat);
                 break;
             case R.id.sliding_layout_previous_button:
+                mBinder.previous();
                 break;
             case R.id.sliding_layout_play_and_pause_button:
-                if (mBinder.isPlaying() && !mBinder.isPause() ) {
-                    mBinder.pauseMusic();
+            case R.id.sliding_layout_title_play_button:
+                if (mBinder.isPause()) {
+                    mBinder.resumeMusic();
+                    mPlayAndPauseButton.setImageResource(android.R.drawable.ic_media_pause);
                 } else {
-                    if (mBinder.isPause()) {
-                        mBinder.resumeMusic();
-                    } else {
-                        mBinder.playMusic(0, null);
-                    }
+                    mBinder.pauseMusic();
+                    mPlayAndPauseButton.setImageResource(R.drawable.btn_play);
                 }
                 break;
             case R.id.sliding_layout_next_button:
+                mBinder.next();
                 break;
             case R.id.sliding_layout_shuffle_play:
                 shuffle = !shuffle;
-                mBinder.switchShuffleList(shuffle);
+                mBinder.switchShuffleMode(shuffle);
                 mShuffleList.setImageResource(shuffle ?
                         R.drawable.btn_shuffle_all : R.drawable.btn_shuffle);
                 break;

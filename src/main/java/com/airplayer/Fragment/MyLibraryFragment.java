@@ -28,7 +28,7 @@ public class MyLibraryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
-        rootView.setPadding(0, 160, 0, 0);
+        rootView.setPadding(0, R.integer.padding_action_bar, 0, 0);
         ((AirMainActivity)getActivity()).getToolbar().setVisibility(View.VISIBLE);
 
         FragmentManager fm = getChildFragmentManager();

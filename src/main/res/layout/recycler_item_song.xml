@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/song_item"
     android:layout_width="match_parent"
-    android:layout_height="76dp"
+    android:layout_height="@dimen/dp_72_560"
     android:clickable="true"
     android:background="@drawable/custom_selector"
     >
@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/song_imageView"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="@dimen/dp_64_560"
+                android:layout_height="@dimen/dp_64_560"
                 />
 
             <TextView
@@ -47,10 +47,10 @@
             android:layout_toEndOf="@+id/song_frameLayout"
             android:layout_toLeftOf="@+id/song_duration"
             android:layout_toStartOf="@+id/song_duration"
-            android:paddingRight="8dp"
-            android:paddingLeft="8dp"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
+            android:paddingRight="@dimen/dp_8_560"
+            android:paddingLeft="@dimen/dp_8_560"
+            android:paddingStart="@dimen/dp_8_560"
+            android:paddingEnd="@dimen/dp_8_560"
             >
 
             <TextView
@@ -80,8 +80,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
-            android:layout_marginRight="48dp"
-            android:layout_marginEnd="48dp"
+            android:layout_marginRight="@dimen/dp_48_560"
+            android:layout_marginEnd="@dimen/dp_48_560"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />

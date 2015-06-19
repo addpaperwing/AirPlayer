@@ -18,4 +18,7 @@
     <dimen name="dp_192_560">192dp</dimen>
 
     <dimen name="drawer_width">320dp</dimen>
+
+    <integer name="padding_action_bar">160</integer>
+    <integer name="sliding_panel_height">256</integer>
 </resources>

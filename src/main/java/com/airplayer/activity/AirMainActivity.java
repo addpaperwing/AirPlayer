@@ -17,8 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.FrameLayout;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
@@ -42,7 +40,6 @@ public class AirMainActivity extends AppCompatActivity
     /* user interface */
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
-//    private FrameLayout mSlidingPanel;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
     /* service */
@@ -51,10 +48,12 @@ public class AirMainActivity extends AppCompatActivity
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             playerControlBinder = (PlayMusicService.PlayerControlBinder) service;
-            // set up bottom sliding fragment
+            // set up bottom sliding fragment when service is connected
             mFragmentManager.beginTransaction()
                     .add(R.id.sliding_fragment_container,
                             new PlayMusicFragment()).commit();
+
+            // set sliding up panel invisible when activity create
             mSlidingUpPanelLayout.setTouchEnabled(false);
             mSlidingUpPanelLayout.setPanelHeight(0);
             Log.d(TAG, "service has connected");
@@ -83,7 +82,7 @@ public class AirMainActivity extends AppCompatActivity
         startService(playMusicServiceIntent);
         bindService(playMusicServiceIntent, connection, BIND_AUTO_CREATE);
 
-//        mSlidingPanel = (FrameLayout) findViewById(R.id.sliding_fragment_container);
+        // get sliding up panel
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
 
         // get fragment manager
@@ -110,7 +109,7 @@ public class AirMainActivity extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         mPlayerStateReceiver = new PlayerStateReceiver();
-        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_MUSIC);
+        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_A_NEW_SONG);
         registerReceiver(mPlayerStateReceiver, filter);
     }
 
@@ -147,11 +146,15 @@ public class AirMainActivity extends AppCompatActivity
         return playerControlBinder;
     }
 
+    /**
+     * inside receiver to receiver player state broadcast
+     * to control the sliding up panel visible
+     */
     public class PlayerStateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             mSlidingUpPanelLayout.setTouchEnabled(true);
-            mSlidingUpPanelLayout.setPanelHeight(256);
+            mSlidingUpPanelLayout.setPanelHeight(R.integer.sliding_panel_height);
         }
     }
 

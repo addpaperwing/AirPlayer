@@ -78,7 +78,7 @@ public class ArtistGridFragment extends Fragment {
 
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new ArtistHeaderViewHolder(getLayoutInflater()
+            return new AirHeadViewHolder(getLayoutInflater()
                     .inflate(R.layout.recycler_header_empty, parent, false));
         }
 
@@ -95,7 +95,7 @@ public class ArtistGridFragment extends Fragment {
                 artistViewHolder.textView.setText(getList().get(i - 1).getName());
             }
 
-            if (holder instanceof ArtistHeaderViewHolder) {
+            if (holder instanceof AirAdapter.AirHeadViewHolder) {
 
             }
         }
@@ -110,13 +110,5 @@ public class ArtistGridFragment extends Fragment {
                 textView = (TextView) itemView.findViewById(R.id.artist_name);
             }
         }
-
-        public class ArtistHeaderViewHolder extends AirHeadViewHolder {
-
-            public ArtistHeaderViewHolder(View itemView) {
-                super(itemView);
-            }
-        }
     }
-
 }

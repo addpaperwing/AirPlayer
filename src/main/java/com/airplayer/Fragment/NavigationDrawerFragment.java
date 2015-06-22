@@ -98,9 +98,9 @@ public class NavigationDrawerFragment extends Fragment {
 
         mDrawerList.setAdapter(new ArrayAdapter<String>(
                 getActivity(),
-                android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{"Now Playing", "My Library"}
+                R.layout.list_item_navigation_drawer,
+                R.id.list_item_text,
+                new String[]{"Play Now", "My Library"}
         ));
 
         return rootView;
@@ -162,6 +162,10 @@ public class NavigationDrawerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_SELECTED_POSITION, mCurrentSelectedPosition);
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
     }
 
     public interface NavigationDrawerCallbacks {

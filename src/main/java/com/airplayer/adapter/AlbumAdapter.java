@@ -41,8 +41,8 @@ public abstract class AlbumAdapter extends AirAdapter<Album> {
                     .into(albumViewHolder.imageView);
         }
 
-        if (holder instanceof AlbumHeaderViewHolder) {
-            AlbumHeaderViewHolder albumHeaderViewHolder = (AlbumHeaderViewHolder) holder;
+        if (holder instanceof AirAdapter.AirHeadViewHolder) {
+            AirAdapter.AirHeadViewHolder albumHeaderViewHolder = (AirAdapter.AirHeadViewHolder) holder;
             setUpViewHolder(albumHeaderViewHolder);
         }
     }
@@ -51,7 +51,7 @@ public abstract class AlbumAdapter extends AirAdapter<Album> {
      * an abstract method to set up different header
      * @param holder use for setting up the views in header
      */
-    public abstract void setUpViewHolder(AlbumHeaderViewHolder holder);
+    public abstract void setUpViewHolder(AirAdapter.AirHeadViewHolder holder);
 
     public class AlbumItemViewHolder extends AirItemViewHolder {
         ImageView imageView;
@@ -65,12 +65,4 @@ public abstract class AlbumAdapter extends AirAdapter<Album> {
             artistText = (TextView) itemView.findViewById(R.id.album_artist_name);
         }
     }
-
-    public class AlbumHeaderViewHolder extends AirHeadViewHolder {
-
-        public AlbumHeaderViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
 }

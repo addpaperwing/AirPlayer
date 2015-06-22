@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        sothree:umanoPanelHeight="@dimen/dp_72_560"
+        sothree:umanoPanelHeight="@dimen/dp_56_560"
         sothree:umanoShadowHeight="@dimen/dp_8_560"
         sothree:umanoDragView="@+id/sliding_fragment_container">
 

@@ -37,7 +37,6 @@
 
         </FrameLayout>
 
-
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -45,8 +44,8 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/song_frameLayout"
             android:layout_toEndOf="@+id/song_frameLayout"
-            android:layout_toLeftOf="@+id/song_duration"
-            android:layout_toStartOf="@+id/song_duration"
+            android:layout_toLeftOf="@+id/duration_frame"
+            android:layout_toStartOf="@+id/duration_frame"
             android:paddingRight="@dimen/dp_8_560"
             android:paddingLeft="@dimen/dp_8_560"
             android:paddingStart="@dimen/dp_8_560"
@@ -74,9 +73,10 @@
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/song_duration"
-            android:textColor="@color/air_primary_text"
+        <LinearLayout
+            android:id="@+id/duration_frame"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|end"
@@ -84,7 +84,20 @@
             android:layout_marginEnd="@dimen/dp_48_560"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true">
+
+            <ImageView
+                android:id="@+id/playing_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/song_duration"
+                android:textColor="@color/air_primary_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

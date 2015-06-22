@@ -1,6 +1,8 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import java.util.List;
 public abstract class SongAdapter extends AirAdapter<Song> {
 
     private boolean showImage = true;
+    private boolean isPlayList = false;
 
     public void setShowImage(boolean showImage) {
         this.showImage = showImage;
@@ -30,6 +33,11 @@ public abstract class SongAdapter extends AirAdapter<Song> {
 
     public SongAdapter(Context context, List<Song> list) {
         super(context, list);
+    }
+
+    public SongAdapter(Context context, List<Song> list, boolean isPlayList) {
+        this(context, list);
+        this.isPlayList = isPlayList;
     }
 
     @Override
@@ -57,21 +65,35 @@ public abstract class SongAdapter extends AirAdapter<Song> {
                 int track = getList().get(position - 1).getTrack();
                 songViewItemHolder.trackNum.setText(track % 1000 + "");
             }
+
+            if (isPlayList) {
+                AnimationDrawable animation;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    animation = (AnimationDrawable) getContext().getDrawable(R.drawable.animation_equalizer);
+                } else {
+                    animation = (AnimationDrawable) getContext().getResources()
+                            .getDrawable(R.drawable.animation_equalizer);
+                }
+                songViewItemHolder.playStateImage.setImageDrawable(animation);
+
+                if (getList().get(position - 1).isPlay()) {
+                    songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                    if (animation != null) animation.start();
+                } else if (getList().get(position - 1).isPause()){
+                    songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                } else {
+                    songViewItemHolder.playStateImage.setVisibility(View.INVISIBLE);
+                }
+            }
         }
 
         //when holder is a SongHeadViewHolder
-        if (holder instanceof SongHeadViewHolder) {
-            SongHeadViewHolder songHeadViewHolder = (SongHeadViewHolder) holder;
-            setUpViewHolder(songHeadViewHolder);
+        if (holder instanceof AirAdapter.AirHeadViewHolder) {
+            AirAdapter.AirHeadViewHolder airHeadViewHolder = (AirAdapter.AirHeadViewHolder) holder;
+            setUpViewHolder(airHeadViewHolder);
         }
 
     }
-
-    /**
-     * an abstract method to set up different header
-     * @param holder use for setting up the views in header
-     */
-    public abstract void setUpViewHolder(SongHeadViewHolder holder);
 
     public class SongItemViewHolder extends AirItemViewHolder {
         ImageView imageView;
@@ -80,6 +102,7 @@ public abstract class SongAdapter extends AirAdapter<Song> {
         TextView durationText;
         Toolbar listItem;
         TextView trackNum;
+        ImageView playStateImage;
 
         public SongItemViewHolder(View itemView) {
             super(itemView);
@@ -89,13 +112,7 @@ public abstract class SongAdapter extends AirAdapter<Song> {
             durationText = (TextView) itemView.findViewById(R.id.song_duration);
             listItem = (Toolbar) itemView.findViewById(R.id.song_item);
             trackNum = (TextView) itemView.findViewById(R.id.song_track_number);
-        }
-    }
-
-    public class SongHeadViewHolder extends AirHeadViewHolder {
-
-        public SongHeadViewHolder(View itemView) {
-            super(itemView);
+            playStateImage = (ImageView) itemView.findViewById(R.id.playing_state);
         }
     }
 
@@ -110,5 +127,11 @@ public abstract class SongAdapter extends AirAdapter<Song> {
         }
         return String.format("%02d:%02d", min, sec);
     }
+
+    /**
+     * an abstract method to set up different header
+     * @param holder use for setting up the views in header
+     */
+    public abstract void setUpViewHolder(AirAdapter.AirHeadViewHolder holder);
 }
 

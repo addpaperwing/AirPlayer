@@ -1,6 +1,7 @@
 package com.airplayer.fragment;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -39,15 +40,14 @@ public class SongListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinder = ((AirMainActivity) getParentFragment().getActivity()).getPlayerControlBinder();
+        // get data base and load a list from it
+        mList = QueryUtils.loadSongList(getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
-
-        // get data base and load a list from it
-        mList = QueryUtils.loadSongList(getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE);
 
         //find a recycler view and set it up
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -63,10 +63,10 @@ public class SongListFragment extends Fragment {
             @Override
             public void headerClicked(View view) {
                 mBinder.playMusic((int) Math.round(Math.random() * (mList.size() - 1)), mList);
+                mBinder.setShuffle(true);
             }
         });
         mRecyclerView.setAdapter(adapter);
-
         return rootView;
     }
 
@@ -76,22 +76,22 @@ public class SongListFragment extends Fragment {
         }
 
         @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+        public SongListHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new SongListHeadViewHolder(getLayoutInflater()
                     .inflate(R.layout.recycler_item_song, parent, false));
         }
 
         @Override
-        public void setUpViewHolder(SongHeadViewHolder holder) {
+        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             SongListHeadViewHolder header = (SongListHeadViewHolder) holder;
-            header.image.setImageResource(android.R.drawable.ic_menu_share);
+            header.image.setImageResource(R.drawable.btn_shuffle_on);
             header.title.setText("Shuffle All");
             header.title.setTextColor(getResources().getColor(R.color.air_accent_color));
             header.desc.setText(mList.size() + " songs");
             header.desc.setTextColor(getResources().getColor(R.color.air_accent_color));
         }
 
-        private class SongListHeadViewHolder extends SongAdapter.SongHeadViewHolder {
+        private class SongListHeadViewHolder extends AirAdapter<Song>.AirHeadViewHolder {
 
             private ImageView image;
             private TextView title;

@@ -15,6 +15,24 @@ public class Song implements Serializable {
     private int duration;
     private String path;
     private int track;
+    private boolean play;
+    private boolean pause;
+
+    public boolean isPause() {
+        return pause;
+    }
+
+    public void setPause(boolean pause) {
+        this.pause = pause;
+    }
+
+    public boolean isPlay() {
+        return play;
+    }
+
+    public void setPlay(boolean play) {
+        this.play = play;
+    }
 
     public int getId() {
         return id;

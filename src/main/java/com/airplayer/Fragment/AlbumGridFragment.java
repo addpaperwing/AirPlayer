@@ -72,18 +72,17 @@ public class AlbumGridFragment extends Fragment {
     }
 
     private class AlbumGridAdapter extends AlbumAdapter {
+
         public AlbumGridAdapter(Context context, List<Album> list) {
             super(context, list);
         }
 
         @Override
-        public void setUpViewHolder(AlbumHeaderViewHolder holder) {
-
-        }
+        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) { }
 
         @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new AlbumHeaderViewHolder(getLayoutInflater()
+        public AirAdapter<Album>.AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new AirAdapter<Album>.AirHeadViewHolder(getLayoutInflater()
                     .inflate(R.layout.recycler_header_empty, parent, false));
         }
     }

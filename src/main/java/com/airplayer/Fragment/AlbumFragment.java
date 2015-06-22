@@ -99,7 +99,7 @@ public class AlbumFragment extends Fragment {
         }
 
         @Override
-        public void setUpViewHolder(SongHeadViewHolder holder) {
+        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             AlbumSongHeader header = (AlbumSongHeader) holder;
             header.image.setImageBitmap(ImageUtils.getListItemThumbnail(getActivity(), mAlbum.getAlbumArtPath()));
             header.title.setText(mAlbum.getTitle());
@@ -113,7 +113,7 @@ public class AlbumFragment extends Fragment {
                     .inflate(R.layout.recycler_header_image, parent, false));
         }
 
-        private class AlbumSongHeader extends SongAdapter.SongHeadViewHolder {
+        private class AlbumSongHeader extends AirAdapter<Song>.AirHeadViewHolder {
 
             private ImageView image;
             private TextView title;

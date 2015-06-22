@@ -16,6 +16,7 @@
     <dimen name="dp_120_560">120dp</dimen>
     <dimen name="dp_160_560">160dp</dimen>
     <dimen name="dp_192_560">192dp</dimen>
+    <dimen name="dp_256_560">256dp</dimen>
 
     <dimen name="drawer_width">320dp</dimen>
 </resources>

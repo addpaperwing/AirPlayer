@@ -11,7 +11,7 @@ import com.airplayer.service.PlayMusicService;
  */
 public class AReceiver extends BroadcastReceiver {
 
-    public static final String START_TO_PLAY_MUSIC = "com.airplayer.START_TO_PLAY_A_NEW_SONG";
+    public static final String START_TO_PLAY_MUSIC = "com.airplayer.PLAY_STATE_CHANGE";
 
     @Override
     public void onReceive(Context context, Intent intent) {

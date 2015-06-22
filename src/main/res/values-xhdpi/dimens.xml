@@ -16,9 +16,7 @@
     <dimen name="dp_120_560">60dp</dimen>
     <dimen name="dp_160_560">80dp</dimen>
     <dimen name="dp_192_560">96dp</dimen>
+    <dimen name="dp_256_560">128dp</dimen>
 
     <dimen name="drawer_width">160dp</dimen>
-
-    <integer name="padding_action_bar">80</integer>
-    <integer name="sliding_panel_height">128</integer>
 </resources>

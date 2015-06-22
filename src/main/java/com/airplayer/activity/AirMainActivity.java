@@ -16,7 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.Gravity;
+import android.view.View;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
@@ -49,13 +50,15 @@ public class AirMainActivity extends AppCompatActivity
         public void onServiceConnected(ComponentName name, IBinder service) {
             playerControlBinder = (PlayMusicService.PlayerControlBinder) service;
             // set up bottom sliding fragment when service is connected
+            mPlayMusicFragment = new PlayMusicFragment();
             mFragmentManager.beginTransaction()
                     .add(R.id.sliding_fragment_container,
-                            new PlayMusicFragment()).commit();
-
+                            mPlayMusicFragment).commit();
             // set sliding up panel invisible when activity create
-            mSlidingUpPanelLayout.setTouchEnabled(false);
-            mSlidingUpPanelLayout.setPanelHeight(0);
+            if (!playerControlBinder.isPlaying()) {
+                mSlidingUpPanelLayout.setTouchEnabled(false);
+                mSlidingUpPanelLayout.setPanelHeight(0);
+            }
             Log.d(TAG, "service has connected");
         }
 
@@ -65,11 +68,12 @@ public class AirMainActivity extends AppCompatActivity
         }
     };
 
-    /* others */
-    private FragmentManager mFragmentManager;
-
     /* receiver */
     private PlayerStateReceiver mPlayerStateReceiver;
+
+    /* others */
+    private FragmentManager mFragmentManager;
+    private PlayMusicFragment mPlayMusicFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,22 +88,47 @@ public class AirMainActivity extends AppCompatActivity
 
         // get sliding up panel
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
+        mSlidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+            @Override
+            public void onPanelSlide(View view, float v) { }
+
+            @Override
+            public void onPanelCollapsed(View view) {
+                Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
+                toolbar.getMenu().clear();
+                toolbar.inflateMenu(R.menu.menu_sliding_panel_down_menu);
+                Log.d(TAG, "collapsed");
+            }
+
+            @Override
+            public void onPanelExpanded(View view) {
+                Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
+                toolbar.getMenu().clear();
+                toolbar.inflateMenu(R.menu.menu_sliding_panel_up_menu);
+            }
+
+            @Override
+            public void onPanelAnchored(View view) { }
+
+            @Override
+            public void onPanelHidden(View view) { }
+        });
 
         // get fragment manager
         mFragmentManager = getSupportFragmentManager();
 
         // set up tool bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mToolbar.inflateMenu(R.menu.menu_main);
-        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.action_testing) {
-
-                }
-                return true;
-            }
-        });
+//        mToolbar.inflateMenu(R.menu.menu_main);
+//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                if (item.getItemId() == R.id.action_testing) {
+//
+//                }
+//                return true;
+//            }
+//        });
 
         // set up navigation drawer fragment
         mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
@@ -109,7 +138,7 @@ public class AirMainActivity extends AppCompatActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         mPlayerStateReceiver = new PlayerStateReceiver();
-        IntentFilter filter = new IntentFilter(PlayMusicService.START_TO_PLAY_A_NEW_SONG);
+        IntentFilter filter = new IntentFilter(PlayMusicService.PLAY_STATE_CHANGE);
         registerReceiver(mPlayerStateReceiver, filter);
     }
 
@@ -118,6 +147,23 @@ public class AirMainActivity extends AppCompatActivity
         unbindService(connection);                  /* unbind service when destroy activity */
         unregisterReceiver(mPlayerStateReceiver);   /* unregister receiver when destroy activity */
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (mNavigationDrawFragment.getDrawerLayout().isDrawerOpen(Gravity.START)) {
+            mNavigationDrawFragment.getDrawerLayout().closeDrawer(Gravity.START);
+        } else if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+            if (mPlayMusicFragment.isPlayListShow()) {
+                super.onBackPressed();
+                mPlayMusicFragment.setIsPlayListShow(false);
+            } else {
+                mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**
@@ -153,8 +199,14 @@ public class AirMainActivity extends AppCompatActivity
     public class PlayerStateReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mSlidingUpPanelLayout.setTouchEnabled(true);
-            mSlidingUpPanelLayout.setPanelHeight(R.integer.sliding_panel_height);
+            int playState = intent.getIntExtra(PlayMusicService.PLAY_STATE_KEY, -1);
+            if (playState == PlayMusicService.PLAY_STATE_PLAY) {
+                mSlidingUpPanelLayout.setTouchEnabled(true);
+                mSlidingUpPanelLayout.setPanelHeight(getResources().getInteger(R.integer.sliding_panel_height));
+            } else if (playState == PlayMusicService.PLAY_STATE_STOP) {
+                mSlidingUpPanelLayout.setTouchEnabled(false);
+                mSlidingUpPanelLayout.setPanelHeight(0);
+            }
         }
     }
 
@@ -166,7 +218,7 @@ public class AirMainActivity extends AppCompatActivity
     private Fragment switchFragment(int position) {
         switch (position) {
             case 0:
-                mToolbar.setTitle("Now Playing");
+                mToolbar.setTitle("Play Now");
                 if (Build.VERSION.SDK_INT >= 21) {
                     mToolbar.setElevation(16);
                 }

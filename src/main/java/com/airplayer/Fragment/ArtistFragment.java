@@ -103,7 +103,7 @@ public class ArtistFragment extends Fragment {
         }
 
         @Override
-        public void setUpViewHolder(AlbumHeaderViewHolder holder) {
+        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
             header.name.setText(mArtist.getName());
             header.albumCount.setText(mAlbumList.size() + " albums");
@@ -115,7 +115,7 @@ public class ArtistFragment extends Fragment {
                     .inflate(R.layout.recycler_header_image, parent, false));
         }
 
-        private class ArtistAlbumHeader extends AlbumAdapter.AlbumHeaderViewHolder {
+        private class ArtistAlbumHeader extends AirAdapter<Album>.AirHeadViewHolder {
 
             private ImageView image;
             private TextView name;

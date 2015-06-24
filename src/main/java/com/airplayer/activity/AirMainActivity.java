@@ -21,7 +21,7 @@ import android.view.View;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
-import com.airplayer.fragment.NowPlayingFragment;
+import com.airplayer.fragment.PlayNowFragment;
 import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.service.PlayMusicService;
@@ -96,8 +96,11 @@ public class AirMainActivity extends AppCompatActivity
             public void onPanelCollapsed(View view) {
                 Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
                 toolbar.getMenu().clear();
-                toolbar.inflateMenu(R.menu.menu_sliding_panel_down_menu);
-                Log.d(TAG, "collapsed");
+                if (playerControlBinder.isPause()) {
+                    toolbar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
+                } else {
+                    toolbar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
+                }
             }
 
             @Override
@@ -119,16 +122,6 @@ public class AirMainActivity extends AppCompatActivity
 
         // set up tool bar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        mToolbar.inflateMenu(R.menu.menu_main);
-//        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                if (item.getItemId() == R.id.action_testing) {
-//
-//                }
-//                return true;
-//            }
-//        });
 
         // set up navigation drawer fragment
         mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
@@ -218,13 +211,13 @@ public class AirMainActivity extends AppCompatActivity
     private Fragment switchFragment(int position) {
         switch (position) {
             case 0:
-                mToolbar.setTitle("Play Now");
+                mToolbar.setTitle(getString(R.string.title_play_now));
                 if (Build.VERSION.SDK_INT >= 21) {
                     mToolbar.setElevation(16);
                 }
-                return new NowPlayingFragment();
+                return new PlayNowFragment();
             case 1:
-                mToolbar.setTitle("My Library");
+                mToolbar.setTitle(getString(R.string.title_my_library));
                 if (Build.VERSION.SDK_INT >= 21) {
                     mToolbar.setElevation(0);
                 }

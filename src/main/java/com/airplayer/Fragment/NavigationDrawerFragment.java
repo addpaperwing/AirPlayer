@@ -100,7 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
                 getActivity(),
                 R.layout.list_item_navigation_drawer,
                 R.id.list_item_text,
-                new String[]{"Play Now", "My Library"}
+                new String[]{ getString(R.string.title_play_now), getString(R.string.title_my_library)}
         ));
 
         return rootView;

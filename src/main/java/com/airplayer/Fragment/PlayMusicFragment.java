@@ -27,6 +27,7 @@ import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.ImageUtils;
 import com.airplayer.util.QueryUtils;
+import com.airplayer.util.Utils;
 
 /**
  * Created by ZiyiTsang on 15/6/10.
@@ -36,6 +37,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     public static final String TAG = "PlayMusicFragment";
 
     public static final int HANDLE_SEEK_BAR_PROGRESS = 0;
+    public static final int HANDLE_TIMER = 1;
 
     private PlayMusicService.PlayerControlBinder mBinder;
 
@@ -66,23 +68,26 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     private ImageView mShuffleList;
 
 
-    private boolean shuffle = false;
-
+    // control values
+    // control the play list button actions
     private boolean isPlayListShow = false;
-
     public boolean isPlayListShow() {
         return isPlayListShow;
     }
-
     public void setIsPlayListShow(boolean isPlayListShow) {
         this.isPlayListShow = isPlayListShow;
     }
 
+    // control shuffle button actions and display
+    private boolean shuffle = false;
 
+    // control loop button action and display
     private int mLoopMode = 0;
 
+    // receiver
     private GetSongReceiver receiver;
 
+    // handle msg about seek bar and play timer
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -90,6 +95,8 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
                 case HANDLE_SEEK_BAR_PROGRESS:
                     mSeekBar.setProgress(Math.round((float) msg.obj));
                     break;
+                case HANDLE_TIMER:
+                    mPlayingTimeTextView.setText(Utils.getFormatTime(Math.round((float) msg.obj)));
                 default:
                     break;
             }
@@ -100,6 +107,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
+        mSong = mBinder.getSongPlaying();
         receiver = new GetSongReceiver();
         IntentFilter filter = new IntentFilter(PlayMusicService.PLAY_STATE_CHANGE);
         getActivity().registerReceiver(receiver, filter);
@@ -107,22 +115,30 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
         new Thread(new Runnable() {
             @Override
             public void run() {
+                int count = 0;
                 while (true) {
                     if (mBinder.isPlaying()) {
                         if (!mBinder.isPause()) {
-                            Message msg = new Message();
-                            msg.what = HANDLE_SEEK_BAR_PROGRESS;
-                            msg.obj = mBinder.getProgress() * 1000;
-                            handler.sendMessage(msg);
+                            Message seekBarMsg = new Message();
+                            seekBarMsg.what = HANDLE_SEEK_BAR_PROGRESS;
+                            seekBarMsg.obj = mBinder.getProgress() * 1000;
+                            handler.sendMessage(seekBarMsg);
+                            count+= 1000;
+                            if (count % 1000 == 0) {
+                                Message timerMsg = new Message();
+                                timerMsg.what = HANDLE_TIMER;
+                                timerMsg.obj = mBinder.getProgress() * mBinder.getSongPlaying().getDuration();
+                                handler.sendMessage(timerMsg);
+                            }
                         }
-                        sleepThread();
+                        sleepThread(100);
                     }
                 }
             }
 
-            private void sleepThread() {
+            private void sleepThread(int ms) {
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(ms);
                 } catch (InterruptedException e) {
                     Log.e(TAG, "Fail to sleep thread " + e);
                 }
@@ -137,7 +153,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // head tool bar section
         mTopToolBar = (Toolbar) rootView.findViewById(R.id.sliding_layout_top_tool_bar);
-        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_menu);
+        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
         mTopToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -156,6 +172,13 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
                         break;
                     case R.id.action_sliding_panel_top_play:
                         playButtonAction();
+                        mTopToolBar.getMenu().clear();
+                        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
+                        break;
+                    case R.id.action_sliding_panel_top_pause:
+                        playButtonAction();
+                        mTopToolBar.getMenu().clear();
+                        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
                 }
                 return false;
             }
@@ -166,7 +189,8 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // center contain section
         mCenterAlbumArt = (ImageView) rootView.findViewById(R.id.sliding_panel_center_album_art);
-        mCenterAlbumArt.setImageResource(R.drawable.ic_default_art);
+        mPlayingTimeTextView = (TextView) rootView.findViewById(R.id.sliding_layout_time_progress);
+        mDurationTextView = (TextView) rootView.findViewById(R.id.sliding_layout_duration);
 
         // foot player control section
         mSeekBar = (SeekBar) rootView.findViewById(R.id.sliding_layout_bottom_seek_bar);
@@ -222,6 +246,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         @Override
         public void onReceive(Context context, Intent intent) {
+            mSong = mBinder.getSongPlaying();
             updateUI();
         }
     }
@@ -259,7 +284,6 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     }
 
     private void updateUI() {
-        mSong = mBinder.getSongPlaying();
         Bitmap nowPlaySongArt = ImageUtils.getListItemThumbnail(
                 getActivity(), QueryUtils.getAlbumArtPath(getActivity(), mSong.getAlbum()));
 
@@ -270,6 +294,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // background and center image section
         mCenterAlbumArt.setImageBitmap(nowPlaySongArt);
+        mDurationTextView.setText(Utils.getFormatTime(mSong.getDuration()));
 
         // foot player control section
         if (mBinder.getPlayMode() == PlayMusicService.SINGLE_SONG_LOOP_MODE) {

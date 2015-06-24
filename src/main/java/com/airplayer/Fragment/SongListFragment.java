@@ -23,6 +23,7 @@ import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.QueryUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,8 +63,16 @@ public class SongListFragment extends Fragment {
 
             @Override
             public void headerClicked(View view) {
-                mBinder.playMusic((int) Math.round(Math.random() * (mList.size() - 1)), mList);
-                mBinder.setShuffle(true);
+                List<Song> listOrdered = QueryUtils.loadSongList(
+                        getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE
+                );
+                ArrayList<Song> listShuffled = new ArrayList<Song>();
+                do {
+                    int shuffle = (int) Math.round(Math.random() * (listOrdered.size() - 1));
+                    listShuffled.add(listOrdered.get(shuffle));
+                    listOrdered.remove(shuffle);
+                } while (listOrdered.size() > 0);
+                mBinder.playMusic(0, listShuffled);
             }
         });
         mRecyclerView.setAdapter(adapter);
@@ -85,6 +94,7 @@ public class SongListFragment extends Fragment {
         public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             SongListHeadViewHolder header = (SongListHeadViewHolder) holder;
             header.image.setImageResource(R.drawable.btn_shuffle_on);
+            header.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             header.title.setText("Shuffle All");
             header.title.setTextColor(getResources().getColor(R.color.air_accent_color));
             header.desc.setText(mList.size() + " songs");

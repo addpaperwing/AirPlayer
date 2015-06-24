@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.model.Song;
+import com.airplayer.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -55,7 +56,7 @@ public abstract class SongAdapter extends AirAdapter<Song> {
 
             songViewItemHolder.titleText.setText(getList().get(position - 1).getTitle());
             songViewItemHolder.artistText.setText(getList().get(position - 1).getArtist());
-            songViewItemHolder.durationText.setText(formatTime(getList().get(position - 1).getDuration()));
+            songViewItemHolder.durationText.setText(Utils.getFormatTime(getList().get(position - 1).getDuration()));
 
             if (showImage) {
                 Picasso.with(getContext())
@@ -115,23 +116,5 @@ public abstract class SongAdapter extends AirAdapter<Song> {
             playStateImage = (ImageView) itemView.findViewById(R.id.playing_state);
         }
     }
-
-    private String formatTime(int duration) {
-        int min = 0;
-        int sec;
-
-        sec = duration / 1000;
-        if(sec > 60){
-            min = sec / 60;
-            sec = sec % 60;
-        }
-        return String.format("%02d:%02d", min, sec);
-    }
-
-    /**
-     * an abstract method to set up different header
-     * @param holder use for setting up the views in header
-     */
-    public abstract void setUpViewHolder(AirAdapter.AirHeadViewHolder holder);
 }
 

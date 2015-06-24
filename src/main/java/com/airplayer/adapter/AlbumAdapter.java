@@ -47,12 +47,6 @@ public abstract class AlbumAdapter extends AirAdapter<Album> {
         }
     }
 
-    /**
-     * an abstract method to set up different header
-     * @param holder use for setting up the views in header
-     */
-    public abstract void setUpViewHolder(AirAdapter.AirHeadViewHolder holder);
-
     public class AlbumItemViewHolder extends AirItemViewHolder {
         ImageView imageView;
         TextView textView;

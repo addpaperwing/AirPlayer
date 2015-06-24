@@ -100,6 +100,11 @@ public class ArtistGridFragment extends Fragment {
             }
         }
 
+        @Override
+        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
+
+        }
+
         public class ArtistItemViewHolder extends AirItemViewHolder {
             ImageView imageView;
             TextView textView;

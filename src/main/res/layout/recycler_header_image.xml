@@ -27,7 +27,7 @@
             <TextView
                 android:id="@+id/header_title"
                 android:textSize="18sp"
-                android:textColor="@color/air_dark_primary_color"
+                android:textColor="@color/air_primary_text"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_marginLeft="@dimen/dp_8_560"
@@ -41,7 +41,7 @@
             <TextView
                 android:id="@+id/header_sub_title"
                 android:textSize="16sp"
-                android:textColor="@color/air_dark_primary_color"
+                android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_marginLeft="@dimen/dp_8_560"
@@ -53,7 +53,7 @@
 
             <TextView
                 android:id="@+id/header_desc"
-                android:textColor="@color/air_primary_color"
+                android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_marginLeft="@dimen/dp_8_560"

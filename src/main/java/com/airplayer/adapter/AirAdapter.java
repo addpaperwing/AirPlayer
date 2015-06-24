@@ -166,8 +166,15 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+
     /**
-     * interface to package click event
+     * an abstract method to set up different header
+     * @param holder use for setting up the views in header
+     */
+    public abstract void setUpViewHolder(AirAdapter.AirHeadViewHolder holder);
+
+    /**
+     * interface of click event
      */
     public interface ClickListener {
         void itemClicked(View view, int position);

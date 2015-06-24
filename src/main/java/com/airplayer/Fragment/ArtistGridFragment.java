@@ -17,6 +17,7 @@ import com.airplayer.R;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.util.QueryUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -93,17 +94,15 @@ public class ArtistGridFragment extends Fragment {
             if (holder instanceof ArtistItemViewHolder) {
                 ArtistItemViewHolder artistViewHolder = (ArtistItemViewHolder) holder;
                 artistViewHolder.textView.setText(getList().get(i - 1).getName());
-            }
-
-            if (holder instanceof AirAdapter.AirHeadViewHolder) {
-
+                String artistImagePath = getList().get(i - 1).getImagePath();
+                if (!artistImagePath.equals("")) {
+                    Picasso.with(getContext()).load(artistImagePath).into(artistViewHolder.imageView);
+                }
             }
         }
 
         @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
-
-        }
+        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) { }
 
         public class ArtistItemViewHolder extends AirItemViewHolder {
             ImageView imageView;

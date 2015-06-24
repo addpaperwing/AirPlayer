@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class Artist implements Serializable {
 
     private String name;
-    private String imagePath;
+    private String imagePath = "";
 
     public String getName() {
         return name;

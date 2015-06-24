@@ -125,18 +125,18 @@ public class QueryUtils {
         List<Album> list = new ArrayList<>();
         String[] recentAlbums = new String[] { "", "", "", "", "", ""};
         int p = 0;
-        Cursor cursor = context.getContentResolver().query(
+        Cursor cursor1 = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[] {
                         MediaStore.Audio.Media.IS_MUSIC,
                         MediaStore.Audio.Media.ALBUM,
                 },
                 null, null, MediaStore.Audio.Media.DATE_ADDED + " desc");
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
+        if (cursor1 != null) {
+            if (cursor1.moveToFirst()) {
                 do {
-                    if (cursor.getInt(0) == 1) {
-                        String albumName = cursor.getString(1);
+                    if (cursor1.getInt(0) == 1) {
+                        String albumName = cursor1.getString(1);
                         boolean have = false;
                         for (int i = 0; i < 6; i++) {
                             if (recentAlbums[i].equals(albumName)) {
@@ -149,16 +149,14 @@ public class QueryUtils {
                         }
                         if (p > 5) break;
                     }
-                } while (cursor.moveToNext());
+                } while (cursor1.moveToNext());
             }
-            cursor.close();
+            cursor1.close();
             Log.d("test", recentAlbums[0] + ", " + recentAlbums[1] + ", " + recentAlbums[2] + ", "
                     + recentAlbums[3] + ", " + recentAlbums[4] + ", " + recentAlbums[5]);
         }
-
-
         for (int i = 0; i < 6; i++) {
-            cursor = context.getContentResolver().query(
+            Cursor cursor2 = context.getContentResolver().query(
                     MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                     new String[]{
                             MediaStore.Audio.Albums._ID,
@@ -169,19 +167,19 @@ public class QueryUtils {
                     },
                     "album = ?", new String[]{recentAlbums[i]}, null
             );
-            if (cursor != null) {
-                cursor.moveToFirst();
+            if (cursor2 != null) {
+                cursor2.moveToFirst();
                 Album album = new Album();
                 album.setTitle(recentAlbums[i]);
-                album.setId(cursor.getInt(0));
-                album.setAlbumArtist(cursor.getString(1));
-                album.setYear(cursor.getString(2));
-                album.setAlbumArtPath(cursor.getString(3));
-                album.setSongsHave(cursor.getInt(4));
+                album.setId(cursor2.getInt(0));
+                album.setAlbumArtist(cursor2.getString(1));
+                album.setYear(cursor2.getString(2));
+                album.setAlbumArtPath(cursor2.getString(3));
+                album.setSongsHave(cursor2.getInt(4));
                 list.add(album);
+                cursor2.close();
             }
         }
-        if (cursor != null) cursor.close();
         return list;
     }
 }

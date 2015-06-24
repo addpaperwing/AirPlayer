@@ -7,12 +7,9 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/sliding_panel_inside_fragment_container"
         android:clickable="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/sliding_layout_top_tool_bar"
-        >
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/sliding_panel_center_album_art"
@@ -20,8 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_default_art"
-            />
+            android:src="@drawable/ic_default_art" />
 
         <TextView
             android:id="@+id/sliding_layout_duration"
@@ -41,11 +37,18 @@
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/sliding_panel_inside_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/sliding_layout_top_tool_bar" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/sliding_layout_top_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/air_text_and_icon">
+        android:background="@color/air_text_color_alpha"
+        android:elevation="@dimen/dp_4_560">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -70,8 +73,7 @@
                 android:layout_toRightOf="@+id/sliding_layout_title_image"
                 android:layout_toEndOf="@+id/sliding_layout_title_image"
                 android:layout_marginRight="@dimen/dp_120_560"
-                android:layout_marginEnd="@dimen/dp_120_560"
-                >
+                android:layout_marginEnd="@dimen/dp_120_560">
 
                 <TextView
                     android:id="@+id/sliding_layout_title_song_title"
@@ -128,8 +130,7 @@
                         android:layout_marginEnd="@dimen/dp_48_560"
                         android:layout_marginStart="@dimen/dp_8_560"
                         android:layout_marginLeft="@dimen/dp_8_560"
-                        android:background="@drawable/custom_selector"
-                        />
+                        android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_previous_button"
@@ -138,20 +139,18 @@
                     android:layout_height="@dimen/dp_40_560"
                     android:layout_marginRight="@dimen/dp_24_560"
                     android:layout_marginEnd="@dimen/dp_24_560"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_play_and_pause_button"
-                    android:src="@drawable/selector_play_pause_button"
+                    android:src="@drawable/btn_play"
                     android:layout_width="@dimen/dp_48_560"
                     android:layout_height="@dimen/dp_48_560"
                     android:layout_marginLeft="@dimen/dp_16_560"
                     android:layout_marginRight="@dimen/dp_16_560"
                     android:layout_marginStart="@dimen/dp_16_560"
                     android:layout_marginEnd="@dimen/dp_16_560"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_next_button"
@@ -160,8 +159,7 @@
                     android:layout_height="@dimen/dp_40_560"
                     android:layout_marginLeft="@dimen/dp_24_560"
                     android:layout_marginStart="@dimen/dp_24_560"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
                 <ImageView
                     android:id="@+id/sliding_layout_shuffle_play"
@@ -172,8 +170,7 @@
                     android:layout_marginStart="@dimen/dp_48_560"
                     android:layout_marginRight="@dimen/dp_8_560"
                     android:layout_marginEnd="@dimen/dp_8_560"
-                    android:background="@drawable/custom_selector"
-                    />
+                    android:background="@drawable/custom_selector" />
 
              </LinearLayout>
 

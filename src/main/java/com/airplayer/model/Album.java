@@ -49,6 +49,9 @@ public class Album implements Serializable{
     }
 
     public String getAlbumArtPath() {
+        if (albumArtPath == null) {
+            return "";
+        }
         return albumArtPath;
     }
 

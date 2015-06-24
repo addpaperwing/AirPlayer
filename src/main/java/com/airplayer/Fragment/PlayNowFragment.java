@@ -96,7 +96,7 @@ public class PlayNowFragment extends Fragment {
             for (int i = 0; i < 6; i++) {
                 numOfSongs += getList().get(i).getSongsHave();
             }
-            playNowHeadViewHolder.subTitle.setText(getList().size() + " albums" + numOfSongs +" songs");
+            playNowHeadViewHolder.subTitle.setText(getList().size() + " albums " + numOfSongs +" songs");
             playNowHeadViewHolder.desc.setText("click to shuffle all recent added");
         }
 

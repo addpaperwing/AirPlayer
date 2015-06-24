@@ -1,5 +1,6 @@
 package com.airplayer.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -7,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,6 +105,7 @@ public class ArtistFragment extends Fragment {
         @Override
         public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
+            header.image.setImageBitmap(ImageUtils.getBitmap((Activity) getContext(), mArtist.getImagePath()));
             header.name.setText(mArtist.getName());
             header.albumCount.setText(mAlbumList.size() + " albums");
         }

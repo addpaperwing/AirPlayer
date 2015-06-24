@@ -24,4 +24,5 @@
 
     <color name="air_dark_primary_color_alpha">#DDD32F2F</color>
     <color name="air_text_color_alpha">#DDFFFFFF</color>
+    <color name="air_check_color_alpha">#AA03A9F4</color>
 </resources>

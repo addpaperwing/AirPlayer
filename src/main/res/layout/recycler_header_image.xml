@@ -27,6 +27,7 @@
             <TextView
                 android:id="@+id/header_title"
                 android:textSize="18sp"
+                android:textStyle="bold"
                 android:textColor="@color/air_primary_text"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -41,6 +42,7 @@
             <TextView
                 android:id="@+id/header_sub_title"
                 android:textSize="16sp"
+                android:textStyle="italic"
                 android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -53,6 +55,7 @@
 
             <TextView
                 android:id="@+id/header_desc"
+                android:textStyle="normal"
                 android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"

@@ -64,7 +64,9 @@ public abstract class SongAdapter extends AirAdapter<Song> {
                         .into(songViewItemHolder.imageView);
             } else {
                 int track = getList().get(position - 1).getTrack();
-                songViewItemHolder.trackNum.setText(track % 1000 + "");
+                if (track != 0) {
+                    songViewItemHolder.trackNum.setText(track % 1000 + "");
+                }
             }
 
             if (isPlayList) {
@@ -77,11 +79,14 @@ public abstract class SongAdapter extends AirAdapter<Song> {
                 }
                 songViewItemHolder.playStateImage.setImageDrawable(animation);
 
-                if (getList().get(position - 1).isPlay()) {
-                    songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
-                    if (animation != null) animation.start();
-                } else if (getList().get(position - 1).isPause()){
-                    songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                if (getList().get(position - 1).isPlay() ) {
+                    if (getList().get(position - 1).isPause()) {
+                        songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                        if (animation != null) animation.stop();
+                    } else {
+                        songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                        if (animation != null) animation.start();
+                    }
                 } else {
                     songViewItemHolder.playStateImage.setVisibility(View.INVISIBLE);
                 }

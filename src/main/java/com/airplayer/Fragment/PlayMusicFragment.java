@@ -153,7 +153,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // head tool bar section
         mTopToolBar = (Toolbar) rootView.findViewById(R.id.sliding_layout_top_tool_bar);
-        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
+        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
         mTopToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -284,7 +284,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     }
 
     private void updateUI() {
-        Bitmap nowPlaySongArt = ImageUtils.getListItemThumbnail(
+        Bitmap nowPlaySongArt = ImageUtils.getBitmap(
                 getActivity(), QueryUtils.getAlbumArtPath(getActivity(), mSong.getAlbum()));
 
         // head tool bar section

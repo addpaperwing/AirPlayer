@@ -97,9 +97,9 @@ public class AirMainActivity extends AppCompatActivity
                 Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
                 toolbar.getMenu().clear();
                 if (playerControlBinder.isPause()) {
-                    toolbar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
-                } else {
                     toolbar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
+                } else {
+                    toolbar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
                 }
             }
 
@@ -153,6 +153,14 @@ public class AirMainActivity extends AppCompatActivity
                 mPlayMusicFragment.setIsPlayListShow(false);
             } else {
                 mSlidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        } else if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED){
+            if (mPlayMusicFragment.isPlayListShow()) {
+                super.onBackPressed();
+                super.onBackPressed();
+                mPlayMusicFragment.setIsPlayListShow(false);
+            } else {
+                super.onBackPressed();
             }
         } else {
             super.onBackPressed();

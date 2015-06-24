@@ -56,7 +56,17 @@ public class PlayMusicService extends Service {
             public void onCompletion(MediaPlayer mp) {
                 if (mPlayMode == SINGLE_SONG_LOOP_MODE) {
                     Log.d(TAG, "song repeated");
-                } else {
+                } else if (mPlayMode == PLAY_LIST_MODE) {
+                    previousPosition = mPosition;
+                    if (shuffle) {
+                        mPosition = (int) Math.round(Math.random() * (mPlayList.size() - 1));
+                    } else {
+                        mPosition++;
+                        if (mPosition >= mPlayList.size()) {
+                            stop();
+                        }
+                    }
+                } else if (mPlayMode == LOOP_LIST_MODE){
                     nextPosition();
                 }
                 play();
@@ -94,6 +104,10 @@ public class PlayMusicService extends Service {
                 songPlaying.setPause(false);
                 mPlayer.start();
                 pause = false;
+                Intent intent = new Intent(PLAY_STATE_CHANGE);
+                intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PLAY);
+                sendBroadcast(intent);
+                Log.d(TAG, "player is resumed");
             }
         }
 
@@ -167,9 +181,14 @@ public class PlayMusicService extends Service {
 
     private void play() {
         try {
-            if (songPlaying != null) songPlaying.setPlay(false);
+            if (songPlaying != null) {
+                songPlaying.setPause(false);
+                songPlaying.setPlay(false);
+            }
             songPlaying = mPlayList.get(mPosition);
             songPlaying.setPlay(true);
+            songPlaying.setPause(false);
+            pause = false;
             mPlayer.reset();
             mPlayer.setDataSource(songPlaying.getPath());
             mPlayer.prepare();

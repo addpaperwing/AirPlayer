@@ -94,9 +94,9 @@ public class PlayListFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             int playState = intent.getIntExtra(PlayMusicService.PLAY_STATE_KEY, -1);
             if (playState == PlayMusicService.PLAY_STATE_PLAY) {
-                mRecyclerView.scrollToPosition(mBinder.getPosition() + 1);
-                mAdapter.notifyDataSetChanged();
+                mRecyclerView.scrollToPosition(mBinder.getPosition() - 1);
             }
+            mAdapter.notifyDataSetChanged();
         }
     }
 }

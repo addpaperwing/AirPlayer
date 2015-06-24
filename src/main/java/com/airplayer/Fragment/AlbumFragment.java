@@ -1,16 +1,12 @@
 package com.airplayer.fragment;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.Size;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +22,6 @@ import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.ImageUtils;
 import com.airplayer.util.QueryUtils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -101,7 +96,7 @@ public class AlbumFragment extends Fragment {
         @Override
         public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             AlbumSongHeader header = (AlbumSongHeader) holder;
-            header.image.setImageBitmap(ImageUtils.getListItemThumbnail(getActivity(), mAlbum.getAlbumArtPath()));
+            header.image.setImageBitmap(ImageUtils.getBitmap(getActivity(), mAlbum.getAlbumArtPath()));
             header.title.setText(mAlbum.getTitle());
             header.subTitle.setText(mAlbum.getAlbumArtist());
             header.desc.setText(mAlbum.getYear() + " , " + mSongList.size() + " songs");

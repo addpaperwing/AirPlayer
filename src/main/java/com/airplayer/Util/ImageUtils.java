@@ -8,6 +8,8 @@ import android.graphics.Point;
 import android.util.Log;
 import android.view.Display;
 
+import com.airplayer.R;
+
 import java.io.FileNotFoundException;
 
 /**
@@ -15,8 +17,8 @@ import java.io.FileNotFoundException;
  */
 public class ImageUtils {
 
-    public static Bitmap getListItemThumbnail (Activity activity, String artPath) {
-        if (artPath != null && !(artPath.equals(""))) {
+    public static Bitmap getBitmap(Activity activity, String artPath) {
+        if (artPath != null) {
             try {
                 Display display = activity.getWindowManager().getDefaultDisplay();
                 Point point = new Point();
@@ -25,7 +27,12 @@ public class ImageUtils {
                 options.inSampleSize = 1;
                 options.inJustDecodeBounds = false;
                 options.inDither = false;
-                Bitmap bm = BitmapFactory.decodeFile(artPath, options);
+                Bitmap bm;
+                if (artPath.equals("")) {
+                    bm = BitmapFactory.decodeResource(activity.getResources(), R.drawable.ic_default_art, options);
+                } else {
+                    bm = BitmapFactory.decodeFile(artPath, options);
+                }
 
                 float fWidth = bm.getWidth();
                 float fHeight = bm.getHeight();

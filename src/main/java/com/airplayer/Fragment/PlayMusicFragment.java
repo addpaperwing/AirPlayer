@@ -284,7 +284,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     }
 
     private void updateUI() {
-        Bitmap nowPlaySongArt = ImageUtils.getBitmap(
+        Bitmap nowPlaySongArt = ImageUtils.getBitmapWithResized(
                 getActivity(), QueryUtils.getAlbumArtPath(getActivity(), mSong.getAlbum()));
 
         // head tool bar section

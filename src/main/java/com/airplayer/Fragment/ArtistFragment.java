@@ -105,7 +105,7 @@ public class ArtistFragment extends Fragment {
         @Override
         public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
             ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
-            header.image.setImageBitmap(ImageUtils.getBitmap((Activity) getContext(), mArtist.getImagePath()));
+            header.image.setImageBitmap(ImageUtils.getBitmapWithResized((Activity) getContext(), mArtist.getImagePath()));
             header.name.setText(mArtist.getName());
             header.albumCount.setText(mAlbumList.size() + " albums");
         }

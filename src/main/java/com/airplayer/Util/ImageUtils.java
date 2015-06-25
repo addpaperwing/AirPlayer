@@ -1,6 +1,7 @@
 package com.airplayer.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -17,7 +18,7 @@ import java.io.FileNotFoundException;
  */
 public class ImageUtils {
 
-    public static Bitmap getBitmap(Activity activity, String artPath) {
+    public static Bitmap getBitmapWithResized(Activity activity, String artPath) {
         if (artPath != null) {
             try {
                 Display display = activity.getWindowManager().getDefaultDisplay();
@@ -47,6 +48,30 @@ public class ImageUtils {
                 int height = (int) fHeight;
 
                 bm = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, true);
+
+                return bm;
+            } catch (NullPointerException e) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    public static Bitmap getBitmapWithoutResized (Context context, String path) {
+        if (path != null) {
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 1;
+                options.inJustDecodeBounds = false;
+                options.inDither = false;
+
+                Bitmap bm;
+                if (path.equals("")) {
+                    bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_default_art, options);
+                } else {
+                    bm = BitmapFactory.decodeFile(path, options);
+                }
 
                 return bm;
             } catch (NullPointerException e) {

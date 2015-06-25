@@ -204,9 +204,20 @@ public class AirMainActivity extends AppCompatActivity
             if (playState == PlayMusicService.PLAY_STATE_PLAY) {
                 mSlidingUpPanelLayout.setTouchEnabled(true);
                 mSlidingUpPanelLayout.setPanelHeight(getResources().getInteger(R.integer.sliding_panel_height));
+                if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
+                    toolbar.getMenu().clear();
+                    toolbar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
+                }
             } else if (playState == PlayMusicService.PLAY_STATE_STOP) {
                 mSlidingUpPanelLayout.setTouchEnabled(false);
                 mSlidingUpPanelLayout.setPanelHeight(0);
+            } else if (playState == PlayMusicService.PLAY_STATE_PAUSE) {
+                if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
+                    toolbar.getMenu().clear();
+                    toolbar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
+                }
             }
         }
     }

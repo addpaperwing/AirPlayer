@@ -1,13 +1,17 @@
 package com.airplayer.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.airplayer.model.Song;
+import com.airplayer.notification.AirNotification;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,12 +24,18 @@ public class PlayMusicService extends Service {
 
     public static final String TAG = "PlayMusicService";
 
-    // broadcast action
+    // broadcast action and extra keys - value
     public static final String PLAY_STATE_CHANGE = "com.airplayer.PLAY_STATE_CHANGE";
     public static final String PLAY_STATE_KEY = "com.airplayer.PLAY_STATE_CHANGE.PLAY_STATE_KEY";
     public static final int PLAY_STATE_PLAY = 0;
     public static final int PLAY_STATE_PAUSE = 1;
     public static final int PLAY_STATE_STOP = 2;
+
+    public static final String NOTIFICATION_OPERATION = "com.airplayer.NOTIFICATION_OPERATION";
+    public static final String NOTIFICATION_OPERATION_KEY = "com.airplayer.NOTIFICATION_OPERATION_KEY";
+    public static final int NOTIFICATION_OPERATION_PREVIOUS = 5;
+    public static final int NOTIFICATION_OPERATION_PLAY_PAUSE = 0;
+    public static final int NOTIFICATION_OPERATION_NEXT = 2;
 
     // play mode
     public static final int PLAY_LIST_MODE = 0;
@@ -46,6 +56,10 @@ public class PlayMusicService extends Service {
 
     private boolean pause = false;
     private boolean shuffle = false;
+
+    private AirNotification notification;
+
+    private NotificationControlReceiver receiver;
 
     @Override
     public void onCreate() {
@@ -72,8 +86,12 @@ public class PlayMusicService extends Service {
                 play();
             }
         });
-
-
+        receiver = new NotificationControlReceiver();
+        IntentFilter filter = new IntentFilter(NOTIFICATION_OPERATION);
+        registerReceiver(receiver, filter);
+        Log.d(TAG, "service create");
+        notification = new AirNotification(this);
+        notification.cancel();
     }
 
     @Override
@@ -88,8 +106,10 @@ public class PlayMusicService extends Service {
 
     @Override
     public void onDestroy() {
+        mBinder.onActivityFinish();
         mPlayer.release();
         super.onDestroy();
+        Log.d(TAG, "service destroy");
     }
 
     public class PlayerControlBinder extends Binder {
@@ -109,6 +129,7 @@ public class PlayMusicService extends Service {
                 Intent intent = new Intent(PLAY_STATE_CHANGE);
                 intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PLAY);
                 sendBroadcast(intent);
+                notification.push(songPlaying);
                 Log.d(TAG, "player is resumed");
             }
         }
@@ -121,6 +142,7 @@ public class PlayMusicService extends Service {
                 Intent intent = new Intent(PLAY_STATE_CHANGE);
                 intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PAUSE);
                 sendBroadcast(intent);
+                notification.push(songPlaying);
                 Log.d(TAG, "player is paused");
             }
         }
@@ -179,6 +201,41 @@ public class PlayMusicService extends Service {
         public int getPosition() {
             return mPosition;
         }
+
+        public void onActivityFinish() {
+            notification.cancel();
+            unregisterReceiver(receiver);
+        }
+    }
+
+    private class NotificationControlReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1) + "");
+            switch (intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1)) {
+                case NOTIFICATION_OPERATION_PREVIOUS:
+                    previousPosition();
+                    play();
+                    Log.d(TAG, "notification previous");
+                    break;
+                case NOTIFICATION_OPERATION_PLAY_PAUSE:
+                    if (pause) {
+                        mBinder.resumeMusic();
+                    } else {
+                        mBinder.pauseMusic();
+                    }
+                    Log.d(TAG, "notification play pause");
+                    break;
+                case NOTIFICATION_OPERATION_NEXT:
+                    nextPosition();
+                    play();
+                    Log.d(TAG, "notification next");
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void play() {
@@ -198,6 +255,7 @@ public class PlayMusicService extends Service {
             Intent intent = new Intent(PLAY_STATE_CHANGE);
             intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PLAY);
             sendBroadcast(intent);
+            notification.push(songPlaying);
         } catch (IOException e) {
             Log.e(TAG, "fail to set data source of player", e);
         }

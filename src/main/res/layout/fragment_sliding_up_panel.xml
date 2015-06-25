@@ -130,7 +130,7 @@
                         android:layout_marginEnd="@dimen/dp_48_560"
                         android:layout_marginStart="@dimen/dp_8_560"
                         android:layout_marginLeft="@dimen/dp_8_560"
-                        android:background="@drawable/custom_selector" />
+                        />
 
                 <ImageView
                     android:id="@+id/sliding_layout_previous_button"
@@ -139,7 +139,7 @@
                     android:layout_height="@dimen/dp_40_560"
                     android:layout_marginRight="@dimen/dp_24_560"
                     android:layout_marginEnd="@dimen/dp_24_560"
-                    android:background="@drawable/custom_selector" />
+                    />
 
                 <ImageView
                     android:id="@+id/sliding_layout_play_and_pause_button"
@@ -150,7 +150,7 @@
                     android:layout_marginRight="@dimen/dp_16_560"
                     android:layout_marginStart="@dimen/dp_16_560"
                     android:layout_marginEnd="@dimen/dp_16_560"
-                    android:background="@drawable/custom_selector" />
+                    />
 
                 <ImageView
                     android:id="@+id/sliding_layout_next_button"
@@ -159,7 +159,7 @@
                     android:layout_height="@dimen/dp_40_560"
                     android:layout_marginLeft="@dimen/dp_24_560"
                     android:layout_marginStart="@dimen/dp_24_560"
-                    android:background="@drawable/custom_selector" />
+                    />
 
                 <ImageView
                     android:id="@+id/sliding_layout_shuffle_play"
@@ -170,7 +170,7 @@
                     android:layout_marginStart="@dimen/dp_48_560"
                     android:layout_marginRight="@dimen/dp_8_560"
                     android:layout_marginEnd="@dimen/dp_8_560"
-                    android:background="@drawable/custom_selector" />
+                    />
 
              </LinearLayout>
 

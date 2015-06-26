@@ -54,10 +54,7 @@ public class AirNotification {
     @SuppressLint("NewApi")
     public void push(Song songPlaying) {
         Notification notification;
-        if (Build.VERSION.SDK_INT >=
-//                Build.VERSION_CODES.LOLLIPOP
-                100
-                ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notification = new Notification.Builder(mContext)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setContentTitle(songPlaying.getTitle())
@@ -87,7 +84,7 @@ public class AirNotification {
                     .addAction(R.drawable.btn_next_white, "next", pNext)
                     .build();
         }
-        
+
         if (songPlaying.isPause()) {
             notification.actions[1].icon = R.drawable.btn_play_white;
             notification.actions[1].title = "play";

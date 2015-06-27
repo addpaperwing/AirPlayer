@@ -1,5 +1,5 @@
 #AirPlayer
-a very first app of me to practice<br>
+a very first app for practicing<br>
 
 ##desc 描述
 a material design music player.<br>

@@ -71,7 +71,7 @@ public class AirMainActivity extends AppCompatActivity
     /* receiver */
     private PlayerStateReceiver mPlayerStateReceiver;
 
-    /* others */
+    /* helper classes */
     private FragmentManager mFragmentManager;
     private PlayMusicFragment mPlayMusicFragment;
 
@@ -86,7 +86,7 @@ public class AirMainActivity extends AppCompatActivity
         startService(playMusicServiceIntent);
         bindService(playMusicServiceIntent, connection, BIND_AUTO_CREATE);
 
-        // get sliding up panel
+        // get sliding up panel and set panel slide listener
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         mSlidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -232,7 +232,7 @@ public class AirMainActivity extends AppCompatActivity
             case 0:
                 mToolbar.setTitle(getString(R.string.title_play_now));
                 if (Build.VERSION.SDK_INT >= 21) {
-                    mToolbar.setElevation(16);
+                    mToolbar.setElevation(19);
                 }
                 return new PlayNowFragment();
             case 1:

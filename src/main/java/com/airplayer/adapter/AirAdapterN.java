@@ -17,7 +17,7 @@ import java.util.List;
  * packaged some method that can be reused
  * app 的全局 adapter 抽象类，封装了一些可以重用的方法，加强代码复用性
  */
-public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public abstract class AirAdapterN<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     /**
      * type of item in a recycler view
@@ -26,6 +26,7 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
      */
     public static final int TYPE_HEADER = 0;
     public static final int TYPE_ITEM = 1;
+    public static final int TYPE_FOOTER = 2;
 
     private LayoutInflater mLayoutInflater;
 
@@ -36,7 +37,7 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
     private ClickListener mClickListener;
 
     /* constructor, construct and set up the field */
-    public AirAdapter(Context context, List<T> list) {
+    public AirAdapterN(Context context, List<T> list) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mList = list;
@@ -75,6 +76,8 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
     public int getItemViewType(int position) {
         if (position == TYPE_HEADER) {
             return TYPE_HEADER;
+        } else if (position == mList.size() + 2) {
+            return TYPE_FOOTER;
         }
         return TYPE_ITEM;
     }
@@ -93,6 +96,8 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
                 return onCreateHeadViewHolder(parent);
             case TYPE_ITEM:
                 return onCreateItemViewHolder(parent);
+            case TYPE_FOOTER:
+                return onCreateFootViewHolder(parent);
             default:
                 throw new RuntimeException("no type match, make sure you use types correctly. " +
                         "unmatchable viewType : " + viewType);
@@ -112,6 +117,23 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
      * @return a header item view holder
      */
     public abstract AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent);
+
+    public abstract AirFootViewHolder onCreateFootViewHolder(ViewGroup parent);
+
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof AirAdapterN.AirHeadViewHolder) {
+            AirAdapterN.AirHeadViewHolder header = (AirAdapterN.AirHeadViewHolder) holder;
+            setUpHeader(header);
+        } else if (holder instanceof AirAdapterN.AirItemViewHolder) {
+            AirAdapterN.AirItemViewHolder item = (AirAdapterN.AirItemViewHolder) holder;
+            setUpItem(item);
+        } else if (holder instanceof AirAdapterN.AirFootViewHolder) {
+            AirAdapterN.AirFootViewHolder footer = (AirAdapterN.AirFootViewHolder) holder;
+            setUpFooter(footer);
+        }
+    }
 
     @Override
     public int getItemCount() {
@@ -166,12 +188,27 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
         }
     }
 
+    public class AirFootViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public AirFootViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mClickListener.footerClicked(v);
+        }
+    }
+
 
     /**
      * an abstract method to set up different header
      * @param holder use for setting up the views in header
      */
-    public abstract void setUpViewHolder(AirAdapter.AirHeadViewHolder holder);
+    public abstract void setUpHeader(AirAdapterN.AirHeadViewHolder holder);
+    public abstract void setUpItem(AirAdapterN.AirItemViewHolder holder);
+    public abstract void setUpFooter(AirAdapterN.AirFootViewHolder holder);
 
     /**
      * interface of click event
@@ -179,5 +216,6 @@ public abstract class AirAdapter<T> extends RecyclerView.Adapter<RecyclerView.Vi
     public interface ClickListener {
         void itemClicked(View view, int position);
         void headerClicked(View view);
+        void footerClicked(View view);
     }
 }

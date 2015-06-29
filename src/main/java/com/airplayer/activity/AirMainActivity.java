@@ -237,12 +237,14 @@ public class AirMainActivity extends AppCompatActivity
                 if (Build.VERSION.SDK_INT >= 21) {
                     mToolbar.setElevation(19);
                 }
+                mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return new PlayNowFragment();
             case 1:
                 mToolbar.setTitle(getString(R.string.title_my_library));
                 if (Build.VERSION.SDK_INT >= 21) {
                     mToolbar.setElevation(0);
                 }
+                mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 return new MyLibraryFragment();
             default:
                 return null;

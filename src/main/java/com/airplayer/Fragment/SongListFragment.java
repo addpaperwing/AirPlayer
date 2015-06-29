@@ -74,6 +74,9 @@ public class SongListFragment extends Fragment {
                 } while (listOrdered.size() > 0);
                 mBinder.playMusic(0, listShuffled);
             }
+
+            @Override
+            public void footerClicked(View view) { }
         });
         mRecyclerView.setAdapter(adapter);
         return rootView;
@@ -91,7 +94,7 @@ public class SongListFragment extends Fragment {
         }
 
         @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
+        public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             SongListHeadViewHolder header = (SongListHeadViewHolder) holder;
             header.image.setImageResource(R.drawable.btn_shuffle_on);
             header.image.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
@@ -101,7 +104,7 @@ public class SongListFragment extends Fragment {
             header.desc.setTextColor(getResources().getColor(R.color.air_accent_color));
         }
 
-        private class SongListHeadViewHolder extends AirAdapter<Song>.AirHeadViewHolder {
+        private class SongListHeadViewHolder extends AirAdapter.AirHeadViewHolder {
 
             private ImageView image;
             private TextView title;

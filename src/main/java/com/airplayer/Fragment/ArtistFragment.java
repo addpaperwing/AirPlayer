@@ -89,6 +89,11 @@ public class ArtistFragment extends Fragment {
             public void headerClicked(View view) {
 
             }
+
+            @Override
+            public void footerClicked(View view) {
+
+            }
         });
         mRecyclerView.setAdapter(adapter);
 
@@ -103,20 +108,20 @@ public class ArtistFragment extends Fragment {
         }
 
         @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
+        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new ArtistAlbumHeader(getLayoutInflater()
+                    .inflate(R.layout.recycler_header_image, parent, false));
+        }
+
+        @Override
+        public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
             header.image.setImageBitmap(ImageUtils.getBitmapWithResized((Activity) getContext(), mArtist.getImagePath()));
             header.name.setText(mArtist.getName());
             header.albumCount.setText(mAlbumList.size() + " albums");
         }
 
-        @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new ArtistAlbumHeader(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_image, parent, false));
-        }
-
-        private class ArtistAlbumHeader extends AirAdapter<Album>.AirHeadViewHolder {
+        private class ArtistAlbumHeader extends AirAdapter.AirHeadViewHolder {
 
             private ImageView image;
             private TextView name;

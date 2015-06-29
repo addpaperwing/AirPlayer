@@ -3,9 +3,7 @@ package com.airplayer.adapter;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,22 +21,22 @@ import java.util.List;
  * an abstract class, which is used by recycler view that shows a song list
  */
 
-public abstract class SongAdapter extends AirAdapter<Song> {
+public class SongAdapter extends AirAdapter {
 
     private boolean showImage = true;
-    private boolean isPlayList = false;
 
-    public void setShowImage(boolean showImage) {
+    public void showIconImage(boolean showImage) {
         this.showImage = showImage;
+    }
+
+    private boolean showAnimation = false;
+
+    public void showEQAnimation(boolean isPlayList) {
+        this.showAnimation = isPlayList;
     }
 
     public SongAdapter(Context context, List<Song> list) {
         super(context, list);
-    }
-
-    public SongAdapter(Context context, List<Song> list, boolean isPlayList) {
-        this(context, list);
-        this.isPlayList = isPlayList;
     }
 
     @Override
@@ -48,28 +46,28 @@ public abstract class SongAdapter extends AirAdapter<Song> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindItemViewHolder(AirItemViewHolder itemHolder, int position) {
+        if (itemHolder instanceof SongItemViewHolder) {
+            SongItemViewHolder songItemViewHolder = (SongItemViewHolder) itemHolder;
 
-        // when holder is a SongItemViewHolder
-        if (holder instanceof SongItemViewHolder) {
-            SongItemViewHolder songViewItemHolder = (SongItemViewHolder) holder;
+            Song item = (Song) getList().get(position - 1);
 
-            songViewItemHolder.titleText.setText(getList().get(position - 1).getTitle());
-            songViewItemHolder.artistText.setText(getList().get(position - 1).getArtist());
-            songViewItemHolder.durationText.setText(Utils.getFormatTime(getList().get(position - 1).getDuration()));
+            songItemViewHolder.titleText.setText(item.getTitle());
+            songItemViewHolder.artistText.setText(item.getArtist());
+            songItemViewHolder.durationText.setText(Utils.getFormatTime(item.getDuration()));
 
             if (showImage) {
                 Picasso.with(getContext())
-                        .load(getList().get(position - 1).getAlbumArtUri())
-                        .into(songViewItemHolder.imageView);
+                        .load(item.getAlbumArtUri())
+                        .into(songItemViewHolder.imageView);
             } else {
-                int track = getList().get(position - 1).getTrack();
+                int track = item.getTrack();
                 if (track != 0) {
-                    songViewItemHolder.trackNum.setText(track % 1000 + "");
+                    songItemViewHolder.trackNum.setText(track % 1000 + "");
                 }
             }
 
-            if (isPlayList) {
+            if (showAnimation) {
                 AnimationDrawable animation;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     animation = (AnimationDrawable) getContext().getDrawable(R.drawable.animation_equalizer);
@@ -77,28 +75,21 @@ public abstract class SongAdapter extends AirAdapter<Song> {
                     animation = (AnimationDrawable) getContext().getResources()
                             .getDrawable(R.drawable.animation_equalizer);
                 }
-                songViewItemHolder.playStateImage.setImageDrawable(animation);
+                songItemViewHolder.playStateImage.setImageDrawable(animation);
 
-                if (getList().get(position - 1).isPlay() ) {
-                    if (getList().get(position - 1).isPause()) {
-                        songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                if (item.isPlay() ) {
+                    if (item.isPause()) {
+                        songItemViewHolder.playStateImage.setVisibility(View.VISIBLE);
                         if (animation != null) animation.stop();
                     } else {
-                        songViewItemHolder.playStateImage.setVisibility(View.VISIBLE);
+                        songItemViewHolder.playStateImage.setVisibility(View.VISIBLE);
                         if (animation != null) animation.start();
                     }
                 } else {
-                    songViewItemHolder.playStateImage.setVisibility(View.INVISIBLE);
+                    songItemViewHolder.playStateImage.setVisibility(View.INVISIBLE);
                 }
             }
         }
-
-        //when holder is a SongHeadViewHolder
-        if (holder instanceof AirAdapter.AirHeadViewHolder) {
-            AirAdapter.AirHeadViewHolder airHeadViewHolder = (AirAdapter.AirHeadViewHolder) holder;
-            setUpViewHolder(airHeadViewHolder);
-        }
-
     }
 
     public class SongItemViewHolder extends AirItemViewHolder {

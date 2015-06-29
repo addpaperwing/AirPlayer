@@ -49,7 +49,7 @@ public class AlbumGridFragment extends Fragment {
         });
         mRecyclerView.setLayoutManager(manager);
 
-        AlbumAdapter adapter = new AlbumGridAdapter(getParentFragment().getActivity(), mList);
+        AlbumAdapter adapter = new AlbumAdapter(getParentFragment().getActivity(), mList);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
             public void itemClicked(View view, int position) {
@@ -62,28 +62,13 @@ public class AlbumGridFragment extends Fragment {
             }
 
             @Override
-            public void headerClicked(View view) {
+            public void headerClicked(View view) { }
 
-            }
+            @Override
+            public void footerClicked(View view) { }
         });
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
-    }
-
-    private class AlbumGridAdapter extends AlbumAdapter {
-
-        public AlbumGridAdapter(Context context, List<Album> list) {
-            super(context, list);
-        }
-
-        @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) { }
-
-        @Override
-        public AirAdapter<Album>.AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new AirAdapter<Album>.AirHeadViewHolder(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_empty, parent, false));
-        }
     }
 }

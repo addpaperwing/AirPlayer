@@ -98,13 +98,6 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerRecycler.setAdapter(new NaviRecyclerAdapter(getActivity(),
                 new String[]{getString(R.string.title_play_now), getString(R.string.title_my_library)}));
 
-//        mDrawerRecycler.setAdapter(new ArrayAdapter<String>(
-//                getActivity(),
-//                R.layout.recycler_item_navigation_drawer,
-//                R.id.list_item_text,
-//                new String[]{getString(R.string.title_play_now), getString(R.string.title_my_library)}
-//        ));
-
         return rootView;
     }
 

@@ -69,7 +69,7 @@ public class AlbumFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         AlbumSongAdapter adapter = new AlbumSongAdapter(getActivity(), mSongList);
-        adapter.setShowImage(false);
+        adapter.showIconImage(false);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
             public void itemClicked(View view, int position) {
@@ -78,6 +78,11 @@ public class AlbumFragment extends Fragment {
 
             @Override
             public void headerClicked(View view) {
+
+            }
+
+            @Override
+            public void footerClicked(View view) {
 
             }
         });
@@ -94,7 +99,13 @@ public class AlbumFragment extends Fragment {
         }
 
         @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
+        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new AlbumSongHeader(getLayoutInflater()
+                    .inflate(R.layout.recycler_header_image, parent, false));
+        }
+
+        @Override
+        public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             AlbumSongHeader header = (AlbumSongHeader) holder;
             header.image.setImageBitmap(ImageUtils.getBitmapWithResized(getActivity(), mAlbum.getAlbumArtPath()));
             header.title.setText(mAlbum.getTitle());
@@ -102,13 +113,7 @@ public class AlbumFragment extends Fragment {
             header.desc.setText(mAlbum.getYear() + " , " + mSongList.size() + " songs");
         }
 
-        @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new AlbumSongHeader(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_image, parent, false));
-        }
-
-        private class AlbumSongHeader extends AirAdapter<Song>.AirHeadViewHolder {
+        private class AlbumSongHeader extends AirAdapter.AirHeadViewHolder {
 
             private ImageView image;
             private TextView title;

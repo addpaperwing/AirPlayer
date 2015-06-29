@@ -71,6 +71,11 @@ public class PlayNowFragment extends Fragment {
             public void headerClicked(View view) {
 
             }
+
+            @Override
+            public void footerClicked(View view) {
+
+            }
         });
         mRecyclerView.setAdapter(adapter);
 
@@ -89,18 +94,18 @@ public class PlayNowFragment extends Fragment {
         }
 
         @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) {
+        public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             PlayNowHeadViewHolder playNowHeadViewHolder = (PlayNowHeadViewHolder) holder;
             playNowHeadViewHolder.title.setText("Recent Added");
             int numOfSongs = 0;
             for (int i = 0; i < 6; i++) {
-                numOfSongs += getList().get(i).getSongsHave();
+                numOfSongs += ((Album) getList().get(i)).getSongsHave();
             }
             playNowHeadViewHolder.subTitle.setText(getList().size() + " albums " + numOfSongs +" songs");
             playNowHeadViewHolder.desc.setText("click to shuffle all recent added");
         }
 
-        private class PlayNowHeadViewHolder extends AirAdapter<Album>.AirHeadViewHolder {
+        private class PlayNowHeadViewHolder extends AirAdapter.AirHeadViewHolder {
 
             TextView title;
             TextView subTitle;

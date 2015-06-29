@@ -55,15 +55,16 @@ public class PlayListFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new SongAdapter(getActivity(), mPlayList, true) {
-            @Override
-            public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) { }
+        mAdapter = new SongAdapter(getActivity(), mPlayList) {
 
             @Override
-            public AirAdapter<Song>.AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-                return new AirAdapter<Song>.AirHeadViewHolder(getLayoutInflater()
-                        .inflate(R.layout.recycler_header_empty, parent, false));
+            public AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
+                return new AirAdapter.AirFootViewHolder(getLayoutInflater()
+                        .inflate(R.layout.recycler_item_song, parent, false));
             }
+
+            @Override
+            public void onBindFootViewHolder(AirFootViewHolder footHolder) { }
         };
         mAdapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
@@ -73,10 +74,12 @@ public class PlayListFragment extends Fragment {
             }
 
             @Override
-            public void headerClicked(View view) {
-            }
-        });
+            public void headerClicked(View view) { }
 
+            @Override
+            public void footerClicked(View view) { }
+        });
+        mAdapter.showEQAnimation(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.scrollToPosition(mBinder.getPosition() + 1);
         return rootView;

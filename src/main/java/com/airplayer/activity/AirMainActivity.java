@@ -39,6 +39,7 @@ public class AirMainActivity extends AppCompatActivity
     private SharedPreferences sp;
 
     /* user interface */
+    private DrawerLayout mDrawerLayout;
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
@@ -101,6 +102,7 @@ public class AirMainActivity extends AppCompatActivity
                 } else {
                     toolbar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
                 }
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
             }
 
             @Override
@@ -108,6 +110,7 @@ public class AirMainActivity extends AppCompatActivity
                 Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
                 toolbar.getMenu().clear();
                 toolbar.inflateMenu(R.menu.menu_sliding_panel_up_menu);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
 
             @Override
@@ -124,11 +127,11 @@ public class AirMainActivity extends AppCompatActivity
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         // set up navigation drawer fragment
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
                 .findFragmentById(R.id.navigation_drawer);
 
-        mNavigationDrawFragment.setUp(R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+        mNavigationDrawFragment.setUp(R.id.navigation_drawer, mDrawerLayout);
 
         mPlayerStateReceiver = new PlayerStateReceiver();
         IntentFilter filter = new IntentFilter(PlayMusicService.PLAY_STATE_CHANGE);

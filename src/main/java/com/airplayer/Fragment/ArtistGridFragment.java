@@ -48,8 +48,6 @@ public class ArtistGridFragment extends Fragment {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-
-
         ArtistAdapter adapter = new ArtistAdapter(getParentFragment().getActivity(), mList);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
@@ -63,24 +61,19 @@ public class ArtistGridFragment extends Fragment {
             }
 
             @Override
-            public void headerClicked(View view) {
+            public void headerClicked(View view) { }
 
-            }
+            @Override
+            public void footerClicked(View view) { }
         });
         mRecyclerView.setAdapter(adapter);
         return rootView;
     }
 
-    private class ArtistAdapter extends AirAdapter<Artist> {
+    private class ArtistAdapter extends AirAdapter {
 
         public ArtistAdapter(Context context, List<Artist> list) {
             super(context, list);
-        }
-
-        @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new AirHeadViewHolder(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_empty, parent, false));
         }
 
         @Override
@@ -90,21 +83,21 @@ public class ArtistGridFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int i) {
-            if (holder instanceof ArtistItemViewHolder) {
-                ArtistItemViewHolder artistViewHolder = (ArtistItemViewHolder) holder;
-                artistViewHolder.textView.setText(getList().get(i - 1).getName());
-                String artistImagePath = getList().get(i - 1).getImagePath();
+        public void onBindItemViewHolder(AirItemViewHolder itemHolder, int position) {
+            if (itemHolder instanceof ArtistItemViewHolder) {
+                ArtistItemViewHolder artistViewHolder = (ArtistItemViewHolder) itemHolder;
+
+                Artist item = (Artist) getList().get(position - 1);
+
+                artistViewHolder.textView.setText(item.getName());
+                String artistImagePath = item.getImagePath();
                 if (!artistImagePath.equals("")) {
                     Picasso.with(getContext()).load(artistImagePath).into(artistViewHolder.imageView);
                 }
             }
         }
 
-        @Override
-        public void setUpViewHolder(AirAdapter.AirHeadViewHolder holder) { }
-
-        public class ArtistItemViewHolder extends AirItemViewHolder {
+        public class ArtistItemViewHolder extends AirAdapter.AirItemViewHolder {
             ImageView imageView;
             TextView textView;
 

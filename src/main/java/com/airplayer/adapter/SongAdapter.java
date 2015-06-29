@@ -68,25 +68,23 @@ public class SongAdapter extends AirAdapter {
             }
 
             if (showAnimation) {
-                AnimationDrawable animation;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    animation = (AnimationDrawable) getContext().getDrawable(R.drawable.animation_equalizer);
-                } else {
-                    animation = (AnimationDrawable) getContext().getResources()
-                            .getDrawable(R.drawable.animation_equalizer);
-                }
-                songItemViewHolder.playStateImage.setImageDrawable(animation);
+                if (item.isPlay()) {
+                    AnimationDrawable animation;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        animation = (AnimationDrawable) getContext().getDrawable(R.drawable.animation_equalizer);
+                    } else {
+                        animation = (AnimationDrawable) getContext().getResources()
+                                .getDrawable(R.drawable.animation_equalizer);
+                    }
+                    songItemViewHolder.playStateImage.setImageDrawable(animation);
 
-                if (item.isPlay() ) {
                     if (item.isPause()) {
-                        songItemViewHolder.playStateImage.setVisibility(View.VISIBLE);
                         if (animation != null) animation.stop();
                     } else {
-                        songItemViewHolder.playStateImage.setVisibility(View.VISIBLE);
                         if (animation != null) animation.start();
                     }
                 } else {
-                    songItemViewHolder.playStateImage.setVisibility(View.INVISIBLE);
+                    songItemViewHolder.playStateImage.setImageDrawable(null);
                 }
             }
         }

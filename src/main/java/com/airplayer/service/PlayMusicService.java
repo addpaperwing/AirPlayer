@@ -29,7 +29,6 @@ public class PlayMusicService extends Service {
     public static final String PLAY_STATE_KEY = "com.airplayer.PLAY_STATE_CHANGE.PLAY_STATE_KEY";
     public static final int PLAY_STATE_PLAY = 0;
     public static final int PLAY_STATE_PAUSE = 1;
-    public static final int PLAY_STATE_STOP = 2;
 
     public static final String NOTIFICATION_OPERATION = "com.airplayer.NOTIFICATION_OPERATION";
     public static final String NOTIFICATION_OPERATION_KEY = "com.airplayer.NOTIFICATION_OPERATION_KEY";
@@ -68,22 +67,17 @@ public class PlayMusicService extends Service {
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                if (mPlayMode == SINGLE_SONG_LOOP_MODE) {
-                    Log.d(TAG, "song repeated");
-                } else if (mPlayMode == PLAY_LIST_MODE) {
-                    previousPosition = mPosition;
+                if (mPlayMode != SINGLE_SONG_LOOP_MODE) {
                     if (shuffle) {
                         mPosition = (int) Math.round(Math.random() * (mPlayList.size() - 1));
                     } else {
-                        mPosition++;
-                        if (mPosition >= mPlayList.size()) {
-                            stop();
-                        }
+                        nextPosition();
                     }
-                } else if (mPlayMode == LOOP_LIST_MODE){
-                    nextPosition();
                 }
                 play();
+                if (mPlayMode == PLAY_LIST_MODE) {
+                    mBinder.pauseMusic();
+                }
             }
         });
         receiver = new NotificationControlReceiver();
@@ -191,7 +185,7 @@ public class PlayMusicService extends Service {
         }
 
         public boolean isPlaying() {
-            return mPlayer.isPlaying();
+            return mPlayer.isPlaying() || pause;
         }
 
         public boolean isPause() {
@@ -217,7 +211,6 @@ public class PlayMusicService extends Service {
                 case NOTIFICATION_OPERATION_PREVIOUS:
                     previousPosition();
                     play();
-                    Log.d(TAG, "notification previous");
                     break;
                 case NOTIFICATION_OPERATION_PLAY_PAUSE:
                     if (pause) {
@@ -225,12 +218,10 @@ public class PlayMusicService extends Service {
                     } else {
                         mBinder.pauseMusic();
                     }
-                    Log.d(TAG, "notification play pause");
                     break;
                 case NOTIFICATION_OPERATION_NEXT:
                     nextPosition();
                     play();
-                    Log.d(TAG, "notification next");
                     break;
                 default:
                     break;
@@ -259,14 +250,6 @@ public class PlayMusicService extends Service {
         } catch (IOException e) {
             Log.e(TAG, "fail to set data source of player", e);
         }
-    }
-
-    private void stop() {
-        songPlaying.setPlay(false);
-        mPlayer.stop();
-        Intent intent = new Intent(PLAY_STATE_CHANGE);
-        intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_STOP);
-        sendBroadcast(intent);
     }
 
     private void nextPosition() {

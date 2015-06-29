@@ -10,6 +10,9 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Handler;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
@@ -34,9 +38,10 @@ public class AirMainActivity extends AppCompatActivity
     public static final String TAG = "AirMainActivity";
 
     /* shared preference */
-    public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
-    public static final String PREF_DATA_BASE_VERSION = "pref_data_base_version";
-    private SharedPreferences sp;
+//    public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
+//    public static final String PREF_DATA_BASE_VERSION = "pref_data_base_version";
+//    private SharedPreferences mSp = PreferenceManager.getDefaultSharedPreferences(this);
+
 
     /* user interface */
     private DrawerLayout mDrawerLayout;
@@ -75,6 +80,15 @@ public class AirMainActivity extends AppCompatActivity
     /* helper classes */
     private FragmentManager mFragmentManager;
     private PlayMusicFragment mPlayMusicFragment;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 0) {
+                mSlidingUpPanelLayout.setPanelHeight((int) msg.obj);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,16 +219,15 @@ public class AirMainActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             int playState = intent.getIntExtra(PlayMusicService.PLAY_STATE_KEY, -1);
             if (playState == PlayMusicService.PLAY_STATE_PLAY) {
-                mSlidingUpPanelLayout.setTouchEnabled(true);
-                mSlidingUpPanelLayout.setPanelHeight(getResources().getInteger(R.integer.sliding_panel_height));
+                if (!mSlidingUpPanelLayout.isTouchEnabled()) {
+                    mSlidingUpPanelLayout.setTouchEnabled(true);
+                    showPanel();
+                }
                 if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
                     toolbar.getMenu().clear();
                     toolbar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
                 }
-            } else if (playState == PlayMusicService.PLAY_STATE_STOP) {
-                mSlidingUpPanelLayout.setTouchEnabled(false);
-                mSlidingUpPanelLayout.setPanelHeight(0);
             } else if (playState == PlayMusicService.PLAY_STATE_PAUSE) {
                 if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
@@ -231,8 +244,15 @@ public class AirMainActivity extends AppCompatActivity
      * @return a new Fragment whose name was selected in NavigationDrawer
      */
     private Fragment switchFragment(int position) {
+
+        // pop all fragments in back stack
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        mPlayMusicFragment.setIsPlayListShow(false);
+
+        // set play list is not showing when it was pop
+        if (mPlayMusicFragment != null) {
+            mPlayMusicFragment.setIsPlayListShow(false);
+        }
+
         switch (position) {
             case 0:
                 mToolbar.setTitle(getString(R.string.title_play_now));
@@ -249,5 +269,24 @@ public class AirMainActivity extends AppCompatActivity
             default:
                 return null;
         }
+    }
+
+    private void showPanel() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int height = 0; height < getResources().getInteger(R.integer.sliding_panel_height); height += 2) {
+                    Message msg = new Message();
+                    msg.what = 0;
+                    msg.obj = height;
+                    handler.sendMessage(msg);
+                    try {
+                        Thread.sleep(2);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 }

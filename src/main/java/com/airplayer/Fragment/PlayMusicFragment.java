@@ -153,7 +153,11 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // head tool bar section
         mTopToolBar = (Toolbar) rootView.findViewById(R.id.sliding_layout_top_tool_bar);
-        mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
+        if (mBinder.isPause()) {
+            mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
+        } else {
+            mTopToolBar.inflateMenu(R.menu.menu_sliding_panel_down_pause_menu);
+        }
         mTopToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {

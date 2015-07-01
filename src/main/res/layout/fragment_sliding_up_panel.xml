@@ -101,7 +101,7 @@
     <FrameLayout
         android:id="@+id/sliding_layout_bottom_control_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_72_560"
+        android:layout_height="@dimen/sliding_up_fragment_bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">

@@ -1,9 +1,6 @@
 package com.airplayer.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
@@ -21,8 +17,6 @@ import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.model.Album;
-import com.airplayer.model.Song;
-import com.airplayer.util.ImageUtils;
 import com.airplayer.util.QueryUtils;
 
 import java.util.List;
@@ -39,10 +33,9 @@ public class PlayNowFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((AirMainActivity)getActivity()).getToolbar().setVisibility(View.VISIBLE);
-
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
         rootView.setPadding(0, getResources().getInteger(R.integer.padding_action_bar), 0, 0);
+        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.VISIBLE);
 
         recentAlbumList = QueryUtils.loadRecentAlbum(getActivity());
 
@@ -98,8 +91,8 @@ public class PlayNowFragment extends Fragment {
             PlayNowHeadViewHolder playNowHeadViewHolder = (PlayNowHeadViewHolder) holder;
             playNowHeadViewHolder.title.setText("Recent Added");
             int numOfSongs = 0;
-            for (int i = 0; i < 6; i++) {
-                numOfSongs += ((Album) getList().get(i)).getSongsHave();
+            for (int i = 0; i < getList().size(); i++) {
+                    numOfSongs += ((Album) getList().get(i)).getSongsHave();
             }
             playNowHeadViewHolder.subTitle.setText(getList().size() + " albums " + numOfSongs +" songs");
             playNowHeadViewHolder.desc.setText("click to shuffle all recent added");

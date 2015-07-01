@@ -2,6 +2,7 @@ package com.airplayer.util;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.CursorIndexOutOfBoundsException;
 import android.provider.MediaStore;
 import android.util.Log;
 
@@ -123,7 +124,7 @@ public class QueryUtils {
 
     public static List<Album> loadRecentAlbum(Context context) {
         List<Album> list = new ArrayList<>();
-        String[] recentAlbums = new String[] { "", "", "", "", "", ""};
+        String[] recentAlbums = new String[] { "leov", "leov", "leov", "leov", "leov", "leov" };
         int p = 0;
         Cursor cursor1 = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -156,6 +157,11 @@ public class QueryUtils {
                     + recentAlbums[3] + ", " + recentAlbums[4] + ", " + recentAlbums[5]);
         }
         for (int i = 0; i < 6; i++) {
+            if (recentAlbums[i].equals("")) {
+
+            }
+        }
+        for (int i = 0; i < 6; i++) {
             Cursor cursor2 = context.getContentResolver().query(
                     MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                     new String[]{
@@ -165,18 +171,22 @@ public class QueryUtils {
                             MediaStore.Audio.Albums.ALBUM_ART,
                             MediaStore.Audio.Albums.NUMBER_OF_SONGS
                     },
-                    "album = ?", new String[]{recentAlbums[i]}, null
+                    "album = ?", new String[]{ recentAlbums[i] }, null
             );
             if (cursor2 != null) {
-                cursor2.moveToFirst();
-                Album album = new Album();
-                album.setTitle(recentAlbums[i]);
-                album.setId(cursor2.getInt(0));
-                album.setAlbumArtist(cursor2.getString(1));
-                album.setYear(cursor2.getString(2));
-                album.setAlbumArtPath(cursor2.getString(3));
-                album.setSongsHave(cursor2.getInt(4));
-                list.add(album);
+                try {
+                    cursor2.moveToFirst();
+                    Album album = new Album();
+                    album.setTitle(recentAlbums[i]);
+                    album.setId(cursor2.getInt(0));
+                    album.setAlbumArtist(cursor2.getString(1));
+                    album.setYear(cursor2.getString(2));
+                    album.setAlbumArtPath(cursor2.getString(3));
+                    album.setSongsHave(cursor2.getInt(4));
+                    list.add(album);
+                } catch (CursorIndexOutOfBoundsException e) {
+                    Log.d("QueryUtils", "index out of bounds");
+                }
                 cursor2.close();
             }
         }

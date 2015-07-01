@@ -19,4 +19,6 @@
     <dimen name="dp_256_560">256dp</dimen>
 
     <dimen name="drawer_width">320dp</dimen>
+
+    <dimen name="sliding_up_fragment_bottom_bar_height">72dp</dimen>
 </resources>

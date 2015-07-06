@@ -72,12 +72,14 @@ public class PlayMusicService extends Service {
                         mPosition = (int) Math.round(Math.random() * (mPlayList.size() - 1));
                     } else {
                         nextPosition();
+                        if (mPosition == 0 && mPlayMode == PLAY_LIST_MODE) {
+                            play();
+                            mBinder.pauseMusic();
+                            return;
+                        }
                     }
                 }
                 play();
-                if (mPlayMode == PLAY_LIST_MODE) {
-                    mBinder.pauseMusic();
-                }
             }
         });
         receiver = new NotificationControlReceiver();

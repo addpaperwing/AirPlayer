@@ -1,13 +1,10 @@
-package com.airplayer.fragment;
+package com.airplayer.fragment.singleItem;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,15 +25,15 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/14.
  */
-public class AlbumFragment extends Fragment {
+public class AlbumFragment extends SingleItemChildFragment {
+
+    public static final String TAG = AlbumFragment.class.getSimpleName();
 
     public static final String ALBUM_RECEIVED = "artist_received";
 
     private Album mAlbum;
 
     private List<Song> mSongList;
-
-    private RecyclerView mRecyclerView;
 
     private PlayMusicService.PlayerControlBinder mBinder;
 
@@ -53,21 +50,14 @@ public class AlbumFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mAlbum = (Album) getArguments().getSerializable(ALBUM_RECEIVED);
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
+        mSongList = QueryUtils.loadSongList(getActivity(),
+                "album = ?", new String[]{mAlbum.getTitle()}, MediaStore.Audio.Media.TRACK);
+
+        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
-        rootView.setPadding(0, 0, 0, 0);
-
-        ((AirMainActivity)getActivity()).getToolbar().setVisibility(View.INVISIBLE);
-
-        mSongList = QueryUtils.loadSongList(getActivity(),
-                "album = ?", new String[]{ mAlbum.getTitle() }, MediaStore.Audio.Media.TRACK);
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    public void setUpRecyclerView(RecyclerView recyclerView) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         AlbumSongAdapter adapter = new AlbumSongAdapter(getActivity(), mSongList);
         adapter.showIconImage(false);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
@@ -77,19 +67,13 @@ public class AlbumFragment extends Fragment {
             }
 
             @Override
-            public void headerClicked(View view) {
-
-            }
+            public void headerClicked(View view) { }
 
             @Override
-            public void footerClicked(View view) {
-
-            }
+            public void footerClicked(View view) { }
         });
 
-        mRecyclerView.setAdapter(adapter);
-
-        return rootView;
+        recyclerView.setAdapter(adapter);
     }
 
     public class AlbumSongAdapter extends SongAdapter {

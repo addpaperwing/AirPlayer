@@ -9,24 +9,24 @@
 
     <ImageView
         android:id="@+id/header_image"
-        android:background="@color/air_primary_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/header_tool_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        android:background="@color/air_text_and_icon">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            >
+            android:paddingTop="@dimen/dp_8_560">
 
             <TextView
                 android:id="@+id/header_title"
-                android:textSize="18sp"
+                android:textSize="@dimen/xxTextSize"
                 android:textStyle="bold"
                 android:textColor="@color/air_primary_text"
                 android:ellipsize="end"
@@ -41,8 +41,7 @@
 
             <TextView
                 android:id="@+id/header_sub_title"
-                android:textSize="16sp"
-                android:textStyle="italic"
+                android:textSize="@dimen/xTextSize"
                 android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -55,8 +54,8 @@
 
             <TextView
                 android:id="@+id/header_desc"
-                android:textStyle="normal"
                 android:textColor="@android:color/darker_gray"
+                android:textSize="@dimen/sTextSize"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_marginLeft="@dimen/dp_8_560"

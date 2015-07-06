@@ -30,7 +30,7 @@
 
             <TextView
                 android:id="@+id/album_title"
-                android:textSize="14sp"
+                android:textSize="@dimen/mTextSize"
                 android:textColor="@color/air_primary_text"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -45,7 +45,7 @@
 
             <TextView
                 android:id="@+id/album_artist_name"
-                android:textSize="12sp"
+                android:textSize="@dimen/sTextSize"
                 android:textColor="@android:color/darker_gray"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -61,7 +61,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/clickable_item"
+            android:id="@+id/clickable_mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"

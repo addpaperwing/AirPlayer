@@ -7,15 +7,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
+import com.airplayer.adapter.AirScrollListener;
 import com.airplayer.adapter.AlbumAdapter;
+import com.airplayer.fragment.singleItem.AlbumFragment;
 import com.airplayer.model.Album;
 import com.airplayer.util.QueryUtils;
 
@@ -30,14 +36,19 @@ public class PlayNowFragment extends Fragment {
     private List<Album> recentAlbumList;
     private RecyclerView mRecyclerView;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        recentAlbumList = QueryUtils.loadRecentAlbum(getActivity());
+        Toolbar globalBar = ((AirMainActivity) getActivity()).getToolbar();
+        globalBar.setTranslationY(0);
+        globalBar.setVisibility(View.VISIBLE);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
-        rootView.setPadding(0, getResources().getInteger(R.integer.padding_action_bar), 0, 0);
-        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.VISIBLE);
-
-        recentAlbumList = QueryUtils.loadRecentAlbum(getActivity());
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         final GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
@@ -66,11 +77,31 @@ public class PlayNowFragment extends Fragment {
             }
 
             @Override
-            public void footerClicked(View view) {
-
-            }
+            public void footerClicked(View view) { }
         });
         mRecyclerView.setAdapter(adapter);
+
+        final Toolbar toolbar = ((AirMainActivity) getActivity()).getToolbar();
+        toolbar.setVisibility(View.VISIBLE);
+        mRecyclerView.setOnScrollListener(new AirScrollListener(getResources().getInteger(R.integer.padding_action_bar)) {
+            @Override
+            public void onViewScrolled(int viewScrolledDistance) {
+                toolbar.setTranslationY(-viewScrolledDistance);
+            }
+
+            @Override
+            public void onHide() {
+                toolbar.animate().translationY(toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(1));
+            }
+
+            @Override
+            public void onShow() {
+                toolbar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(1));
+            }
+
+            @Override
+            public void onScrollBackToTop() { }
+        });
 
         return rootView;
     }
@@ -89,6 +120,7 @@ public class PlayNowFragment extends Fragment {
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             PlayNowHeadViewHolder playNowHeadViewHolder = (PlayNowHeadViewHolder) holder;
+            playNowHeadViewHolder.image.setMinimumHeight(getResources().getInteger(R.integer.padding_action_bar));
             playNowHeadViewHolder.title.setText("Recent Added");
             int numOfSongs = 0;
             for (int i = 0; i < getList().size(); i++) {
@@ -100,12 +132,14 @@ public class PlayNowFragment extends Fragment {
 
         private class PlayNowHeadViewHolder extends AirAdapter.AirHeadViewHolder {
 
+            ImageView image;
             TextView title;
             TextView subTitle;
             TextView desc;
 
             public PlayNowHeadViewHolder(View itemView) {
                 super(itemView);
+                image = (ImageView) itemView.findViewById(R.id.header_image);
                 title = (TextView) itemView.findViewById(R.id.header_title);
                 subTitle = (TextView) itemView.findViewById(R.id.header_sub_title);
                 desc = (TextView) itemView.findViewById(R.id.header_desc);

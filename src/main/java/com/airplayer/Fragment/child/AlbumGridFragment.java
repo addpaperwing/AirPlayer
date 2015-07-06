@@ -1,20 +1,17 @@
-package com.airplayer.fragment;
+package com.airplayer.fragment.child;
 
-import android.content.Context;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
+import com.airplayer.fragment.singleItem.AlbumFragment;
 import com.airplayer.model.Album;
 import com.airplayer.util.QueryUtils;
 
@@ -23,22 +20,18 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/9.
  */
-public class AlbumGridFragment extends Fragment {
-
-    private RecyclerView mRecyclerView;
+public class AlbumGridFragment extends MyLibraryChildFragment  {
 
     private List<Album> mList;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
-
-        // get data base and load a list from it
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mList = QueryUtils.loadAlbumList(getParentFragment().getActivity(), null, null, MediaStore.Audio.Albums.ALBUM);
+    }
 
-        //find a recycler view and set it up
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+    @Override
+    public void setUpRecyclerView(RecyclerView recyclerView) {
         final GridLayoutManager manager = new GridLayoutManager(getParentFragment().getActivity(), 2);
 
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -47,7 +40,7 @@ public class AlbumGridFragment extends Fragment {
                 return position == 0 ? manager.getSpanCount() : 1;
             }
         });
-        mRecyclerView.setLayoutManager(manager);
+        recyclerView.setLayoutManager(manager);
 
         AlbumAdapter adapter = new AlbumAdapter(getParentFragment().getActivity(), mList);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
@@ -62,13 +55,13 @@ public class AlbumGridFragment extends Fragment {
             }
 
             @Override
-            public void headerClicked(View view) { }
+            public void headerClicked(View view) {
+            }
 
             @Override
-            public void footerClicked(View view) { }
+            public void footerClicked(View view) {
+            }
         });
-        mRecyclerView.setAdapter(adapter);
-
-        return rootView;
+        recyclerView.setAdapter(adapter);
     }
 }

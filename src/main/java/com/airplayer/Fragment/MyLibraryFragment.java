@@ -8,13 +8,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.adapter.AirMulScrollListener;
+import com.airplayer.fragment.child.AlbumGridFragment;
+import com.airplayer.fragment.child.ArtistGridFragment;
+import com.airplayer.fragment.child.SongListFragment;
 import com.airplayer.google.SlidingTabLayout;
 
 /**
@@ -22,18 +27,28 @@ import com.airplayer.google.SlidingTabLayout;
  */
 public class MyLibraryFragment extends Fragment {
 
-    ViewPager viewPager;
-    SlidingTabLayout tabLayout;
+    private ViewPager viewPager;
+    private Toolbar globalBar;
+    private Toolbar paddingBar;
+    private SlidingTabLayout tabLayout;
+
+    private AirMulScrollListener listener;
+
+    public AirMulScrollListener getListener() {
+        return listener;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
-        rootView.setPadding(0, getResources().getInteger(R.integer.padding_action_bar), 0, 0);
-        ((AirMainActivity)getActivity()).getToolbar().setVisibility(View.VISIBLE);
+        final View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
+        globalBar = ((AirMainActivity) getActivity()).getToolbar();
+        globalBar.setVisibility(View.VISIBLE);
 
         FragmentManager fm = getChildFragmentManager();
         fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+
+        paddingBar = (Toolbar) rootView.findViewById(R.id.padding_toolbar);
 
         viewPager = (ViewPager) rootView.findViewById(R.id.my_library_pager);
         viewPager.setAdapter(new LibraryPagerAdapter(fm));
@@ -41,10 +56,43 @@ public class MyLibraryFragment extends Fragment {
         tabLayout.setDistributeEvenly(true);
         tabLayout.setViewPager(viewPager);
 
+        listener = new AirMulScrollListener(getResources().getInteger(R.integer.padding_action_bar) + getResources().getInteger(R.integer.padding_tabs)) {
+            @Override
+            public void onViewScrolled(int viewScrolledDistance) {
+                noAnimateTranslate(-viewScrolledDistance);
+            }
+
+            @Override
+            public void onHide() {
+                animateTranslate(-getResources().getInteger(R.integer.padding_action_bar) - getResources().getInteger(R.integer.padding_tabs));
+            }
+
+            @Override
+            public void onShow() {
+                animateTranslate(0);
+            }
+        };
+
+        tabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+
+            @Override
+            public void onPageSelected(int position) {
+                animateTranslate(0);
+                listener.reset();
+                listener.setPage(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) { }
+        });
+
+        noAnimateTranslate(0);
         return rootView;
     }
 
-    class LibraryPagerAdapter extends FragmentPagerAdapter {
+    private class LibraryPagerAdapter extends FragmentPagerAdapter {
         String[] tabItemArray = getResources().getStringArray(R.array.tab_item_array);
 
         public LibraryPagerAdapter(FragmentManager fm) {
@@ -74,6 +122,18 @@ public class MyLibraryFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return tabItemArray[position];
         }
+    }
+
+    private void noAnimateTranslate(int y) {
+        globalBar.setTranslationY(y);
+        paddingBar.setTranslationY(y);
+        tabLayout.setTranslationY(y);
+    }
+
+    private void animateTranslate(int y) {
+        globalBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(1));
+        paddingBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(1));
+        tabLayout.animate().translationY(y).setInterpolator(new AccelerateInterpolator(1));
     }
 }
 

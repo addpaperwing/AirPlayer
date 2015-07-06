@@ -11,7 +11,7 @@
     <color name="old_world_gold">#93744E</color>
     <color name="plum_brown">#4F4247</color>
 
-    <color name="color_control_high_light">#B6B6B6</color>
+    <color name="color_control_high_light">#5503A9F4</color>
     
     <color name="air_dark_primary_color">#D32F2F</color>
     <color name="air_primary_color">#F44336</color>
@@ -25,4 +25,5 @@
     <color name="air_dark_primary_color_alpha">#DDD32F2F</color>
     <color name="air_text_color_alpha">#DDFFFFFF</color>
     <color name="air_check_color_alpha">#AA03A9F4</color>
+    <color name="air_mask_grey">#33727272</color>
 </resources>

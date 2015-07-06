@@ -1,7 +1,6 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +17,7 @@ import java.util.List;
  * an abstract class, which is used by recycler view that shows a album grid view
  * 一个以 grid view 显示专辑类型 item 的抽象类
  */
-public class AlbumAdapter extends AirAdapter {
+public class AlbumAdapter extends HeadPadAdapter {
 
     public AlbumAdapter(Context context, List<Album> list) {
         super(context, list);

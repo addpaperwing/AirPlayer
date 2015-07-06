@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import java.util.List;
  * an abstract class, which is used by recycler view that shows a song list
  */
 
-public class SongAdapter extends AirAdapter {
+public class SongAdapter extends HeadPadAdapter {
 
     private boolean showImage = true;
 

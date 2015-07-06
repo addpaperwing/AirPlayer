@@ -21,4 +21,11 @@
     <dimen name="drawer_width">240dp</dimen>
 
     <dimen name="sliding_up_fragment_bottom_bar_height">58dp</dimen>
+
+    <dimen name="largeTextSize">24sp</dimen>
+    <dimen name="xxxTextSize">18sp</dimen>
+    <dimen name="xxTextSize">16sp</dimen>
+    <dimen name="xTextSize">14sp</dimen>
+    <dimen name="mTextSize">12sp</dimen>
+    <dimen name="sTextSize">10sp</dimen>
 </resources>

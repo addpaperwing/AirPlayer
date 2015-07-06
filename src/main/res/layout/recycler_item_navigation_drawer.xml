@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/navigation_recycler_item_text"
-            android:textSize="14sp"
+            android:textSize="@dimen/mTextSize"
             android:textStyle="bold"
             android:textColor="@color/air_primary_text"
             android:padding="@dimen/dp_16_560"

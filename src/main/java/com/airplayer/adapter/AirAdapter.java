@@ -64,13 +64,11 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     /**
      * return the type of item by position
      * the return value will be use in the { @link onCreateViewHolder } method
+     * 根据每一个 item 的 position 决定返回的 item 属于哪种类型 ( header 还是 普通的 item )
+     * 返回值会在 { @link onCreateViewHolder } 中用来决定返回的 viewHolder 对象
      * @param position of item in the recycler view, 0 is a header, the last one is footer, others are ordinary item
      * @return the view type which is set as field
      *
-     * 根据每一个 item 的 position 决定返回的 item 属于哪种类型 ( header 还是 普通的 item )
-     * 返回值会在 { @link onCreateViewHolder } 中用来决定返回的 viewHolder 对象
-     * 参数: position 每一个 item 在 recycler view 中所处的位置, 0 为 header, 最后一个为 footer 其他为 普通的item
-     * 返回值: 在类的常量中设置好的 view 类型的值
      */
     @Override
     public int getItemViewType(int position) {
@@ -85,11 +83,11 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     /**
      * According to the viewType that return from { @link getItemViewType }
      * switch the create view method to call
+     * 根据 viewType 的返回值，选择调用哪个类型的view 需要被创建
      * @param parent view group of the sub layout, here is a recycler view
      * @param viewType this value returns from { @link getItemViewType }
      * @return methods which could be over ride in sub class to create different view
      *
-     * 更具 viewType 的返回值，选择调用哪个类型的view 需要被创建
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -107,34 +105,34 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /**
-     * create an ordinary item view
+     * create an ordinary item view, must be implemented
+     * 创建一个普通的 item view
      * @param parent view group of the sub layout, here is a recycler view
      * @return an ordinary item view holder
      *
-     * 创建一个普通的 item view
      */
     public abstract AirAdapter.AirItemViewHolder onCreateItemViewHolder(ViewGroup parent);
 
     /**
-     * create a header item view
+     * create a header item view, if not over ride returns a empty header
+     * 创建一个 header 默认为空
      * @param parent view group of the sub layout, here is a recycler view
      * @return a header item view holder
      *
-     * 创建一个 header 默认为空
      */
     public  AirAdapter.AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-        return new AirHeadViewHolder(mLayoutInflater.inflate(R.layout.recycle_item_empty, parent, false));
+        return new AirHeadViewHolder(mLayoutInflater.inflate(R.layout.recycler_item_empty, parent, false));
     }
 
     /**
-     * create a footer item view
+     * create a footer item view, if not over ride returns a empty footer
+     * 创建一个 footer 默认为空
      * @param parent view group of the sub layout, here is a recycler view
      * @return a footer item view holder
      *
-     * 创建一个 footer 默认为空
      */
     public AirAdapter.AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
-        return new AirFootViewHolder(mLayoutInflater.inflate(R.layout.recycle_item_empty, parent, false));
+        return new AirFootViewHolder(mLayoutInflater.inflate(R.layout.recycler_item_empty, parent, false));
     }
 
 
@@ -180,14 +178,14 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     public class AirItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private FrameLayout clickableItem;
+        private FrameLayout clickableMask;
 
         public AirItemViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            clickableItem = (FrameLayout) itemView.findViewById(R.id.clickable_item);
-            if (clickableItem != null) {
-                clickableItem.setOnClickListener(this);
+            clickableMask = (FrameLayout) itemView.findViewById(R.id.clickable_mask);
+            if (clickableMask != null) {
+                clickableMask.setOnClickListener(this);
             }
         }
 

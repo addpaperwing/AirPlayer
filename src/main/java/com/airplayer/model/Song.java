@@ -15,9 +15,11 @@ public class Song implements Serializable {
     private int duration;
     private String path;
     private int track;
+    private int year;
     private boolean play;
     private boolean pause;
 
+    // control
     public boolean isPause() {
         return pause;
     }
@@ -34,6 +36,8 @@ public class Song implements Serializable {
         this.play = play;
     }
 
+
+    // display
     public int getId() {
         return id;
     }
@@ -88,6 +92,14 @@ public class Song implements Serializable {
 
     public void setTrack(int track) {
         this.track = track;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public Uri getAlbumArtUri() {

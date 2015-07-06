@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,13 +58,24 @@ public class PlayListFragment extends Fragment {
         mAdapter = new SongAdapter(getActivity(), mPlayList) {
 
             @Override
-            public AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
-                return new AirAdapter.AirFootViewHolder(getLayoutInflater()
-                        .inflate(R.layout.recycler_item_song, parent, false));
+            public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {
+                return new SongItemViewHolder(
+                        getLayoutInflater().inflate(R.layout.recycler_item_play_list, parent, false));
             }
 
             @Override
-            public void onBindFootViewHolder(AirFootViewHolder footHolder) { }
+            public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+                return new AirHeadViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_empty, parent, false));
+            }
+
+            @Override
+            public void onBindHeadViewHolder(AirHeadViewHolder headHolder) { }
+
+            @Override
+            public AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
+                return new AirAdapter.AirFootViewHolder(getLayoutInflater()
+                        .inflate(R.layout.recycler_item_play_list, parent, false));
+            }
         };
         mAdapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override

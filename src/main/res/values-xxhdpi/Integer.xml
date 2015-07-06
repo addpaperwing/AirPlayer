@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="padding_action_bar">144</integer>
-    <integer name="sliding_panel_height">144</integer>
+    <integer name="padding_action_bar">168</integer>
+    <integer name="sliding_panel_height">168</integer>
+    <integer name="padding_tabs">138</integer>
 </resources>

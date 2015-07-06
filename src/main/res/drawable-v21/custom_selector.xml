@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="?android:attr/colorControlHighlight">
+    android:color="@color/color_control_high_light">
 
     <item
         android:id="@android:id/mask"
-        android:drawable="@android:color/white">
-
+        android:drawable="@color/air_text_and_icon">
     </item>
 
 </ripple>

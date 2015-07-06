@@ -1,19 +1,19 @@
-package com.airplayer.fragment;
+package com.airplayer.fragment.child;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
+import com.airplayer.adapter.HeadPadAdapter;
+import com.airplayer.fragment.singleItem.ArtistFragment;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.util.QueryUtils;
@@ -24,22 +24,18 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/9.
  */
-public class ArtistGridFragment extends Fragment {
-
-    private RecyclerView mRecyclerView;
+public class ArtistGridFragment extends MyLibraryChildFragment {
 
     private List<Artist> mList;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
-
-        // load a list from Media data base
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         mList = QueryUtils.loadArtistList(getParentFragment().getActivity());
+    }
 
-        //find a recycler view and set it up
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+    @Override
+    public void setUpRecyclerView(RecyclerView recyclerView) {
         final GridLayoutManager manager = new GridLayoutManager(getParentFragment().getActivity(), 2);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -47,7 +43,9 @@ public class ArtistGridFragment extends Fragment {
                 return position == 0 ? manager.getSpanCount() : 1;
             }
         });
-        mRecyclerView.setLayoutManager(manager);
+        recyclerView.setLayoutManager(manager);
+
+        // set adapter for recyclerView
         ArtistAdapter adapter = new ArtistAdapter(getParentFragment().getActivity(), mList);
         adapter.setItemClickListener(new AirAdapter.ClickListener() {
             @Override
@@ -66,11 +64,10 @@ public class ArtistGridFragment extends Fragment {
             @Override
             public void footerClicked(View view) { }
         });
-        mRecyclerView.setAdapter(adapter);
-        return rootView;
+        recyclerView.setAdapter(adapter);
     }
 
-    private class ArtistAdapter extends AirAdapter {
+    private class ArtistAdapter extends HeadPadAdapter {
 
         public ArtistAdapter(Context context, List<Artist> list) {
             super(context, list);

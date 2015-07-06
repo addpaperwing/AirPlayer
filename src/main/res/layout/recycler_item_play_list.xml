@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 <android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/song_item"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_72_560"
-    android:clickable="true"
-    android:background="@color/air_text_and_icon">
+    android:clickable="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -100,13 +95,4 @@
         </LinearLayout>
 
     </RelativeLayout>
-
 </android.support.v7.widget.Toolbar>
-
-    <FrameLayout
-        android:id="@+id/clickable_mask"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/custom_selector"/>
-
-</FrameLayout>

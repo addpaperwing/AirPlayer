@@ -28,6 +28,7 @@
             <TextView
                 android:id="@+id/artist_name"
                 android:textColor="@color/air_primary_text"
+                android:textSize="@dimen/mTextSize"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:layout_margin="@dimen/dp_4_560"
@@ -38,7 +39,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/clickable_item"
+            android:id="@+id/clickable_mask"
             android:clickable="true"
             android:background="@drawable/custom_selector"
             android:layout_width="match_parent"

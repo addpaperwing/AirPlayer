@@ -9,6 +9,5 @@ but there are still some work have to be done.<br>
 matrial design 的音乐播放器，尝试着做成 google play music 的样子<br>
 
 ##To do list
-hide/show action bar when scroll down/up<br>
 floatting button<br>
-material design scroll view([Parallax Scrolls](https://github.com/nirhart/ParallaxScroll)) and mix it with Recyclerview<br>
+fetch artist/album image from internet<br>

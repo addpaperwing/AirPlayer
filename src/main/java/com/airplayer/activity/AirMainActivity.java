@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Handler;
 import android.os.Message;
@@ -21,7 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
@@ -271,6 +275,9 @@ public class AirMainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * package method to animate show panel when start to play music
+     */
     private void showPanel() {
         new Thread(new Runnable() {
             @Override

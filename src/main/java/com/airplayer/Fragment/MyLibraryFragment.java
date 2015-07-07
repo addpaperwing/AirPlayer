@@ -33,7 +33,6 @@ public class MyLibraryFragment extends Fragment {
     private SlidingTabLayout tabLayout;
 
     private AirMulScrollListener listener;
-
     public AirMulScrollListener getListener() {
         return listener;
     }
@@ -131,9 +130,9 @@ public class MyLibraryFragment extends Fragment {
     }
 
     private void animateTranslate(int y) {
-        globalBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(1));
-        paddingBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(1));
-        tabLayout.animate().translationY(y).setInterpolator(new AccelerateInterpolator(1));
+        globalBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(2));
+        paddingBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(2));
+        tabLayout.animate().translationY(y).setInterpolator(new AccelerateInterpolator(2));
     }
 }
 

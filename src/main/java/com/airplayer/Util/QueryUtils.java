@@ -99,7 +99,8 @@ public class QueryUtils {
                         MediaStore.Audio.Media.DURATION,    /* for displaying */
                         MediaStore.Audio.Media.DATA,        /* for playing */
                         MediaStore.Audio.Media.TRACK,       /* for displaying in album fragment */
-                        MediaStore.Audio.Media.YEAR         /* for displaying in header of Song list fragment */
+                        MediaStore.Audio.Media.YEAR,        /* for displaying in header of Song list fragment */
+                        MediaStore.Audio.Media.ALBUM_ID     /* for getting the album art*/
                 },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
@@ -115,6 +116,7 @@ public class QueryUtils {
                         song.setPath(cursor.getString(6));
                         song.setTrack(cursor.getInt(7));
                         song.setYear(cursor.getInt(8));
+                        song.setAlbumId(cursor.getInt(9));
                         list.add(song);
                     }
                 } while (cursor.moveToNext());

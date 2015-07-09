@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,27 @@ public class MyLibraryFragment extends Fragment {
         return listener;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        listener = new AirMulScrollListener(getResources().getInteger(R.integer.padding_action_bar) + getResources().getInteger(R.integer.padding_tabs)) {
+            @Override
+            public void onViewScrolled(int viewScrolledDistance) {
+                noAnimateTranslate(-viewScrolledDistance);
+            }
+
+            @Override
+            public void onHide() {
+                animateTranslate(-getResources().getInteger(R.integer.padding_action_bar) - getResources().getInteger(R.integer.padding_tabs));
+            }
+
+            @Override
+            public void onShow() {
+                animateTranslate(0);
+            }
+        };
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,23 +76,6 @@ public class MyLibraryFragment extends Fragment {
         tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setDistributeEvenly(true);
         tabLayout.setViewPager(viewPager);
-
-        listener = new AirMulScrollListener(getResources().getInteger(R.integer.padding_action_bar) + getResources().getInteger(R.integer.padding_tabs)) {
-            @Override
-            public void onViewScrolled(int viewScrolledDistance) {
-                noAnimateTranslate(-viewScrolledDistance);
-            }
-
-            @Override
-            public void onHide() {
-                animateTranslate(-getResources().getInteger(R.integer.padding_action_bar) - getResources().getInteger(R.integer.padding_tabs));
-            }
-
-            @Override
-            public void onShow() {
-                animateTranslate(0);
-            }
-        };
 
         tabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

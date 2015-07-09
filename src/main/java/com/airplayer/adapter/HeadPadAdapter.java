@@ -1,11 +1,17 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.airplayer.R;
+import com.airplayer.fragment.NavigationDrawerFragment;
+import com.airplayer.util.ImageUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -27,8 +33,10 @@ public abstract class HeadPadAdapter extends AirAdapter {
     public void onBindHeadViewHolder(AirHeadViewHolder headHolder) {
         if (headHolder instanceof PadHeader) {
             PadHeader header = (PadHeader) headHolder;
-            header.imageView.setMinimumHeight(getContext().getResources().getInteger(R.integer.padding_tabs) + getContext().getResources().getInteger(R.integer.padding_action_bar));
-            header.imageView.setMaxHeight(getContext().getResources().getInteger(R.integer.padding_tabs) + getContext().getResources().getInteger(R.integer.padding_action_bar));
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+            Picasso.with(getContext())
+                    .load(Uri.parse(sp.getString(NavigationDrawerFragment.PREF_THEME_PIC, "")))
+                    .into(header.imageView);
         }
     }
 

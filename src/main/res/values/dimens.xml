@@ -20,6 +20,7 @@
 
     <dimen name="drawer_width">240dp</dimen>
 
+    <dimen name="padding_image_height">102dp</dimen>
     <dimen name="sliding_up_fragment_bottom_bar_height">58dp</dimen>
 
     <dimen name="largeTextSize">24sp</dimen>

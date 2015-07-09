@@ -2,7 +2,10 @@ package com.airplayer.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -13,50 +16,103 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.util.ImageUtils;
+import com.airplayer.util.StorageUtils;
+
+import java.io.File;
 
 /**
  * Created by ZiyiTsang on 15/6/1.
  */
 public class NavigationDrawerFragment extends Fragment {
 
+    /* SharedPreference */
+    private SharedPreferences mSp;
     /**
-     * The key of { @link mCurrentSelectedPosition }
-     * which used to remember the position that selected
-     */
-    public static final String CURRENT_SELECTED_POSITION = "current_selected_position";
-
-    /**
-     * The key of { @link mUserLearnDrawer }
-     * which used to remember if user learn how to use the drawer
+     * sharedPreference to save if user learn how to use the drawer
      */
     public static final String PREF_USER_LEARN_DRAWER = "pref_user_learn_drawer";
 
+    private boolean mUserLearnDrawer;
+
+    /**
+     * sharedPreference to save the Uri of theme picture which is set when click the top image view
+     * of navigation drawer
+     */
+    public static final String PREF_THEME_PIC = "pref_theme_picture";
+
+    private Uri ThemePicURI = null;
+
+    public Uri getThemePicURI() {
+        return ThemePicURI;
+    }
+
+    public void setThemePicURI(Uri themePicURI) {
+        ThemePicURI = themePicURI;
+        if (themePicURI == null) {
+            mSp.edit().putString(PREF_THEME_PIC, null).apply();
+        } else {
+            mSp.edit().putString(PREF_THEME_PIC, ThemePicURI.toString()).apply();
+        }
+
+    }
+
+    /* Actions */
+    public static final int PICK_PHOTO = 1;
 
     /**
      * A pointer to the current callbacks instance (the Activity).
      */
     private NavigationDrawerCallbacks mCallbacks;
 
-
+    /* User interface */
     private DrawerLayout mDrawerLayout;
-    private RecyclerView mDrawerRecycler;
     private View mFragmentContainerView;
+
+    // top of navigation drawer
+    private ImageView mTopImage;
+    private TextView mTopImageHint;
+
+    // package set top image method to relate the hint text view to invisible
+    private void setTopImageBitmap(Bitmap bm) {
+        if (mTopImage != null) {
+            mTopImage.setImageBitmap(bm);
+        }
+        if (mTopImageHint != null && bm != null) {
+            mTopImageHint.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    // content of navigation drawer
+    private RecyclerView mDrawerRecycler;
+
+    // bottom of navigation drawer
+    private FrameLayout mSetting;
 
     /**
      * Helper component that ties the action bar to the navigation drawer.
      */
     private ActionBarDrawerToggle toggle;
 
+    /* savedInstanceState */
+    /**
+     * The key of { @link mCurrentSelectedPosition }
+     * which used to remember the position that selected
+     */
+    public static final String CURRENT_SELECTED_POSITION = "current_selected_position";
+
     private int mCurrentSelectedPosition;
-    private boolean mUserLearnDrawer;
 
     @Override
     public void onAttach(Activity activity) {
@@ -72,8 +128,13 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mUserLearnDrawer = sp.getBoolean(PREF_USER_LEARN_DRAWER, false);
+        // get SharedPreference
+        mSp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mUserLearnDrawer = mSp.getBoolean(PREF_USER_LEARN_DRAWER, false);
+        String themePicUriString = mSp.getString(PREF_THEME_PIC, "");
+        if (!"".equals(themePicUriString)) {
+            ThemePicURI = Uri.parse(themePicUriString);
+        }
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(CURRENT_SELECTED_POSITION);
@@ -82,13 +143,33 @@ public class NavigationDrawerFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
 
         mDrawerRecycler = (RecyclerView) rootView.findViewById(R.id.navigation_recycler);
         mDrawerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDrawerRecycler.setAdapter(new NaviRecyclerAdapter(getActivity(),
                 new String[]{getString(R.string.title_play_now), getString(R.string.title_my_library)}));
+
+        mTopImageHint = (TextView) rootView.findViewById(R.id.navigation_top_image_hint);
+        mTopImage = (ImageView) rootView.findViewById(R.id.navigation_image);
+        setTopImageBitmap(ImageUtils.getBitmap(getActivity(), getThemePicURI()));
+        mTopImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, PICK_PHOTO);
+            }
+        });
+
+        mSetting = (FrameLayout) rootView.findViewById(R.id.navigation_bottom_button);
+        mSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         return rootView;
     }
@@ -149,6 +230,23 @@ public class NavigationDrawerFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_SELECTED_POSITION, mCurrentSelectedPosition);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PICK_PHOTO) {
+                Uri uri = data.getData();
+                Bitmap bm = ImageUtils.getBitmap(getActivity(), uri);
+                if (bm.getByteCount() > 14745600) {
+                    Toast.makeText(getActivity(), R.string.navigation_top_toast, Toast.LENGTH_SHORT).show();
+                } else {
+                    File photoFile = StorageUtils.savePhoto(getActivity(), "/AirPlayer", "Theme.jpg", bm);
+                    setThemePicURI(Uri.fromFile(photoFile));
+                    setTopImageBitmap(bm);
+                }
+            }
+        }
     }
 
     public DrawerLayout getDrawerLayout() {

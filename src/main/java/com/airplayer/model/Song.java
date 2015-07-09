@@ -8,18 +8,11 @@ import java.io.Serializable;
  * Created by ZiyiTsang on 15/6/7.
  */
 public class Song implements Serializable {
-    private int id;
-    private String title;
-    private String album;
-    private String artist;
-    private int duration;
-    private String path;
-    private int track;
-    private int year;
+
+    // control
     private boolean play;
     private boolean pause;
 
-    // control
     public boolean isPause() {
         return pause;
     }
@@ -36,8 +29,17 @@ public class Song implements Serializable {
         this.play = play;
     }
 
-
     // display
+    private int id;
+    private String title;
+    private String album;
+    private int albumId;
+    private String artist;
+    private int duration;
+    private String path;
+    private int track;
+    private int year;
+
     public int getId() {
         return id;
     }
@@ -60,6 +62,10 @@ public class Song implements Serializable {
 
     public void setAlbum(String album) {
         this.album = album;
+    }
+
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
     }
 
     public String getArtist() {
@@ -103,6 +109,6 @@ public class Song implements Serializable {
     }
 
     public Uri getAlbumArtUri() {
-        return Uri.parse("content://media/external/audio/media/" + id + "/albumart");
+        return Uri.parse("content://media/external/audio/albumart/" + albumId);
     }
 }

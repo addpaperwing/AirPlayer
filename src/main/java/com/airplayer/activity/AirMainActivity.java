@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,8 +45,7 @@ public class AirMainActivity extends AppCompatActivity
     /* shared preference */
 //    public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
 //    public static final String PREF_DATA_BASE_VERSION = "pref_data_base_version";
-//    private SharedPreferences mSp = PreferenceManager.getDefaultSharedPreferences(this);
-
+//    private SharedPreferences mSp;
 
     /* user interface */
     private DrawerLayout mDrawerLayout;

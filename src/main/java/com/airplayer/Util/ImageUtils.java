@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.net.Uri;
 import android.util.Log;
 import android.view.Display;
 
@@ -18,7 +19,7 @@ import java.io.FileNotFoundException;
  */
 public class ImageUtils {
 
-    public static Bitmap getBitmapWithResized(Activity activity, String artPath) {
+    public static Bitmap getWindowWideBitmap(Activity activity, String artPath) {
         if (artPath != null) {
             try {
                 Display display = activity.getWindowManager().getDefaultDisplay();
@@ -58,7 +59,7 @@ public class ImageUtils {
         }
     }
 
-    public static Bitmap getBitmapWithoutResized (Context context, String path) {
+    public static Bitmap getBitmap(Context context, String path) {
         if (path != null) {
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
@@ -80,5 +81,17 @@ public class ImageUtils {
         } else {
             return null;
         }
+    }
+
+    public static Bitmap getBitmap(Context context, Uri uri) {
+        Bitmap bm = null;
+        if (uri != null) {
+            try {
+                bm = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return bm;
     }
 }

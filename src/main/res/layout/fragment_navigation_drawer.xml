@@ -6,13 +6,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/navigation_image"
+    <FrameLayout
+        android:id="@+id/navigation_top_stuff"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_160_560"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/darker_gray"
-        />
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
+
+        <ImageView
+            android:id="@+id/navigation_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_160_560"
+            android:scaleType="centerCrop"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/navigation_top_image_hint"
+            android:text="@string/navigation_top_hint"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
+
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/navigation_recycler"
@@ -21,13 +36,27 @@
         android:dividerHeight="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/navigation_image" />
+        android:layout_below="@+id/navigation_top_stuff" />
 
-    <ImageView
-        android:id="@+id/navigation_bottom_image"
+    <FrameLayout
+        android:id="@+id/navigation_bottom_button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_56_560"
-        android:layout_alignParentBottom="true"
-        android:background="@color/air_dark_primary_color"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_56_560"
+            android:background="@color/air_dark_primary_color"/>
+
+        <TextView
+            android:text="@string/action_settings"
+            android:textStyle="bold"
+            android:textSize="@dimen/xxTextSize"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" />
+
+    </FrameLayout>
 
 </RelativeLayout>

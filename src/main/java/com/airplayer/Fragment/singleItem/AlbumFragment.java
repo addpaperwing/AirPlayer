@@ -91,7 +91,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             AlbumSongHeader header = (AlbumSongHeader) holder;
-            header.image.setImageBitmap(ImageUtils.getBitmapWithResized(getActivity(), mAlbum.getAlbumArtPath()));
+            header.image.setImageBitmap(ImageUtils.getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath()));
             header.title.setText(mAlbum.getTitle());
             header.subTitle.setText(mAlbum.getAlbumArtist());
             header.desc.setText(mAlbum.getYear() + " , " + mSongList.size() + " songs");

@@ -1,28 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/padding_image"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/padding_image_height"
-        android:scaleType="centerCrop" />
+        android:layout_height="wrap_content"
+        fresco:actualImageScaleType="centerCrop"
+        />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/air_mask_grey" />
+        android:background="@color/air_mask_grey"
+        />
 
     <TextView
-        android:text="AirPlayer"
+        android:text="@string/app_name"
         android:textStyle="bold"
         android:textSize="@dimen/largeTextSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:gravity="center" />
+        android:gravity="center"
+        />
 
 </FrameLayout>

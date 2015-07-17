@@ -1,4 +1,4 @@
-package com.airplayer.adapter;
+package com.airplayer.listener;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -34,9 +34,17 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
 
     private int totalScrollDistance = 0;
 
-    private int viewHeight;
-    private int viewScrolledDistance = 0;
-    private boolean toolbarHide = false;
+    protected int getTotalScrollDistance() {
+        return totalScrollDistance;
+    }
+
+    protected void setTotalScrollDistance(int dy) {
+        totalScrollDistance += dy;
+    }
+
+    protected int viewHeight;
+    protected int viewScrolledDistance = 0;
+    protected boolean toolbarHide = false;
 
     public AirScrollListener(int viewHeight) {
         this.viewHeight = viewHeight;
@@ -62,12 +70,12 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
         onViewScrolled(viewScrolledDistance);
 
         // measure the totalDistance user scrolled, min is 0, max is pixels of height of recyclerView
-        totalScrollDistance += dy;
+        setTotalScrollDistance(dy);
 
         // set parallax translationY to half of totalScrollDistance every scrolled
         // make it look like half distance scrolled than others
         if (haveParallax) {
-            mParallax.setTranslationY(totalScrollDistance / 2);
+            mParallax.setTranslationY(getTotalScrollDistance() / 2);
         }
     }
 
@@ -84,17 +92,17 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
 
         // when recyclerView is settled, toolbar start to animate (show/hide) in different situation
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-            if (!toolbarHide && viewScrolledDistance > 0 && totalScrollDistance > viewHeight) {
+            if (!toolbarHide && viewScrolledDistance > 0 && getTotalScrollDistance() > viewHeight) {
                 onHide();
                 toolbarHide = true;
                 viewScrolledDistance = viewHeight;
-            } else if (toolbarHide && viewScrolledDistance < viewHeight || totalScrollDistance < viewHeight){
+            } else if (toolbarHide && viewScrolledDistance < viewHeight || getTotalScrollDistance() < viewHeight){
                 onShow();
                 toolbarHide = false;
                 viewScrolledDistance = 0;
             }
 
-            if (totalScrollDistance == 0) {
+            if (getTotalScrollDistance() == 0) {
                 // when toolbar back to top of the view (totalScrollDistance back to 0)
                 // set it's color to transparent
                 onScrollBackToTop();
@@ -105,5 +113,5 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
     public abstract void onViewScrolled(int viewScrolledDistance);
     public abstract void onHide();
     public abstract void onShow();
-    public abstract void onScrollBackToTop();
+    public void onScrollBackToTop() { }
 }

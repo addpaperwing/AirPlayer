@@ -1,8 +1,11 @@
 package com.airplayer.fragment.singleItem;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,10 +17,12 @@ import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
+import com.airplayer.listener.OnPictureClickListener;
 import com.airplayer.model.Album;
+import com.airplayer.model.PictureGettable;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.airplayer.util.ImageUtils;
+import com.airplayer.util.BitmapUtils;
 import com.airplayer.util.QueryUtils;
 
 import java.util.List;
@@ -29,13 +34,17 @@ public class AlbumFragment extends SingleItemChildFragment {
 
     public static final String TAG = AlbumFragment.class.getSimpleName();
 
-    public static final String ALBUM_RECEIVED = "artist_received";
+    public static final String ALBUM_RECEIVED = "album_received";
+
+    private ImageView mImageView;
 
     private Album mAlbum;
 
     private List<Song> mSongList;
 
     private PlayMusicService.PlayerControlBinder mBinder;
+
+    private FragmentManager mFragmentManager;
 
     public static AlbumFragment newInstance(Album album) {
         AlbumFragment fragment = new AlbumFragment();
@@ -54,26 +63,32 @@ public class AlbumFragment extends SingleItemChildFragment {
                 "album = ?", new String[]{mAlbum.getTitle()}, MediaStore.Audio.Media.TRACK);
 
         ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
+        mFragmentManager = getActivity().getSupportFragmentManager();
     }
 
-    public void setUpRecyclerView(RecyclerView recyclerView) {
+    public void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         AlbumSongAdapter adapter = new AlbumSongAdapter(getActivity(), mSongList);
         adapter.showIconImage(false);
-        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
-            public void itemClicked(View view, int position) {
+            public void onItemClicked(View view, int position) {
                 mBinder.playMusic(position - 1, mSongList);
             }
-
-            @Override
-            public void headerClicked(View view) { }
-
-            @Override
-            public void footerClicked(View view) { }
         });
 
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PictureGettable.REQUEST_CODE_FETCH_PICTURE) {
+                mAlbum.setPictureDownloaded(true);
+                mImageView.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
+                        mAlbum.getAlbumArtPath(), true));
+            }
+        }
     }
 
     public class AlbumSongAdapter extends SongAdapter {
@@ -90,8 +105,18 @@ public class AlbumFragment extends SingleItemChildFragment {
 
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
-            AlbumSongHeader header = (AlbumSongHeader) holder;
-            header.image.setImageBitmap(ImageUtils.getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath()));
+            final AlbumSongHeader header = (AlbumSongHeader) holder;
+            header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), true));
+            header.image.setOnClickListener(new OnPictureClickListener(getContext(), mAlbum, mFragmentManager) {
+                @Override
+                public void onPictureDelete() {
+                    mAlbum.setPictureDownloaded(false);
+                    header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
+                            mAlbum.getAlbumArtPath(), true));
+                }
+            });
+            mImageView = header.image;
+
             header.title.setText(mAlbum.getTitle());
             header.subTitle.setText(mAlbum.getAlbumArtist());
             header.desc.setText(mAlbum.getYear() + " , " + mSongList.size() + " songs");

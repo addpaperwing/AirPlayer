@@ -1,18 +1,15 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.airplayer.R;
-import com.airplayer.fragment.NavigationDrawerFragment;
-import com.airplayer.util.ImageUtils;
-import com.squareup.picasso.Picasso;
+import com.airplayer.activity.AirMainActivity;
+import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -20,8 +17,16 @@ import java.util.List;
  */
 public abstract class HeadPadAdapter extends AirAdapter {
 
+    private int paddingHeight;
+
     public HeadPadAdapter(Context context, List<?> list) {
         super(context, list);
+        paddingHeight = context.getResources().getInteger(R.integer.padding_action_bar) + context.getResources().getInteger(R.integer.padding_tabs);
+    }
+
+    public HeadPadAdapter(Context context, List<?> list, int paddingHeight) {
+        super(context, list);
+        this.paddingHeight = paddingHeight;
     }
 
     @Override
@@ -33,20 +38,21 @@ public abstract class HeadPadAdapter extends AirAdapter {
     public void onBindHeadViewHolder(AirHeadViewHolder headHolder) {
         if (headHolder instanceof PadHeader) {
             PadHeader header = (PadHeader) headHolder;
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-            Picasso.with(getContext())
-                    .load(Uri.parse(sp.getString(NavigationDrawerFragment.PREF_THEME_PIC, "")))
-                    .into(header.imageView);
+            header.image.setMaxHeight(paddingHeight);
+            header.image.setMinimumHeight(paddingHeight);
+
+            File file = new File(AirMainActivity.EXTERNAL_PICTURE_FOLDER + "Theme.jpg");
+            header.image.setImageURI(Uri.fromFile(file));
         }
     }
 
     class PadHeader extends AirAdapter.AirHeadViewHolder {
 
-        ImageView imageView;
+        SimpleDraweeView image;
 
         public PadHeader(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.padding_image);
+            image = (SimpleDraweeView) itemView.findViewById(R.id.padding_image);
         }
     }
 }

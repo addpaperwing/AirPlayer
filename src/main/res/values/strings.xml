@@ -14,6 +14,15 @@
     <string name="navigation_top_hint">click to set up a theme picture</string>
     <string name="navigation_top_toast">Picture is too large</string>
 
+    <string name="fetch_picture_from_internet">Fetch picture from internet</string>
+    <string name="delete_picture_downloaded">Delete picture downloaded</string>
+
+    <string name="make_sure_replace_album_art">Replace album art with this picture?</string>
+    <string name="make_sure_replace_artist_picture">Replace artist picture with this?</string>
+
+    <string name="toast_picture_delete">Picture deleted</string>
+    <string name="toast_picture_not_found">Picture not found</string>
+
     <string-array name="tab_item_array">
         <item>Artists</item>
         <item>Albums</item>

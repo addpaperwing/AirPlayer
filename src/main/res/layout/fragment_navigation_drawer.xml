@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#FFFFFF"
     android:layout_width="match_parent"
@@ -12,12 +13,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/navigation_image"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_160_560"
-            android:scaleType="centerCrop"
-            android:background="@android:color/darker_gray" />
+            android:background="@android:color/darker_gray"
+            fresco:actualImageScaleType="centerCrop"
+            />
 
         <TextView
             android:id="@+id/navigation_top_image_hint"

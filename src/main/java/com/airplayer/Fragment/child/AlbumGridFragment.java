@@ -31,7 +31,7 @@ public class AlbumGridFragment extends MyLibraryChildFragment  {
     }
 
     @Override
-    public void setUpRecyclerView(RecyclerView recyclerView) {
+    public void setupRecyclerView(RecyclerView recyclerView) {
         final GridLayoutManager manager = new GridLayoutManager(getParentFragment().getActivity(), 2);
 
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -43,23 +43,15 @@ public class AlbumGridFragment extends MyLibraryChildFragment  {
         recyclerView.setLayoutManager(manager);
 
         AlbumAdapter adapter = new AlbumAdapter(getParentFragment().getActivity(), mList);
-        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
-            public void itemClicked(View view, int position) {
+            public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getParentFragment().getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mList.get(position - 1)));
                 ft.addToBackStack(null);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
-            }
-
-            @Override
-            public void headerClicked(View view) {
-            }
-
-            @Override
-            public void footerClicked(View view) {
             }
         });
         recyclerView.setAdapter(adapter);

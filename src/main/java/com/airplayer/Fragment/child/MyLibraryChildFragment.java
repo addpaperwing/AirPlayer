@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airplayer.R;
-import com.airplayer.adapter.AirMulScrollListener;
+import com.airplayer.listener.AirMulScrollListener;
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.itf.SettableRecyclerView;
 
@@ -30,7 +30,7 @@ public abstract class MyLibraryChildFragment extends Fragment implements Settabl
 
         //find a recycler view and set it up
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        this.setUpRecyclerView(recyclerView);
+        this.setupRecyclerView(recyclerView);
 
         AirMulScrollListener listener = ((MyLibraryFragment)getParentFragment()).getListener();
         recyclerView.setOnScrollListener(listener);

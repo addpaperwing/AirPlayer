@@ -1,12 +1,15 @@
 package com.airplayer.fragment;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,19 +19,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
-import com.airplayer.util.ImageUtils;
+import com.airplayer.util.BitmapUtils;
 import com.airplayer.util.StorageUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 
@@ -37,8 +39,8 @@ import java.io.File;
  */
 public class NavigationDrawerFragment extends Fragment {
 
-    /* SharedPreference */
     private SharedPreferences mSp;
+    /* guide user to use navigation drawer */
     /**
      * sharedPreference to save if user learn how to use the drawer
      */
@@ -46,30 +48,40 @@ public class NavigationDrawerFragment extends Fragment {
 
     private boolean mUserLearnDrawer;
 
-    /**
-     * sharedPreference to save the Uri of theme picture which is set when click the top image view
-     * of navigation drawer
-     */
-    public static final String PREF_THEME_PIC = "pref_theme_picture";
 
-    private Uri ThemePicURI = null;
-
-    public Uri getThemePicURI() {
-        return ThemePicURI;
-    }
-
-    public void setThemePicURI(Uri themePicURI) {
-        ThemePicURI = themePicURI;
-        if (themePicURI == null) {
-            mSp.edit().putString(PREF_THEME_PIC, null).apply();
-        } else {
-            mSp.edit().putString(PREF_THEME_PIC, ThemePicURI.toString()).apply();
-        }
-
-    }
-
-    /* Actions */
+    /* handle replace theme picture operation */
     public static final int PICK_PHOTO = 1;
+
+    // what value of message instance
+    private static final int THEME_PICTURE = 0;
+
+    // progress dialog when loading theme picture
+    private ProgressDialog progress;
+
+    // handler
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == THEME_PICTURE) {
+                setTopImage((Uri) msg.obj);
+            }
+            progress.dismiss();
+        }
+    };
+
+    // thread
+    private void saveBitmapTask(final Bitmap bitmap, final Uri uri) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                StorageUtils.saveImage(getActivity(), "Theme.jpg", bitmap);
+                Message msg = new Message();
+                msg.what = THEME_PICTURE;
+                msg.obj = uri;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
 
     /**
      * A pointer to the current callbacks instance (the Activity).
@@ -80,18 +92,23 @@ public class NavigationDrawerFragment extends Fragment {
     private DrawerLayout mDrawerLayout;
     private View mFragmentContainerView;
 
-    // top of navigation drawer
-    private ImageView mTopImage;
+
+    // top theme image view of navigation drawer
+    private SimpleDraweeView mTopImage;
     private TextView mTopImageHint;
 
-    // package set top image method to relate the hint text view to invisible
-    private void setTopImageBitmap(Bitmap bm) {
-        if (mTopImage != null) {
-            mTopImage.setImageBitmap(bm);
+    private void setTopImage(Uri uri) {
+        if (uri == null) {
+            File file = new File(AirMainActivity.EXTERNAL_PICTURE_FOLDER + "Theme.jpg");
+            if (file.exists()) {
+                uri = Uri.fromFile(file);
+            } else {
+                mTopImageHint.setVisibility(View.VISIBLE);
+                return;
+            }
         }
-        if (mTopImageHint != null && bm != null) {
-            mTopImageHint.setVisibility(View.INVISIBLE);
-        }
+        mTopImage.setImageURI(uri);
+        mTopImageHint.setVisibility(View.INVISIBLE);
     }
 
     // content of navigation drawer
@@ -131,10 +148,6 @@ public class NavigationDrawerFragment extends Fragment {
         // get SharedPreference
         mSp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnDrawer = mSp.getBoolean(PREF_USER_LEARN_DRAWER, false);
-        String themePicUriString = mSp.getString(PREF_THEME_PIC, "");
-        if (!"".equals(themePicUriString)) {
-            ThemePicURI = Uri.parse(themePicUriString);
-        }
 
         if (savedInstanceState != null) {
             mCurrentSelectedPosition = savedInstanceState.getInt(CURRENT_SELECTED_POSITION);
@@ -152,8 +165,8 @@ public class NavigationDrawerFragment extends Fragment {
                 new String[]{getString(R.string.title_play_now), getString(R.string.title_my_library)}));
 
         mTopImageHint = (TextView) rootView.findViewById(R.id.navigation_top_image_hint);
-        mTopImage = (ImageView) rootView.findViewById(R.id.navigation_image);
-        setTopImageBitmap(ImageUtils.getBitmap(getActivity(), getThemePicURI()));
+        mTopImage = (SimpleDraweeView) rootView.findViewById(R.id.navigation_image);
+        setTopImage(null);
         mTopImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -237,13 +250,14 @@ public class NavigationDrawerFragment extends Fragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PICK_PHOTO) {
                 Uri uri = data.getData();
-                Bitmap bm = ImageUtils.getBitmap(getActivity(), uri);
+                Bitmap bm = BitmapUtils.getBitmap(getActivity(), uri);
                 if (bm.getByteCount() > 14745600) {
                     Toast.makeText(getActivity(), R.string.navigation_top_toast, Toast.LENGTH_SHORT).show();
                 } else {
-                    File photoFile = StorageUtils.savePhoto(getActivity(), "/AirPlayer", "Theme.jpg", bm);
-                    setThemePicURI(Uri.fromFile(photoFile));
-                    setTopImageBitmap(bm);
+                    progress = new ProgressDialog(getActivity());
+                    progress.setMessage("saving picture");
+                    progress.show();
+                    saveBitmapTask(bm, uri);
                 }
             }
         }

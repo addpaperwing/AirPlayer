@@ -9,19 +9,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
-import com.airplayer.adapter.AirScrollListener;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.fragment.singleItem.AlbumFragment;
+import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.model.Album;
 import com.airplayer.util.QueryUtils;
 
@@ -60,9 +58,9 @@ public class PlayNowFragment extends Fragment {
         });
         mRecyclerView.setLayoutManager(manager);
         PlayNowAdapter adapter = new PlayNowAdapter(getActivity(), recentAlbumList);
-        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
-            public void itemClicked(View view, int position) {
+            public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(recentAlbumList.get(position - 1)));
@@ -70,39 +68,12 @@ public class PlayNowFragment extends Fragment {
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             }
-
-            @Override
-            public void headerClicked(View view) {
-
-            }
-
-            @Override
-            public void footerClicked(View view) { }
         });
         mRecyclerView.setAdapter(adapter);
 
         final Toolbar toolbar = ((AirMainActivity) getActivity()).getToolbar();
         toolbar.setVisibility(View.VISIBLE);
-        mRecyclerView.setOnScrollListener(new AirScrollListener(getResources().getInteger(R.integer.padding_action_bar)) {
-            @Override
-            public void onViewScrolled(int viewScrolledDistance) {
-                toolbar.setTranslationY(-viewScrolledDistance);
-            }
-
-            @Override
-            public void onHide() {
-                toolbar.animate().translationY(toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(1));
-            }
-
-            @Override
-            public void onShow() {
-                toolbar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(1));
-            }
-
-            @Override
-            public void onScrollBackToTop() { }
-        });
-
+        mRecyclerView.setOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), toolbar));
         return rootView;
     }
 
@@ -124,7 +95,7 @@ public class PlayNowFragment extends Fragment {
             playNowHeadViewHolder.title.setText("Recent Added");
             int numOfSongs = 0;
             for (int i = 0; i < getList().size(); i++) {
-                    numOfSongs += ((Album) getList().get(i)).getSongsHave();
+                    numOfSongs += ((Album) getList().get(i)).getSongsCount();
             }
             playNowHeadViewHolder.subTitle.setText(getList().size() + " albums " + numOfSongs +" songs");
             playNowHeadViewHolder.desc.setText("click to shuffle all recent added");

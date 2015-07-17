@@ -6,16 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.HandlerThread;
+import android.os.Environment;
 import android.os.IBinder;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
@@ -24,16 +20,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
 
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
 import com.airplayer.fragment.PlayNowFragment;
 import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
+import com.airplayer.model.AirModel;
+import com.airplayer.model.PictureGettable;
 import com.airplayer.service.PlayMusicService;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 
@@ -41,6 +37,9 @@ public class AirMainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     public static final String TAG = "AirMainActivity";
+
+    public static final String EXTERNAL_PICTURE_FOLDER = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES).getPath() + "/AirPlayer/";
 
     /* shared preference */
 //    public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
@@ -97,6 +96,8 @@ public class AirMainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
+        AirModel.initModels(this);
         setContentView(R.layout.activity_main);
 
         // bind service
@@ -154,6 +155,20 @@ public class AirMainActivity extends AppCompatActivity
         mPlayerStateReceiver = new PlayerStateReceiver();
         IntentFilter filter = new IntentFilter(PlayMusicService.PLAY_STATE_CHANGE);
         registerReceiver(mPlayerStateReceiver, filter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PictureGettable.REQUEST_CODE_FETCH_PICTURE) {
+                mFragmentManager.findFragmentById(R.id.fragment_container)
+                        .onActivityResult(requestCode, resultCode, data);
+            } else {
+                super.onActivityResult(requestCode, resultCode, data);
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override

@@ -13,7 +13,7 @@ import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.airplayer.util.ImageUtils;
+import com.airplayer.util.BitmapUtils;
 import com.airplayer.util.QueryUtils;
 
 /**
@@ -62,7 +62,7 @@ public class AirNotification {
                     .setSubText(songPlaying.getAlbum())
                     .setContentIntent(pContent)
                     .setWhen(0)
-                    .setLargeIcon(ImageUtils.getBitmap(mContext, QueryUtils.getAlbumArtPath(mContext, songPlaying.getAlbum())))
+                    .setLargeIcon(BitmapUtils.getBitmap(mContext, songPlaying.getAlbumArtPath(mContext)))
                     .setStyle(new Notification.MediaStyle().setShowActionsInCompactView(0, 1, 2))
                     .setOngoing(true)
                     .addAction(R.drawable.btn_previous_white, "previous", pPrevious)
@@ -77,7 +77,7 @@ public class AirNotification {
                     .setSubText(songPlaying.getAlbum())
                     .setContentIntent(pContent)
                     .setWhen(0)
-                    .setLargeIcon(ImageUtils.getBitmap(mContext, QueryUtils.getAlbumArtPath(mContext, songPlaying.getAlbum())))
+                    .setLargeIcon(BitmapUtils.getBitmap(mContext, QueryUtils.getAlbumArtPath(mContext, songPlaying.getAlbum())))
                     .setOngoing(true)
                     .addAction(R.drawable.btn_previous_white, "previous", pPrevious)
                     .addAction(R.drawable.btn_pause_white, "pause", pPlayPause)

@@ -1,13 +1,20 @@
 package com.airplayer.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Environment;
+import android.preference.PreferenceManager;
+
+import com.airplayer.activity.AirMainActivity;
+import com.airplayer.util.QueryUtils;
 
 import java.io.Serializable;
 
 /**
  * Created by ZiyiTsang on 15/6/7.
  */
-public class Song implements Serializable {
+public class Song extends AirModel implements Serializable {
 
     // control
     private boolean play;
@@ -38,7 +45,6 @@ public class Song implements Serializable {
     private int duration;
     private String path;
     private int track;
-    private int year;
 
     public int getId() {
         return id;
@@ -100,15 +106,24 @@ public class Song implements Serializable {
         this.track = track;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
     public Uri getAlbumArtUri() {
-        return Uri.parse("content://media/external/audio/albumart/" + albumId);
+        boolean b = sSp.getBoolean(albumId + "", false);
+        if (!b) {
+            return Uri.parse("content://media/external/audio/albumart/" + albumId);
+        } else {
+            return Uri.parse("file://"
+                    + Uri.decode(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    + "/AirPlayer/"
+                    + artist + " - " + album + ".jpg"));
+        }
+    }
+
+    public String getAlbumArtPath(Context context) {
+        boolean b = sSp.getBoolean(albumId + "", false);
+        if (!b) {
+            return QueryUtils.getAlbumArtPath(context, album);
+        } else {
+            return AirMainActivity.EXTERNAL_PICTURE_FOLDER + artist + " - " + album + ".jpg";
+        }
     }
 }

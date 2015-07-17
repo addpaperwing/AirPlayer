@@ -8,17 +8,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
-import com.airplayer.adapter.AirScrollListener;
+import com.airplayer.listener.AirScrollListener;
 import com.airplayer.fragment.itf.SettableRecyclerView;
+import com.airplayer.listener.SimpleAirScrollListener;
 
 /**
  * Created by ZiyiTsang on 15/6/14.
  */
 public abstract class SingleItemChildFragment extends Fragment implements SettableRecyclerView {
+
+    private RecyclerView mRecyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,9 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_toolbar_recycler, container, false);
+        View rootView = inflater.inflate(R.layout.recycler_suppressible_toolbar, container, false);
 
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.hideable_toolbar);
+        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.suppressible_toolbar);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,28 +43,28 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        this.setUpRecyclerView(recyclerView);
-        AirScrollListener listener = new AirScrollListener(getResources().getInteger(R.integer.padding_action_bar)) {
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        this.setupRecyclerView(mRecyclerView);
+        AirScrollListener listener = new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), toolbar) {
 
             @Override
             public void onHide() {
+                super.onHide();
                 toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-                toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(1));
             }
 
             @Override
             public void onShow() {
+                super.onShow();
                 toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-                toolbar.animate().translationY(0).setInterpolator(new AccelerateInterpolator(1));
             }
 
             @Override
             public void onViewScrolled(int viewScrolledDistance) {
+                super.onViewScrolled(viewScrolledDistance);
                 if (viewScrolledDistance >= toolbar.getHeight()) {
                     toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
                 }
-                toolbar.setTranslationY(-viewScrolledDistance);
             }
 
             @Override
@@ -70,9 +73,26 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
             }
         };
         listener.setHaveParallax(true);
-        recyclerView.setOnScrollListener(listener);
+        mRecyclerView.setOnScrollListener(listener);
 
 
         return rootView;
+    }
+
+    public ImageView getHeaderImageView() {
+        View view = findTopView(mRecyclerView.getChildAt(0));
+        if (view instanceof ImageView) {
+            return (ImageView) view;
+        }
+        return null;
+    }
+
+    private View findTopView(View view) {
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            return findTopView(group.getChildAt(0));
+        } else {
+            return view;
+        }
     }
 }

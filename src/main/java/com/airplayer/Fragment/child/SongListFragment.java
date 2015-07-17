@@ -1,18 +1,12 @@
 package com.airplayer.fragment.child;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
@@ -20,7 +14,6 @@ import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.QueryUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -42,32 +35,29 @@ public class SongListFragment extends MyLibraryChildFragment {
     }
 
     @Override
-    public void setUpRecyclerView(RecyclerView recyclerView) {
+    public void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getParentFragment().getActivity()));
         SongAdapter adapter = new SongAdapter(getParentFragment().getActivity(), mList);
 
-        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
-            public void itemClicked(View view, int position) {
+            public void onItemClicked(View view, int position) {
                 mBinder.playMusic(position - 1, mList);
             }
 
-            @Override
-            public void headerClicked(View view) {
-                List<Song> listOrdered = QueryUtils.loadSongList(
-                        getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE
-                );
-                ArrayList<Song> listShuffled = new ArrayList<Song>();
-                do {
-                    int shuffle = (int) Math.round(Math.random() * (listOrdered.size() - 1));
-                    listShuffled.add(listOrdered.get(shuffle));
-                    listOrdered.remove(shuffle);
-                } while (listOrdered.size() > 0);
-                mBinder.playMusic(0, listShuffled);
-            }
-
-            @Override
-            public void footerClicked(View view) { }
+//            @Override
+//            public void headerClicked(View view) {
+//                List<Song> listOrdered = QueryUtils.loadSongList(
+//                        getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE
+//                );
+//                ArrayList<Song> listShuffled = new ArrayList<Song>();
+//                do {
+//                    int shuffle = (int) Math.round(Math.random() * (listOrdered.size() - 1));
+//                    listShuffled.add(listOrdered.get(shuffle));
+//                    listOrdered.remove(shuffle);
+//                } while (listOrdered.size() > 0);
+//                mBinder.playMusic(0, listShuffled);
+//            }
         });
         recyclerView.setAdapter(adapter);
     }

@@ -1,13 +1,14 @@
 package com.airplayer.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.model.Album;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,20 +43,18 @@ public class AlbumAdapter extends HeadPadAdapter {
         Album item = (Album) getList().get(position - 1);
         albumViewHolder.textView.setText(item.getTitle());
         albumViewHolder.artistText.setText(item.getAlbumArtist());
-
-        Picasso.with(getContext()).load(item.getAlbumArtUri())
-                .into(albumViewHolder.imageView);
+        albumViewHolder.draweeView.setImageURI(item.getAlbumArtUri());
     }
 
     // item holder which would not change in sub class
     public class AlbumItemViewHolder extends AirItemViewHolder {
-        ImageView imageView;
+        SimpleDraweeView draweeView;
         TextView textView;
         TextView artistText;
 
         public AlbumItemViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.album_art);
+            draweeView = (SimpleDraweeView) itemView.findViewById(R.id.album_art);
             textView = (TextView) itemView.findViewById(R.id.album_title);
             artistText = (TextView) itemView.findViewById(R.id.album_artist_name);
         }

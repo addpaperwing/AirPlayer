@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/air_text_color_alpha"
+    android:layout_width="@dimen/dp_384_560"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom">
+
+    <TextView
+        android:text="@string/make_sure_replace_album_art"
+        android:textColor="@color/air_primary_text"
+        android:textSize="@dimen/xTextSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="@dimen/dp_16_560"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_32_560">
+
+        <TextView
+            android:id="@+id/fragment_asking_cancel_button"
+            android:text="@android:string/cancel"
+            android:textColor="@color/air_accent_color"
+            android:textSize="@dimen/xTextSize"
+            android:gravity="center"
+            android:background="@drawable/custom_selector"
+            android:layout_width="@dimen/dp_72_560"
+            android:layout_height="match_parent"
+            android:layout_toLeftOf="@+id/fragment_asking_ok_button"
+            android:layout_toStartOf="@+id/fragment_asking_ok_button"
+            />
+
+        <TextView
+            android:id="@+id/fragment_asking_ok_button"
+            android:text="@android:string/ok"
+            android:textColor="@color/air_accent_color"
+            android:textSize="@dimen/xTextSize"
+            android:gravity="center"
+            android:background="@drawable/custom_selector"
+            android:layout_width="@dimen/dp_72_560"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

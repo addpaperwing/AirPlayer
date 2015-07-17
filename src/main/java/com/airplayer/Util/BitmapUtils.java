@@ -6,20 +6,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Display;
 
 import com.airplayer.R;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
  * Created by ZiyiTsang on 15/6/6.
  */
-public class ImageUtils {
+public class BitmapUtils {
 
-    public static Bitmap getWindowWideBitmap(Activity activity, String artPath) {
+    public static Bitmap getWindowWideBitmap(Activity activity, String artPath, boolean isSquare) {
         if (artPath != null) {
             try {
                 Display display = activity.getWindowManager().getDefaultDisplay();
@@ -42,6 +44,9 @@ public class ImageUtils {
 
                 float scaleWidth = point.x/fWidth;
                 float scaleHeight = point.x/fHeight;
+                if (!isSquare) {
+                    scaleHeight = scaleHeight * 3 / 4;
+                }
 
                 matrix.postScale(scaleWidth , scaleHeight);
 
@@ -57,6 +62,10 @@ public class ImageUtils {
         } else {
             return null;
         }
+    }
+
+    public static Bitmap getWindowWideBitmap (Activity activity, Uri uri, boolean isSquare) {
+        return getWindowWideBitmap(activity, uri.getPath(), isSquare);
     }
 
     public static Bitmap getBitmap(Context context, String path) {

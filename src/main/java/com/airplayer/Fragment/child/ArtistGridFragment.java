@@ -17,6 +17,7 @@ import com.airplayer.fragment.singleItem.ArtistFragment;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.util.QueryUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
     }
 
     @Override
-    public void setUpRecyclerView(RecyclerView recyclerView) {
+    public void setupRecyclerView(RecyclerView recyclerView) {
         final GridLayoutManager manager = new GridLayoutManager(getParentFragment().getActivity(), 2);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -47,9 +48,9 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
 
         // set adapter for recyclerView
         ArtistAdapter adapter = new ArtistAdapter(getParentFragment().getActivity(), mList);
-        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
-            public void itemClicked(View view, int position) {
+            public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getParentFragment().getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, ArtistFragment.newInstance(mList.get(position - 1)));
@@ -57,12 +58,6 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             }
-
-            @Override
-            public void headerClicked(View view) { }
-
-            @Override
-            public void footerClicked(View view) { }
         });
         recyclerView.setAdapter(adapter);
     }
@@ -87,20 +82,17 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
                 Artist item = (Artist) getList().get(position - 1);
 
                 artistViewHolder.textView.setText(item.getName());
-                String artistImagePath = item.getImagePath();
-                if (!artistImagePath.equals("")) {
-                    Picasso.with(getContext()).load(artistImagePath).into(artistViewHolder.imageView);
-                }
+                artistViewHolder.draweeView.setImageURI(item.getArtistPictureUri());
             }
         }
 
         public class ArtistItemViewHolder extends AirAdapter.AirItemViewHolder {
-            ImageView imageView;
+            SimpleDraweeView draweeView;
             TextView textView;
 
             public ArtistItemViewHolder(View itemView) {
                 super(itemView);
-                imageView = (ImageView) itemView.findViewById(R.id.artist_image);
+                draweeView = (SimpleDraweeView) itemView.findViewById(R.id.artist_image);
                 textView = (TextView) itemView.findViewById(R.id.artist_name);
             }
         }

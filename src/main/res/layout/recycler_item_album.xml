@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/album_item"
     android:layout_width="@dimen/dp_192_560"
     android:layout_height="@dimen/dp_192_560"
@@ -12,12 +13,13 @@
         android:layout_height="match_parent"
         >
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/album_art"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
-            android:paddingTop="@dimen/dp_8_560"
+            android:padding="@dimen/dp_8_560"
+            fresco:placeholderImage="@drawable/ic_default_art"
             />
 
         <LinearLayout

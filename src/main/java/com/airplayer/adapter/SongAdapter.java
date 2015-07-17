@@ -6,13 +6,12 @@ import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.model.Song;
-import com.airplayer.util.Utils;
+import com.airplayer.util.StringUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -40,6 +39,10 @@ public class SongAdapter extends HeadPadAdapter {
         super(context, list);
     }
 
+    public SongAdapter(Context context, List<?> list, int paddingHeight) {
+        super(context, list, paddingHeight);
+    }
+
     @Override
     public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {
         return new SongItemViewHolder(
@@ -55,7 +58,7 @@ public class SongAdapter extends HeadPadAdapter {
 
             songItemViewHolder.titleText.setText(item.getTitle());
             songItemViewHolder.artistText.setText(item.getArtist());
-            songItemViewHolder.durationText.setText(Utils.getFormatTime(item.getDuration()));
+            songItemViewHolder.durationText.setText(StringUtils.getFormatTime(item.getDuration()));
 
             if (showImage) {
                 Picasso.with(getContext())

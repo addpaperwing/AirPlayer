@@ -2,9 +2,11 @@ package com.airplayer.fragment.singleItem;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +19,11 @@ import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
+import com.airplayer.listener.OnPictureClickListener;
 import com.airplayer.model.Album;
 import com.airplayer.model.Artist;
-import com.airplayer.util.ImageUtils;
+import com.airplayer.model.PictureGettable;
+import com.airplayer.util.BitmapUtils;
 import com.airplayer.util.QueryUtils;
 
 import java.util.List;
@@ -34,6 +38,10 @@ public class ArtistFragment extends SingleItemChildFragment {
     private Artist mArtist;
 
     private List<Album> mAlbumList;
+
+    private ImageView mImageView;
+
+    private FragmentManager mFragmentManager;
 
     public static ArtistFragment newInstance(Artist artist) {
         ArtistFragment fragment = new ArtistFragment();
@@ -50,11 +58,11 @@ public class ArtistFragment extends SingleItemChildFragment {
         mArtist = (Artist) getArguments().get(ARTIST_RECEIVED);
         mAlbumList = QueryUtils.loadAlbumList(getActivity(),
                 "artist = ?", new String[] { mArtist.getName() }, MediaStore.Audio.Albums.FIRST_YEAR);
-
+        mFragmentManager = getActivity().getSupportFragmentManager();
         ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
     }
 
-    public void setUpRecyclerView(RecyclerView recyclerView) {
+    public void setupRecyclerView(RecyclerView recyclerView) {
         final GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -64,24 +72,28 @@ public class ArtistFragment extends SingleItemChildFragment {
         });
         recyclerView.setLayoutManager(manager);
         AlbumAdapter adapter = new ArtistAlbumAdapter(getActivity(), mAlbumList);
-        adapter.setItemClickListener(new AirAdapter.ClickListener() {
+        adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
-            public void itemClicked(View view, int position) {
-                FragmentTransaction ft = getActivity()
-                        .getSupportFragmentManager().beginTransaction();
+            public void onItemClicked(View view, int position) {
+                FragmentTransaction ft = mFragmentManager.beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mAlbumList.get(position - 1)));
                 ft.addToBackStack(null);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             }
-
-            @Override
-            public void headerClicked(View view) { }
-
-            @Override
-            public void footerClicked(View view) { }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PictureGettable.REQUEST_CODE_FETCH_PICTURE) {
+                mArtist.setPictureDownloaded(true);
+                mImageView.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
+                        mArtist.getArtistPicturePath(), false));
+            }
+        }
     }
 
     private class ArtistAlbumAdapter extends AlbumAdapter {
@@ -98,8 +110,19 @@ public class ArtistFragment extends SingleItemChildFragment {
 
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
-            ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
-            header.image.setImageBitmap(ImageUtils.getWindowWideBitmap((Activity) getContext(), mArtist.getImagePath()));
+            final ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
+            header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(), mArtist.getArtistPicturePath(), false));
+            header.image.setOnClickListener(new OnPictureClickListener(getContext(), mArtist, mFragmentManager) {
+                @Override
+                public void onPictureDelete() {
+                    super.onPictureDelete();
+                    mArtist.setPictureDownloaded(false);
+                    header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
+                            mArtist.getArtistPicturePath(), false));
+                }
+            });
+            mImageView = header.image;
+
             header.name.setText(mArtist.getName());
             header.albumCount.setText(mAlbumList.size() + " albums");
         }

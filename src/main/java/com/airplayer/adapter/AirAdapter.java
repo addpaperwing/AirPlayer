@@ -34,7 +34,9 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private List<?> mList;
 
-    private ClickListener mClickListener;
+    private OnItemClickListener mOnItemClickListener;
+    private OnHeaderClickListener mOnHeaderClickListener;
+    private OnFooterClickListener mOnFooterClickListener;
 
     /* constructor, construct and set up the field */
     public AirAdapter(Context context, List<?> list) {
@@ -156,79 +158,6 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     /**
-     * @return header + list size + footer
-     */
-    @Override
-    public int getItemCount() {
-        return mList == null ? 0 : mList.size() + 2;
-    }
-
-
-    /**
-     * set click listener method that can be called at fragment or activity
-     * so that the click action can use some resource that adapter can not get
-     * @param clickListener class that implements the click method
-     */
-    public void setItemClickListener(ClickListener clickListener) {
-        mClickListener = clickListener;
-    }
-
-    /**
-     * view holder for ordinary items
-     */
-    public class AirItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private FrameLayout clickableMask;
-
-        public AirItemViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            clickableMask = (FrameLayout) itemView.findViewById(R.id.clickable_mask);
-            if (clickableMask != null) {
-                clickableMask.setOnClickListener(this);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-                mClickListener.itemClicked(v, getPosition());
-            }
-        }
-
-    /**
-     * view holder for header
-     */
-    public class AirHeadViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        public AirHeadViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mClickListener.headerClicked(v);
-        }
-    }
-
-    /**
-     * view holder for footer
-     */
-    public class AirFootViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        public AirFootViewHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mClickListener.footerClicked(v);
-        }
-    }
-
-
-    /**
      * method that set up a header which calls in method onBindViewHolder
      * 配置 header 的方法，会在 onBindViewHolder 里面调用，默认为空
      * @param headHolder past from onBindViewHolder
@@ -251,12 +180,115 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      */
     public abstract void onBindItemViewHolder(AirAdapter.AirItemViewHolder itemHolder, int position);
 
+
     /**
-     * interface of click event
+     * @return header + list size + footer
      */
-    public interface ClickListener {
-        void itemClicked(View view, int position);
-        void headerClicked(View view);
-        void footerClicked(View view);
+    @Override
+    public int getItemCount() {
+        return mList == null ? 0 : mList.size() + 2;
+    }
+
+
+    /**
+     * set click listener method that can be called at fragment or activity
+     * so that the click action can use some resource that adapter can not get
+     * @param listener class that implements the click method
+     */
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    /**
+     * set click listener method that can be called at fragment or activity
+     * so that the click action can use some resource that adapter can not get
+     * @param listener class that implements the click method
+     */
+    public void setOnHeaderClickListener(OnHeaderClickListener listener) {
+        mOnHeaderClickListener = listener;
+    }
+
+    /**
+     * set click listener method that can be called at fragment or activity
+     * so that the click action can use some resource that adapter can not get
+     * @param listener class that implements the click method
+     */
+    public void setOnFooterClickListener(OnFooterClickListener listener) {
+        mOnFooterClickListener = listener;
+    }
+
+    /**
+     * view holder for ordinary items
+     */
+    public class AirItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private FrameLayout clickableMask;
+
+        public AirItemViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            clickableMask = (FrameLayout) itemView.findViewById(R.id.clickable_mask);
+            if (clickableMask != null) {
+                clickableMask.setOnClickListener(this);
+            }
+        }
+
+        @Override
+        public void onClick(View v) {
+                mOnItemClickListener.onItemClicked(v, getPosition());
+            }
+        }
+
+    /**
+     * view holder for header
+     */
+    public class AirHeadViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public AirHeadViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnHeaderClickListener.onHeaderClicked(v);
+        }
+    }
+
+    /**
+     * view holder for footer
+     */
+    public class AirFootViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        public AirFootViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnFooterClickListener.onFooterClicked(v);
+        }
+    }
+
+    /**
+     * interface of item click event
+     */
+    public interface OnItemClickListener {
+        void onItemClicked(View view, int position);
+    }
+
+    /**
+     * interface of header click event
+     */
+    public interface OnHeaderClickListener {
+        void onHeaderClicked(View view);
+    }
+
+    /**
+     * interface of footer click event
+     */
+    public interface OnFooterClickListener {
+        void onFooterClicked(View view);
     }
 }

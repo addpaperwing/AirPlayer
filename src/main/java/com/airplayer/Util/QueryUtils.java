@@ -42,13 +42,14 @@ public class QueryUtils {
         List<Artist> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Audio.Artists.ARTIST},
+                new String[]{ MediaStore.Audio.Artists._ID, MediaStore.Audio.Artists.ARTIST },
                 null, null, MediaStore.Audio.Artists.ARTIST);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
                     Artist artist = new Artist();
-                    artist.setName(cursor.getString(0));
+                    artist.setId(cursor.getInt(0));
+                    artist.setName(cursor.getString(1));
                     list.add(artist);
                 } while (cursor.moveToNext());
             }
@@ -99,7 +100,6 @@ public class QueryUtils {
                         MediaStore.Audio.Media.DURATION,    /* for displaying */
                         MediaStore.Audio.Media.DATA,        /* for playing */
                         MediaStore.Audio.Media.TRACK,       /* for displaying in album fragment */
-                        MediaStore.Audio.Media.YEAR,        /* for displaying in header of Song list fragment */
                         MediaStore.Audio.Media.ALBUM_ID     /* for getting the album art*/
                 },
                 selection, selectionArgs, sortOrder);
@@ -115,8 +115,7 @@ public class QueryUtils {
                         song.setDuration(cursor.getInt(5));
                         song.setPath(cursor.getString(6));
                         song.setTrack(cursor.getInt(7));
-                        song.setYear(cursor.getInt(8));
-                        song.setAlbumId(cursor.getInt(9));
+                        song.setAlbumId(cursor.getInt(8));
                         list.add(song);
                     }
                 } while (cursor.moveToNext());
@@ -157,8 +156,6 @@ public class QueryUtils {
                 } while (cursor1.moveToNext());
             }
             cursor1.close();
-            Log.d("test", recentAlbums[0] + ", " + recentAlbums[1] + ", " + recentAlbums[2] + ", "
-                    + recentAlbums[3] + ", " + recentAlbums[4] + ", " + recentAlbums[5]);
         }
         for (int i = 0; i < 6; i++) {
             if (recentAlbums[i].equals("")) {
@@ -186,7 +183,7 @@ public class QueryUtils {
                     album.setAlbumArtist(cursor2.getString(1));
                     album.setYear(cursor2.getString(2));
                     album.setAlbumArtPath(cursor2.getString(3));
-                    album.setSongsHave(cursor2.getInt(4));
+                    album.setSongsCount(cursor2.getInt(4));
                     list.add(album);
                 } catch (CursorIndexOutOfBoundsException e) {
                     Log.d("QueryUtils", "index out of bounds");

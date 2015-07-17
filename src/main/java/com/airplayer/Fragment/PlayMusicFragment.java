@@ -25,9 +25,9 @@ import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.airplayer.util.ImageUtils;
+import com.airplayer.util.BitmapUtils;
 import com.airplayer.util.QueryUtils;
-import com.airplayer.util.Utils;
+import com.airplayer.util.StringUtils;
 
 /**
  * Created by ZiyiTsang on 15/6/10.
@@ -96,7 +96,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
                     mSeekBar.setProgress(Math.round((float) msg.obj));
                     break;
                 case HANDLE_TIMER:
-                    mPlayingTimeTextView.setText(Utils.getFormatTime(Math.round((float) msg.obj)));
+                    mPlayingTimeTextView.setText(StringUtils.getFormatTime(Math.round((float) msg.obj)));
                 default:
                     break;
             }
@@ -288,8 +288,8 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     }
 
     private void updateUI() {
-        Bitmap nowPlaySongArt = ImageUtils.getWindowWideBitmap(
-                getActivity(), QueryUtils.getAlbumArtPath(getActivity(), mSong.getAlbum()));
+        Bitmap nowPlaySongArt = BitmapUtils.getWindowWideBitmap(
+                getActivity(), mSong.getAlbumArtPath(getActivity()), true);
 
         // head tool bar section
         mTitleImageView.setImageBitmap(nowPlaySongArt);
@@ -298,7 +298,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // background and center image section
         mCenterAlbumArt.setImageBitmap(nowPlaySongArt);
-        mDurationTextView.setText(Utils.getFormatTime(mSong.getDuration()));
+        mDurationTextView.setText(StringUtils.getFormatTime(mSong.getDuration()));
 
         // foot player control section
         if (mBinder.getPlayMode() == PlayMusicService.SINGLE_SONG_LOOP_MODE) {

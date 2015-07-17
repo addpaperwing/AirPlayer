@@ -104,6 +104,7 @@ public class PlayMusicService extends Service {
     public void onDestroy() {
         mBinder.onActivityFinish();
         mPlayer.release();
+        notification.cancel();
         super.onDestroy();
         Log.d(TAG, "service destroy");
     }

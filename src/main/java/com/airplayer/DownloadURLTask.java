@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -19,6 +20,32 @@ import java.util.Arrays;
  */
 public class DownloadURLTask extends AsyncTask<String, Void, ArrayList<String>>{
 
+    /**
+     * <br>a link to search a album art, use as a param to execute { @see DownloadURLTask  }</br>
+     * <br>查询专辑封面的链接，执行 { @see DownloadURLTask } 时作为传入参数</br>
+     */
+    private static final String SEARCH_LINK_ALBUM_ART = "https://api.douban.com/v2/music/search?q=";
+
+    /**
+     * <br>a link to search a artist picture, use as a param to execute { @see DownloadURLTask  }</br>
+     * <br>查询艺人图片的链接，执行 { @see DownloadURLTask } 时作为传入参数</br>
+     */
+    private static final String SEARCH_LINK_ARTIST_PICTURE = "http://image.baidu.com/i?tn=baiduimagejson&word=";
+
+    public static final int MODE_DOWNLOAD_ALBUM_ART = 9;
+
+    public static final int MODE_DOWNLOAD_ARTIST_PICTURE = 8;
+
+    private int mode;
+
+    public void setMode(int mode) {
+        this.mode = mode;
+        if (mode == MODE_DOWNLOAD_ALBUM_ART) searchLink = SEARCH_LINK_ALBUM_ART;
+        if (mode == MODE_DOWNLOAD_ARTIST_PICTURE) searchLink = SEARCH_LINK_ARTIST_PICTURE;
+    }
+
+    private String searchLink;
+
     private HttpCallbackListener listener;
 
     public DownloadURLTask(HttpCallbackListener listener) {
@@ -29,7 +56,7 @@ public class DownloadURLTask extends AsyncTask<String, Void, ArrayList<String>>{
     protected ArrayList<String> doInBackground(String... params) {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(params[0]);
+            URL url = new URL(searchLink + params[0]);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(8000);
@@ -40,12 +67,12 @@ public class DownloadURLTask extends AsyncTask<String, Void, ArrayList<String>>{
             while ((line = br.readLine()) != null) {
                 response.append(line);
             }
-            if (params[1].equals("album")) {
+            if (mode == MODE_DOWNLOAD_ALBUM_ART) {
                 return decodeAlbumJSON(response.toString());
-            } else if (params[1].equals("artist")) {
+            } else if (mode == MODE_DOWNLOAD_ARTIST_PICTURE){
                 return decodeArtistJSON(response.toString());
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             if (listener != null) {
                 listener.onError(e);
             }

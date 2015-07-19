@@ -19,46 +19,111 @@ import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/6/10.
+ * <br>Service to control play music actions</br>
  */
 public class PlayMusicService extends Service {
 
     public static final String TAG = "PlayMusicService";
 
     // broadcast action and extra keys - value
+    /**
+     * <br>Broadcast intent action</br>
+     */
     public static final String PLAY_STATE_CHANGE = "com.airplayer.PLAY_STATE_CHANGE";
+
+    /**
+     * <br>Broadcast intent action</br>
+     */
     public static final String PLAY_STATE_KEY = "com.airplayer.PLAY_STATE_CHANGE.PLAY_STATE_KEY";
+
+    /**
+     * <br>Broadcast intent action</br>
+     */
+    public static final String NOTIFICATION_OPERATION = "com.airplayer.NOTIFICATION_OPERATION";
+
+    /**
+     * <br>Broadcast intent action</br>
+     */
+    public static final String NOTIFICATION_OPERATION_KEY = "com.airplayer.NOTIFICATION_OPERATION_KEY";
+
+    /**
+     * <br>Play state value</br>
+     */
     public static final int PLAY_STATE_PLAY = 0;
+
+    /**
+     * <br>Play state value</br>
+     */
     public static final int PLAY_STATE_PAUSE = 1;
 
-    public static final String NOTIFICATION_OPERATION = "com.airplayer.NOTIFICATION_OPERATION";
-    public static final String NOTIFICATION_OPERATION_KEY = "com.airplayer.NOTIFICATION_OPERATION_KEY";
+    /**
+     * <br>Notification operation broadcast intent extra</br>
+     */
     public static final int NOTIFICATION_OPERATION_PREVIOUS = 5;
     public static final int NOTIFICATION_OPERATION_PLAY_PAUSE = 0;
     public static final int NOTIFICATION_OPERATION_NEXT = 2;
 
-    // play mode
+    /**
+     * <br>Play mode value</br>
+     */
     public static final int PLAY_LIST_MODE = 0;
     public static final int LOOP_LIST_MODE = 1;
     public static final int SINGLE_SONG_LOOP_MODE = 2;
 
+    /**
+     * <br>Binder</br>
+     */
     private PlayerControlBinder mBinder = new PlayerControlBinder();
+
+    /**
+     * <br>Media player</br>
+     */
     private MediaPlayer mPlayer;
 
+    /**
+     * <br>Play list</br>
+     */
     private List<Song> mPlayList = new ArrayList<>();
 
+    /**
+     * <br>Position of song playing in { @see mPlayList }</br>
+     */
     private int mPosition;
-    private int previousPosition;
 
+    /**
+     * <br>Position  of last song played in { @see mPlayList }</br>
+     */
+    private int lastPosition;
+
+    /**
+     * <br>Song instance of playing song</br>
+     */
     private Song songPlaying;
 
+    /**
+     * <br>Play Mode</br>
+     */
     private int mPlayMode = PLAY_LIST_MODE;
 
+    /**
+     * <br>Value to control pause actions</br>
+     */
     private boolean pause = false;
+
+    /**
+     * <br>Value to control shuffle play mode</br>
+     */
     private boolean shuffle = false;
 
+    /**
+     * <br>Notification { @see AirNotification }</br>
+     */
     private AirNotification notification;
 
-    private NotificationControlReceiver receiver;
+    /**
+     * <br>Receiver for notification operation</br>
+     */
+    private PlayMusicReceiver playMusicReceiver;
 
     @Override
     public void onCreate() {
@@ -82,9 +147,10 @@ public class PlayMusicService extends Service {
                 play();
             }
         });
-        receiver = new NotificationControlReceiver();
+        playMusicReceiver = new PlayMusicReceiver();
         IntentFilter filter = new IntentFilter(NOTIFICATION_OPERATION);
-        registerReceiver(receiver, filter);
+        filter.addAction(Intent.ACTION_HEADSET_PLUG);
+        registerReceiver(playMusicReceiver, filter);
         Log.d(TAG, "service create");
         notification = new AirNotification(this);
         notification.cancel();
@@ -102,7 +168,7 @@ public class PlayMusicService extends Service {
 
     @Override
     public void onDestroy() {
-        mBinder.onActivityFinish();
+        unregisterReceiver(playMusicReceiver);
         mPlayer.release();
         notification.cancel();
         super.onDestroy();
@@ -114,7 +180,7 @@ public class PlayMusicService extends Service {
         public void playMusic(int position, List<Song> playList) {
             mPosition = position;
             mPlayList = playList;
-            previousPosition = mPosition - 1;
+            lastPosition = mPosition - 1;
             play();
         }
 
@@ -132,7 +198,7 @@ public class PlayMusicService extends Service {
         }
 
         public void pauseMusic() {
-            if (mPlayer != null) {
+            if (mPlayer != null && songPlaying != null && !pause) {
                 songPlaying.setPause(true);
                 mPlayer.pause();
                 pause = true;
@@ -199,37 +265,6 @@ public class PlayMusicService extends Service {
             return mPosition;
         }
 
-        public void onActivityFinish() {
-            notification.cancel();
-            unregisterReceiver(receiver);
-        }
-    }
-
-    private class NotificationControlReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1) + "");
-            switch (intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1)) {
-                case NOTIFICATION_OPERATION_PREVIOUS:
-                    previousPosition();
-                    play();
-                    break;
-                case NOTIFICATION_OPERATION_PLAY_PAUSE:
-                    if (pause) {
-                        mBinder.resumeMusic();
-                    } else {
-                        mBinder.pauseMusic();
-                    }
-                    break;
-                case NOTIFICATION_OPERATION_NEXT:
-                    nextPosition();
-                    play();
-                    break;
-                default:
-                    break;
-            }
-        }
     }
 
     private void play() {
@@ -256,7 +291,7 @@ public class PlayMusicService extends Service {
     }
 
     private void nextPosition() {
-        previousPosition = mPosition;
+        lastPosition = mPosition;
         if (shuffle) {
             mPosition = (int) Math.round(Math.random() * (mPlayList.size() - 1));
         } else {
@@ -273,11 +308,59 @@ public class PlayMusicService extends Service {
             float progressInPercent = ((float)mPlayer.getCurrentPosition())
                     / ((float)mPlayer.getDuration());
             if (max * progressInPercent < 10) {
-                if (previousPosition != -1) {
-                    mPosition = previousPosition;
-                    previousPosition = mPosition - 1;
+                if (lastPosition != -1) {
+                    mPosition = lastPosition;
+                    lastPosition = mPosition - 1;
                 }
             }
+        }
+    }
+
+    /**
+     * <br>Receive broadcast sent when user operating at notification</br>
+     */
+    private class PlayMusicReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case NOTIFICATION_OPERATION:
+                    onNotificationActionsReceive(intent);
+                    break;
+                case Intent.ACTION_HEADSET_PLUG:
+                    onHeadsetPlugActionReceive(intent);
+                    break;
+            }
+        }
+    }
+
+    private void onNotificationActionsReceive(Intent intent) {
+        Log.d(TAG, intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1) + "");
+        switch (intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1)) {
+            case NOTIFICATION_OPERATION_PREVIOUS:
+                previousPosition();
+                play();
+                break;
+            case NOTIFICATION_OPERATION_PLAY_PAUSE:
+                if (pause) {
+                    mBinder.resumeMusic();
+                } else {
+                    mBinder.pauseMusic();
+                }
+                break;
+            case NOTIFICATION_OPERATION_NEXT:
+                nextPosition();
+                play();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void onHeadsetPlugActionReceive(Intent intent) {
+        if (intent.getIntExtra("state", -1) == 0) {
+            mBinder.pauseMusic();
+            Log.d(TAG, "Headset unplug");
         }
     }
 }

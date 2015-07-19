@@ -24,7 +24,6 @@ import com.airplayer.adapter.HeadPadAdapter;
 import com.airplayer.fragment.dialog.ReplacePicDialogFragment;
 import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.model.Album;
-import com.airplayer.model.Artist;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.util.StorageUtils;
 import com.airplayer.util.StringUtils;
@@ -36,36 +35,59 @@ import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/7/12.
+ * <br>Activity that start when user click the top picture of { @see AlbumFragment } which is an album art
+ * or { @see ArtistFragment } which is an artist picture</br>
+ * <br>This activity will search a picture about the item that pass with intent before start</br>
+ * <br>The item is a { @see PictureGettable } instance, in this app is an { @see Album } or an { @see Artist }</br>
  */
 public class ResponseActivity extends AppCompatActivity {
 
-    String SEARCH_URL_ALBUM_ART = "https://api.douban.com/v2/music/search?q=";
-    String SEARCH_URL_ARTIST_PICTURE = "http://image.baidu.com/i?tn=baiduimagejson&word=";
-
-    // query target album, key and value
-    // 查询的目标专辑对象，键和值
+    /**
+     * <br>Key of { @see mItem }</br>
+     * <br>{ @see mItem } 的键</br>
+     */
     public static final String QUERY_TARGET = "query_target";
-
-    private ArrayList<String> mImageLinks;
-
+    /**
+     * <br>Instance of { @see PictureGettable }, pass when start { @see ResponseActivity }</br>
+     * <br>{ @see PictureGettable } 的实例, 启动{ @see ResponseActivity } 时传入</br>
+     */
     private PictureGettable mItem;
 
-    private RecyclerView mRecyclerView;
+    /**
+     * <br>Image url array list fetch from { @see DownloadURLTask }</br>
+     * <br>图片 url 的数组列表，从 { @see DownloadURLTask } 获取</br>
+     */
+    private ArrayList<String> mImageLinks;
 
     /* handle download image task */
-    private static final int MSG_WHAT_FILE = 1;
-    private static final int MSG_WHAT_ERROR = 2;
+    /**
+     * <br>What value of message that will be sent when { @see downloadImage } download succeed.</br>
+     * <br>在 { @see downloadImage } 方法下载成功时发送的 message 的 what 值</br>
+     */
+    private static final int MSG_DOWNLOAD_SUCCEED = 1;
+
+    /**
+     * <br>What value of message that will be sent when { @see DownloadURLTask } download fail</br>
+     * <br>在 { @see DownloadURLTask } 下载失败时发送的 message 的 what 值</br>
+     */
+    private static final int MSG_DOWNLOAD_FAIL = 2;
 
     private ProgressDialog progress;
 
+    /**
+     * <br>If msg is { @see MSG_DOWNLOAD_SUCCEED } dismiss progress and set resultCode to RESULT_OK.</br>
+     * <br>If msg is { @see MSG_DOWNLOAD_FAIL } make a toast to tell user.</br>
+     * <br>如果 msg 是 { @see MSG_DOWNLOAD_SUCCEED } 撤销进度条并设置 resultCode 为 RESULT_OK。</br>
+     * <br>如果 msg 是 { @see MSG_DOWNLOAD_FAIL } 发出一条 toast 告诉用户下载失败。</br>
+     */
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == MSG_WHAT_FILE) {
+            if (msg.what == MSG_DOWNLOAD_SUCCEED) {
                 progress.dismiss();
                 setResult(RESULT_OK, null);
                 onBackPressed();
-            } else if (msg.what == MSG_WHAT_ERROR) {
+            } else if (msg.what == MSG_DOWNLOAD_FAIL) {
                 Toast.makeText(ResponseActivity.this,
                         "download fail, please check out network connection",
                         Toast.LENGTH_SHORT).show();
@@ -73,6 +95,13 @@ public class ResponseActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * <br>New thread to download picture from @param url to external storage and show a progress.
+     * When download succeed send a { @see MSG_DOWNLOAD_SUCCEED } message.</br>
+     * <br>新建一个线程下载 @param url 中的图片到手机扩展储存，并现实一个进度条。
+     * 当下载成功时，发送一个 { @see MSG_DOWNLOAD_SUCCEED } message 。</br>
+     * @param url the url of picture when it was clicked. 被点击的图片的url
+     */
     private void downloadImage(final String url) {
         progress = new ProgressDialog(ResponseActivity.this);
         progress.setMessage("Saving picture");
@@ -83,13 +112,14 @@ public class ResponseActivity extends AppCompatActivity {
                 File file = StorageUtils.saveImage(ResponseActivity.this,
                         mItem.getSaveName() + ".jpg", url);
                 Message msg = new Message();
-                msg.what = MSG_WHAT_FILE;
+                msg.what = MSG_DOWNLOAD_SUCCEED;
                 msg.obj = file;
                 handler.sendMessage(msg);
             }
         }).start();
     }
 
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +128,7 @@ public class ResponseActivity extends AppCompatActivity {
 
         mItem = (PictureGettable) getIntent().getSerializableExtra(QUERY_TARGET);
 
-        // download task
+        // task to download a array list of image links
         DownloadURLTask task = new DownloadURLTask(new DownloadURLTask.HttpCallbackListener() {
             @Override
             public void onFinish(ArrayList<String> list) {
@@ -109,15 +139,14 @@ public class ResponseActivity extends AppCompatActivity {
             @Override
             public void onError(Exception e) {
                 Message msg = new Message();
-                msg.what = MSG_WHAT_ERROR;
+                msg.what = MSG_DOWNLOAD_FAIL;
                 handler.sendMessage(msg);
             }
         });
-        String urlSpec = (mItem instanceof Album ? SEARCH_URL_ALBUM_ART : SEARCH_URL_ARTIST_PICTURE)
-                + StringUtils.encodeKeyword(mItem.getSearchKeyword());
-        String choice = (mItem instanceof Album ? "album" : "artist");
-        Log.d("TAG", urlSpec + "   " + choice);
-        task.execute(urlSpec, choice);
+        // choose a mode
+        task.setMode(mItem instanceof Album?
+                DownloadURLTask.MODE_DOWNLOAD_ALBUM_ART : DownloadURLTask.MODE_DOWNLOAD_ARTIST_PICTURE );
+        task.execute(StringUtils.encodeKeyword(mItem.getSearchKeyword()));
 
         // setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.suppressible_toolbar);
@@ -148,6 +177,10 @@ public class ResponseActivity extends AppCompatActivity {
         setupAdapter();
     }
 
+    /**
+     * <br>Adapter of RecyclerView has a head padding, two columns and every item is a { @see SimpleDraweeView }</br>
+     * <br>RecyclerView 的 adapter 头部有一部分空白填充，两列每一项都是一个 { @SimpleDraweeView }</br>
+     */
     private class ResponseAdapter extends HeadPadAdapter {
 
         public ResponseAdapter(Context context, List<?> list, int paddingHeight) {
@@ -180,7 +213,13 @@ public class ResponseActivity extends AppCompatActivity {
     }
 
     /**
-     * a convenient method to setup or update data of adapter of RecyclerView
+     * <br>A convenient method to setup or update data of adapter of RecyclerView.</br>
+     * <br>一个封装好的简易方法来配置 RecyclerView adapter</br>
+     * <br></br>
+     * <br>This method will be called twice, first is when { @see ResponseActivity } create and the
+     * other one is when { @DownloadURLTask } finish</br>
+     * <br>该方法将会被调用两次，第一次是当 { @see ResponseActivity } 创建时，
+     * 另一次时当 { @see DownloadURLTask } 完成时</br>
      */
     private void setupAdapter() {
         ResponseAdapter adapter = new ResponseAdapter(ResponseActivity.this,

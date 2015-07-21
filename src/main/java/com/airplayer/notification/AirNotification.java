@@ -65,9 +65,9 @@ public class AirNotification {
                     .setLargeIcon(BitmapUtils.getBitmap(mContext, songPlaying.getAlbumArtPath(mContext)))
                     .setStyle(new Notification.MediaStyle().setShowActionsInCompactView(0, 1, 2))
                     .setOngoing(true)
-                    .addAction(R.drawable.btn_previous_white, "previous", pPrevious)
-                    .addAction(R.drawable.btn_pause_white, "pause", pPlayPause)
-                    .addAction(R.drawable.btn_next_white, "next", pNext)
+                    .addAction(R.drawable.ic_skip_previous_white, "previous", pPrevious)
+                    .addAction(R.drawable.ic_pause_white, "pause", pPlayPause)
+                    .addAction(R.drawable.ic_skip_next_white, "next", pNext)
                     .build();
         } else {
             notification = mBuilder
@@ -79,14 +79,14 @@ public class AirNotification {
                     .setWhen(0)
                     .setLargeIcon(BitmapUtils.getBitmap(mContext, QueryUtils.getAlbumArtPath(mContext, songPlaying.getAlbum())))
                     .setOngoing(true)
-                    .addAction(R.drawable.btn_previous_white, "previous", pPrevious)
-                    .addAction(R.drawable.btn_pause_white, "pause", pPlayPause)
-                    .addAction(R.drawable.btn_next_white, "next", pNext)
+                    .addAction(R.drawable.ic_skip_previous_white, "previous", pPrevious)
+                    .addAction(R.drawable.ic_pause_white, "pause", pPlayPause)
+                    .addAction(R.drawable.ic_skip_next_white, "next", pNext)
                     .build();
         }
 
         if (songPlaying.isPause()) {
-            notification.actions[1].icon = R.drawable.btn_play_white;
+            notification.actions[1].icon = R.drawable.ic_play_arrow_white;
             notification.actions[1].title = "play";
         }
 

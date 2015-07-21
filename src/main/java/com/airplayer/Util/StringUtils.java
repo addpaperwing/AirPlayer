@@ -27,7 +27,7 @@ public class StringUtils {
         try {
             keyword = URLEncoder.encode(keyword, Charset.defaultCharset().name());
         } catch (UnsupportedEncodingException e) {
-            Log.e("ResponseActivity", "Unsupported Encoding!", e);
+            Log.e("StringUtil", "Unsupported Encoding!", e);
         }
         return keyword;
     }

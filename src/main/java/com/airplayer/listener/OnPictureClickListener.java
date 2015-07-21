@@ -8,8 +8,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.airplayer.R;
-import com.airplayer.activity.ResponseActivity;
+import com.airplayer.activity.FetchPictureActivity.FetchAlbumArtActivity;
+import com.airplayer.activity.FetchPictureActivity.FetchArtistPictureActivity;
+import com.airplayer.activity.FetchPictureActivity.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
+import com.airplayer.model.Album;
 import com.airplayer.model.PictureGettable;
 
 import java.io.File;
@@ -33,14 +36,19 @@ public class OnPictureClickListener implements View.OnClickListener {
     public void onClick(View v) {
         MenuDialogFragment dialog = new MenuDialogFragment() {
             @Override
-            public void onFirstItemClick(View v) {
-                Intent intent = new Intent(getActivity(), ResponseActivity.class);
-                intent.putExtra(ResponseActivity.QUERY_TARGET, mItem);
+            public void onFetchButtonClick(View v) {
+                Intent intent;
+                if (mItem instanceof Album) {
+                    intent = new Intent(getActivity(), FetchAlbumArtActivity.class);
+                } else {
+                    intent = new Intent(getActivity(), FetchArtistPictureActivity.class);
+                }
+                intent.putExtra(FetchPictureActivity.QUERY_TARGET, mItem);
                 getActivity().startActivityForResult(intent, PictureGettable.REQUEST_CODE_FETCH_PICTURE);
             }
 
             @Override
-            public void onSecondItemClick(View v) {
+            public void onDeleteButtonClick(View v) {
                 deleteHeaderPicture();
             }
         };

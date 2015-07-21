@@ -33,6 +33,7 @@ import com.airplayer.util.StorageUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by ZiyiTsang on 15/6/1.
@@ -53,7 +54,8 @@ public class NavigationDrawerFragment extends Fragment {
     public static final int PICK_PHOTO = 1;
 
     // what value of message instance
-    private static final int THEME_PICTURE = 0;
+    private static final int MSG_SAVE_THEME_PICTURE_SUCCEED = 0;
+    private static final int MSG_SAVE_THEME_PICTURE_FAIL = 2;
 
     // progress dialog when loading theme picture
     private ProgressDialog progress;
@@ -62,10 +64,17 @@ public class NavigationDrawerFragment extends Fragment {
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == THEME_PICTURE) {
-                setTopImage((Uri) msg.obj);
-            }
             progress.dismiss();
+            switch (msg.what) {
+                case MSG_SAVE_THEME_PICTURE_SUCCEED:
+                    setTopImage((Uri) msg.obj);
+                    break;
+                case MSG_SAVE_THEME_PICTURE_FAIL:
+                    Toast.makeText(getActivity(),
+                            "fail to save picture into external storage",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+            }
         }
     };
 
@@ -74,11 +83,16 @@ public class NavigationDrawerFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                StorageUtils.saveImage(getActivity(), "Theme.jpg", bitmap);
                 Message msg = new Message();
-                msg.what = THEME_PICTURE;
-                msg.obj = uri;
-                handler.sendMessage(msg);
+                try {
+                    StorageUtils.saveImage(getActivity(), "Theme.jpg", bitmap);
+                    msg.what = MSG_SAVE_THEME_PICTURE_SUCCEED;
+                    msg.obj = uri;
+                } catch (Exception e) {
+                    msg.what = MSG_SAVE_THEME_PICTURE_FAIL;
+                } finally {
+                    handler.sendMessage(msg);
+                }
             }
         }).start();
     }

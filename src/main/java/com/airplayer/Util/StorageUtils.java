@@ -25,7 +25,7 @@ import java.net.URL;
  */
 public class StorageUtils {
 
-    public static File saveImage(Context context, String fileName, Bitmap bm) {
+    public static File saveImage(Context context, String fileName, Bitmap bm) throws IOException, RuntimeException {
         String state = Environment.getExternalStorageState();
         if (state.equals(Environment.MEDIA_MOUNTED)) {
             String storageDirPath = Environment.getExternalStoragePublicDirectory(
@@ -44,26 +44,19 @@ public class StorageUtils {
                     Log.d("StorageUtils", "File exists, deleted");
                 }
             }
-            try {
-                boolean check3 = file.createNewFile();
-                if (check3) {
-                    Log.d("StorageUtils", "New file created succeed");
-                }
-
-                saveBitmap(context, file, bm);
-                return file;
-            } catch (IOException e) {
-                Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-                return null;
+            boolean check3 = file.createNewFile();
+            if (check3) {
+                Log.d("StorageUtils", "New file created succeed");
             }
+
+            saveBitmap(context, file, bm);
+            return file;
         } else {
-            Toast.makeText(context, "External Storage unavailable", Toast.LENGTH_SHORT).show();
-            return null;
+            throw new RuntimeException("External Storage unavailable");
         }
     }
 
-    public static File saveImage(Context context, String fileName, String urlSpec) {
+    public static File saveImage(Context context, String fileName, String urlSpec) throws IOException {
         HttpURLConnection connection = null;
         try {
             URL url = new URL(urlSpec);
@@ -81,10 +74,6 @@ public class StorageUtils {
             byte[] bitmapBytes = out.toByteArray();
             Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
             return saveImage(context, fileName, bitmap);
-        } catch (IOException e) {
-            Toast.makeText(context, "Fail to download image, please check out network connection",
-                    Toast.LENGTH_SHORT).show();
-            return null;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -92,17 +81,17 @@ public class StorageUtils {
         }
     }
 
-    private static void saveBitmap(final Context context, final File file, final Bitmap bitmap) {
-        try {
-            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+    private static void saveBitmap(final Context context, final File file, final Bitmap bitmap) throws IOException, NullPointerException {
+        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+        if (bitmap != null) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 30, bos);
             bos.flush();
             bos.close();
             Log.d("StorageUtils.saveBitmap", "Success to save bitmap to " + file.getPath());
             // send a scan broadcast to update image library
             sendScanBroadcast(context, file);
-        } catch (IOException e) {
-            Log.d("StorageUtils.saveBitmap", "Fail to save bitmap");
+        } else {
+            throw new NullPointerException();
         }
     }
 

@@ -78,7 +78,7 @@ public class ArtistFragment extends SingleItemChildFragment {
                 FragmentTransaction ft = mFragmentManager.beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mAlbumList.get(position - 1)));
                 ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.commit();
             }
         });

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -181,8 +182,8 @@ public class AirMainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mNavigationDrawFragment.getDrawerLayout().isDrawerOpen(Gravity.START)) {
-            mNavigationDrawFragment.getDrawerLayout().closeDrawer(Gravity.START);
+        if (mNavigationDrawFragment.getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
+            mNavigationDrawFragment.getDrawerLayout().closeDrawer(GravityCompat.START);
         } else if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             if (mPlayMusicFragment.isPlayListShow()) {
                 super.onBackPressed();

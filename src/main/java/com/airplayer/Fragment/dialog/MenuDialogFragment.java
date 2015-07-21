@@ -23,7 +23,7 @@ public abstract class MenuDialogFragment extends DialogFragment {
         fetch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onFirstItemClick(v);
+                onFetchButtonClick(v);
                 dismiss();
             }
         });
@@ -31,13 +31,13 @@ public abstract class MenuDialogFragment extends DialogFragment {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onSecondItemClick(v);
+                onDeleteButtonClick(v);
                 dismiss();
             }
         });
         return rootView;
     }
 
-    public abstract void onFirstItemClick(View v);
-    public abstract void onSecondItemClick(View v);
+    public abstract void onFetchButtonClick(View v);
+    public abstract void onDeleteButtonClick(View v);
 }

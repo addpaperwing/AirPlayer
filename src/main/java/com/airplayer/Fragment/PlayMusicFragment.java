@@ -168,7 +168,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
                         if (isPlayListShow) {
                             getActivity().onBackPressed();
                         } else {
-                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                             ft.addToBackStack(null);
                             ft.replace(R.id.sliding_panel_inside_fragment_container, fragment).commit();
                             isPlayListShow = !isPlayListShow;
@@ -262,11 +262,11 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
                 switchLoopMode();
                 mBinder.setPlayMode(mLoopMode);
                 if (mLoopMode == PlayMusicService.SINGLE_SONG_LOOP_MODE) {
-                    mSwitchPlayMode.setImageResource(R.drawable.btn_repeat_one);
+                    mSwitchPlayMode.setImageResource(R.drawable.ic_repeat_one);
                 } else if (mLoopMode == PlayMusicService.LOOP_LIST_MODE) {
-                    mSwitchPlayMode.setImageResource(R.drawable.btn_repeat_list);
+                    mSwitchPlayMode.setImageResource(R.drawable.ic_repeat_on);
                 } else {
-                    mSwitchPlayMode.setImageResource(R.drawable.btn_repeat_off);
+                    mSwitchPlayMode.setImageResource(R.drawable.ic_repeat_off);
                 }
                 break;
             case R.id.sliding_layout_previous_button:
@@ -282,7 +282,7 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
                 shuffle = !shuffle;
                 mBinder.setShuffle(shuffle);
                 mShuffleList.setImageResource(shuffle ?
-                        R.drawable.btn_shuffle_on : R.drawable.btn_shuffle_off);
+                        R.drawable.ic_shuffle_on : R.drawable.ic_shuffle_off);
                 break;
         }
     }
@@ -302,25 +302,25 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
 
         // foot player control section
         if (mBinder.getPlayMode() == PlayMusicService.SINGLE_SONG_LOOP_MODE) {
-            mSwitchPlayMode.setImageResource(R.drawable.btn_repeat_one);
+            mSwitchPlayMode.setImageResource(R.drawable.ic_repeat_one);
         } else if (mBinder.getPlayMode() == PlayMusicService.LOOP_LIST_MODE) {
-            mSwitchPlayMode.setImageResource(R.drawable.btn_repeat_list);
+            mSwitchPlayMode.setImageResource(R.drawable.ic_repeat_on);
         } else {
-            mSwitchPlayMode.setImageResource(R.drawable.btn_repeat_off);
+            mSwitchPlayMode.setImageResource(R.drawable.ic_repeat_off);
         }
         mPlayAndPauseButton.setImageResource(mBinder.isPause() ?
-                R.drawable.btn_play : R.drawable.btn_pause);
+                R.drawable.ic_play_circle_filled : R.drawable.ic_pause_circle_filled);
         mShuffleList.setImageResource((mBinder.isShuffle() ?
-                R.drawable.btn_shuffle_on : R.drawable.btn_shuffle_off));
+                R.drawable.ic_shuffle_on : R.drawable.ic_shuffle_off));
     }
 
     private void playButtonAction() {
         if (mBinder.isPause()) {
             mBinder.resumeMusic();
-            mPlayAndPauseButton.setImageResource(R.drawable.btn_pause);
+            mPlayAndPauseButton.setImageResource(R.drawable.ic_pause_circle_filled);
         } else {
             mBinder.pauseMusic();
-            mPlayAndPauseButton.setImageResource(R.drawable.btn_play);
+            mPlayAndPauseButton.setImageResource(R.drawable.ic_play_circle_filled);
         }
     }
 

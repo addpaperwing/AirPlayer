@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.ResponseActivity"/>
+        <activity android:name=".activity.FetchPictureActivity.FetchAlbumArtActivity"/>
+        <activity android:name=".activity.FetchPictureActivity.FetchArtistPictureActivity"/>
         <service android:name=".service.PlayMusicService"/>
 
     </application>

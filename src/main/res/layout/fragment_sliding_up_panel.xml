@@ -123,7 +123,7 @@
 
                     <ImageView
                         android:id="@+id/sliding_layout_switch_mode"
-                        android:src="@drawable/btn_repeat_off"
+                        android:src="@drawable/ic_repeat_off"
                         android:layout_width="@dimen/dp_24_560"
                         android:layout_height="@dimen/dp_24_560"
                         android:layout_marginRight="@dimen/dp_48_560"
@@ -134,7 +134,7 @@
 
                 <ImageView
                     android:id="@+id/sliding_layout_previous_button"
-                    android:src="@drawable/btn_previous"
+                    android:src="@drawable/ic_skip_previous_black"
                     android:layout_width="@dimen/dp_40_560"
                     android:layout_height="@dimen/dp_40_560"
                     android:layout_marginRight="@dimen/dp_24_560"
@@ -143,7 +143,7 @@
 
                 <ImageView
                     android:id="@+id/sliding_layout_play_and_pause_button"
-                    android:src="@drawable/btn_play"
+                    android:src="@drawable/ic_play_circle_filled"
                     android:layout_width="@dimen/dp_48_560"
                     android:layout_height="@dimen/dp_48_560"
                     android:layout_marginLeft="@dimen/dp_16_560"
@@ -154,7 +154,7 @@
 
                 <ImageView
                     android:id="@+id/sliding_layout_next_button"
-                    android:src="@drawable/btn_next"
+                    android:src="@drawable/ic_skip_next_black"
                     android:layout_width="@dimen/dp_40_560"
                     android:layout_height="@dimen/dp_40_560"
                     android:layout_marginLeft="@dimen/dp_24_560"
@@ -163,7 +163,7 @@
 
                 <ImageView
                     android:id="@+id/sliding_layout_shuffle_play"
-                    android:src="@drawable/btn_shuffle_off"
+                    android:src="@drawable/ic_shuffle_off"
                     android:layout_width="@dimen/dp_24_560"
                     android:layout_height="@dimen/dp_24_560"
                     android:layout_marginLeft="@dimen/dp_48_560"

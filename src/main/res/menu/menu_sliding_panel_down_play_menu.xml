@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_sliding_panel_top_play"
         android:title="@string/action_play"
-        android:icon="@drawable/btn_play"
+        android:icon="@drawable/ic_play_arrow_black"
         android:orderInCategory="100"
         app:showAsAction="always"
         />

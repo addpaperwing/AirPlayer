@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/6/9.
- * An abstract adapter for all adapter in app
+ * A global abstract adapter for all adapter in app
  * packaged some method that can be reused
  * app 的全局 adapter 抽象类，封装了一些可以重用的方法，加强代码复用性
  */
@@ -235,9 +235,11 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onClick(View v) {
+            if (mOnItemClickListener != null) {
                 mOnItemClickListener.onItemClicked(v, getPosition());
             }
         }
+    }
 
     /**
      * view holder for header
@@ -251,7 +253,9 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onClick(View v) {
-            mOnHeaderClickListener.onHeaderClicked(v);
+            if (mOnHeaderClickListener != null) {
+                mOnHeaderClickListener.onHeaderClicked(v);
+            }
         }
     }
 
@@ -267,7 +271,9 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         @Override
         public void onClick(View v) {
-            mOnFooterClickListener.onFooterClicked(v);
+            if (mOnFooterClickListener != null) {
+                mOnFooterClickListener.onFooterClicked(v);
+            }
         }
     }
 

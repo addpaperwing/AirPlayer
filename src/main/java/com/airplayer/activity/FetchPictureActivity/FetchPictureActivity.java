@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.airplayer.DownloadURLTask;
@@ -86,6 +87,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     private static final int MSG_DOWNLOAD_IMAGE_URL_FAIL = 3;
 
     private ProgressDialog progress;
+
+    private ProgressBar progressBar;
 
     /**
      * <br>If msg is { @see MSG_DOWNLOAD_PICTURE_SUCCEED } dismiss progress and set resultCode to RESULT_OK.</br>
@@ -178,6 +181,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             public void onFinish(ArrayList<Picture> list) {
                 mPictureList = list;
                 setupAdapter();
+                progressBar.setVisibility(View.INVISIBLE);
             }
         };
         task.execute(StringUtils.encodeKeyword(mItem.getSearchKeyword()));
@@ -194,6 +198,9 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+
+        progressBar = (ProgressBar) findViewById(R.id.loading_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
 
         // setup RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);

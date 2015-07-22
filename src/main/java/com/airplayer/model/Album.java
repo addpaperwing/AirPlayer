@@ -6,12 +6,12 @@ import android.os.Environment;
 /**
  * Created by ZiyiTsang on 15/6/10.
  */
-public class Album extends AirModel implements PictureGettable {
+public class Album extends AirModel implements Comparable<Album>, PictureGettable {
 
     private int id;
     private String title;
     private String albumArtist;
-    private String year;
+    private int year;
     private String albumArtPath;
     private int songsCount;
 
@@ -40,11 +40,11 @@ public class Album extends AirModel implements PictureGettable {
         this.albumArtist = albumArtist;
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
@@ -107,5 +107,10 @@ public class Album extends AirModel implements PictureGettable {
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + "/AirPlayer/"
                 + getSaveName() + ".jpg";
+    }
+
+    @Override
+    public int compareTo(Album another) {
+        return this.getYear() - another.getYear();
     }
 }

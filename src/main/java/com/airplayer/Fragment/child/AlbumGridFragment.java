@@ -11,9 +11,10 @@ import android.view.View;
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
+import com.airplayer.adapter.SongAdapter;
 import com.airplayer.fragment.singleItem.AlbumFragment;
+import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
-import com.airplayer.util.QueryUtils;
 
 import java.util.List;
 
@@ -23,11 +24,13 @@ import java.util.List;
 public class AlbumGridFragment extends MyLibraryChildFragment  {
 
     private List<Album> mList;
+    private AlbumAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mList = QueryUtils.loadAlbumList(getParentFragment().getActivity(), null, null, MediaStore.Audio.Albums.ALBUM);
+        mList = AirModelSingleton.getInstance(getParentFragment().getActivity())
+                .getAlbumArrayList(null, null, MediaStore.Audio.Albums.ALBUM);
     }
 
     @Override
@@ -42,18 +45,24 @@ public class AlbumGridFragment extends MyLibraryChildFragment  {
         });
         recyclerView.setLayoutManager(manager);
 
-        AlbumAdapter adapter = new AlbumAdapter(getParentFragment().getActivity(), mList);
+        adapter = new AlbumAdapter(getParentFragment().getActivity(), mList);
         adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getParentFragment().getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mList.get(position - 1)));
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 }

@@ -1,4 +1,4 @@
-package com.airplayer.fragment.itf;
+package com.airplayer.fragment.singleItem.itf;
 
 import android.support.v7.widget.RecyclerView;
 

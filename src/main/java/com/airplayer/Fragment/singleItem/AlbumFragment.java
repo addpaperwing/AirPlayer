@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +17,13 @@ import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
 import com.airplayer.listener.OnPictureClickListener;
+import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.BitmapUtils;
-import com.airplayer.util.QueryUtils;
+import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -59,9 +59,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         super.onCreate(savedInstanceState);
         mAlbum = (Album) getArguments().getSerializable(ALBUM_RECEIVED);
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
-        mSongList = QueryUtils.loadSongList(getActivity(),
-                "album = ?", new String[]{mAlbum.getTitle()}, MediaStore.Audio.Media.TRACK);
-
+        mSongList = AirModelSingleton.getInstance(getActivity()).getAlbumSong(mAlbum.getTitle());
         ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
         mFragmentManager = getActivity().getSupportFragmentManager();
     }
@@ -100,7 +98,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new AlbumSongHeader(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_image, parent, false));
+                    .inflate(R.layout.recycler_header_image_fab, parent, false));
         }
 
         @Override
@@ -117,14 +115,25 @@ public class AlbumFragment extends SingleItemChildFragment {
             });
             mImageView = header.image;
 
+            header.fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mBinder.playMusic(0, mSongList);
+                }
+            });
             header.title.setText(mAlbum.getTitle());
             header.subTitle.setText(mAlbum.getAlbumArtist());
-            header.desc.setText(mAlbum.getYear() + " , " + mSongList.size() + " songs");
+            if (mAlbum.getYear() != 0) {
+                header.desc.setText(mAlbum.getYear() + " , " + mSongList.size() + " songs");
+            } else {
+                header.desc.setText(mSongList.size() + " songs");
+            }
         }
 
         private class AlbumSongHeader extends AirAdapter.AirHeadViewHolder {
 
             private ImageView image;
+            private FloatingActionButton fab;
             private TextView title;
             private TextView subTitle;
             private TextView desc;
@@ -132,6 +141,7 @@ public class AlbumFragment extends SingleItemChildFragment {
             public AlbumSongHeader(View itemView) {
                 super(itemView);
                 image = (ImageView) itemView.findViewById(R.id.header_image);
+                fab = (FloatingActionButton) itemView.findViewById(R.id.header_fab);
                 title = (TextView) itemView.findViewById(R.id.header_title);
                 subTitle = (TextView) itemView.findViewById(R.id.header_sub_title);
                 desc = (TextView) itemView.findViewById(R.id.header_desc);

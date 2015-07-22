@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:divider="@color/air_primary_text">
+    android:divider="@color/air_primary_text"
+    android:showDividers="middle">
 
     <TextView
         android:id="@+id/fetch_picture_from_internet"
@@ -15,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dp_16_560"
+        android:background="@drawable/custom_selector"
         />
 
     <TextView
@@ -26,6 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/dp_16_560"
+        android:background="@drawable/custom_selector"
         />
 
 </LinearLayout>

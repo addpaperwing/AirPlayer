@@ -20,8 +20,8 @@ import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.fragment.singleItem.AlbumFragment;
 import com.airplayer.listener.SimpleAirScrollListener;
+import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
-import com.airplayer.util.QueryUtils;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class PlayNowFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recentAlbumList = QueryUtils.loadRecentAlbum(getActivity());
+        recentAlbumList = AirModelSingleton.getInstance(getActivity()).getRecentAlbumArrayList();
         Toolbar globalBar = ((AirMainActivity) getActivity()).getToolbar();
         globalBar.setTranslationY(0);
         globalBar.setVisibility(View.VISIBLE);
@@ -65,7 +65,7 @@ public class PlayNowFragment extends Fragment {
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(recentAlbumList.get(position - 1)));
                 ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.commit();
             }
         });
@@ -91,7 +91,7 @@ public class PlayNowFragment extends Fragment {
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             PlayNowHeadViewHolder playNowHeadViewHolder = (PlayNowHeadViewHolder) holder;
-            playNowHeadViewHolder.image.setMinimumHeight(getResources().getInteger(R.integer.padding_action_bar));
+            playNowHeadViewHolder.pad.setMinimumHeight(getResources().getInteger(R.integer.padding_action_bar));
             playNowHeadViewHolder.title.setText("Recent Added");
             int numOfSongs = 0;
             for (int i = 0; i < getList().size(); i++) {
@@ -103,14 +103,14 @@ public class PlayNowFragment extends Fragment {
 
         private class PlayNowHeadViewHolder extends AirAdapter.AirHeadViewHolder {
 
-            ImageView image;
+            ImageView pad;
             TextView title;
             TextView subTitle;
             TextView desc;
 
             public PlayNowHeadViewHolder(View itemView) {
                 super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.header_image);
+                pad = (ImageView) itemView.findViewById(R.id.header_image);
                 title = (TextView) itemView.findViewById(R.id.header_title);
                 subTitle = (TextView) itemView.findViewById(R.id.header_sub_title);
                 desc = (TextView) itemView.findViewById(R.id.header_desc);

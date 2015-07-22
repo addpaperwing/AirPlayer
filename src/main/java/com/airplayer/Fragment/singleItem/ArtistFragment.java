@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,11 +19,11 @@ import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.listener.OnPictureClickListener;
+import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 import com.airplayer.model.Artist;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.util.BitmapUtils;
-import com.airplayer.util.QueryUtils;
 
 import java.util.List;
 
@@ -56,8 +55,7 @@ public class ArtistFragment extends SingleItemChildFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mArtist = (Artist) getArguments().get(ARTIST_RECEIVED);
-        mAlbumList = QueryUtils.loadAlbumList(getActivity(),
-                "artist = ?", new String[] { mArtist.getName() }, MediaStore.Audio.Albums.FIRST_YEAR);
+        mAlbumList = AirModelSingleton.getInstance(getActivity()).getArtistAlbum(mArtist.getName());
         mFragmentManager = getActivity().getSupportFragmentManager();
         ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
     }

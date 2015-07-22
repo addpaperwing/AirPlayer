@@ -9,11 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.listener.AirScrollListener;
-import com.airplayer.fragment.itf.SettableRecyclerView;
+import com.airplayer.fragment.singleItem.itf.SettableRecyclerView;
 import com.airplayer.listener.SimpleAirScrollListener;
 
 /**
@@ -77,22 +78,5 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
 
         return rootView;
-    }
-
-    public ImageView getHeaderImageView() {
-        View view = findTopView(mRecyclerView.getChildAt(0));
-        if (view instanceof ImageView) {
-            return (ImageView) view;
-        }
-        return null;
-    }
-
-    private View findTopView(View view) {
-        if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            return findTopView(group.getChildAt(0));
-        } else {
-            return view;
-        }
     }
 }

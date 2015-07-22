@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:fab="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recycler_view_header"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -14,79 +9,64 @@
 
     <ImageView
         android:id="@+id/header_image"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/header_tool_bar"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/air_text_and_icon">
+        android:background="@color/air_text_and_icon"
+        android:paddingTop="@dimen/dp_8_560"
+        android:paddingLeft="@dimen/dp_16_560"
+        android:paddingStart="@dimen/dp_16_560"
+        android:paddingRight="@dimen/dp_16_560"
+        android:paddingEnd="@dimen/dp_16_560">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/header_title"
+            android:textSize="@dimen/xxTextSize"
+            android:textStyle="bold"
+            android:textColor="@color/air_primary_text"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/dp_8_560"
+            android:layout_marginRight="@dimen/dp_8_560"
+            android:layout_marginStart="@dimen/dp_8_560"
+            android:layout_marginEnd="@dimen/dp_8_560"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/dp_8_560">
+            />
 
-            <TextView
-                android:id="@+id/header_title"
-                android:textSize="@dimen/xxTextSize"
-                android:textStyle="bold"
-                android:textColor="@color/air_primary_text"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:layout_marginLeft="@dimen/dp_8_560"
-                android:layout_marginRight="@dimen/dp_8_560"
-                android:layout_marginStart="@dimen/dp_8_560"
-                android:layout_marginEnd="@dimen/dp_8_560"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+        <TextView
+            android:id="@+id/header_sub_title"
+            android:textSize="@dimen/xTextSize"
+            android:textColor="@android:color/darker_gray"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/dp_8_560"
+            android:layout_marginRight="@dimen/dp_8_560"
+            android:layout_marginStart="@dimen/dp_8_560"
+            android:layout_marginEnd="@dimen/dp_8_560"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
-            <TextView
-                android:id="@+id/header_sub_title"
-                android:textSize="@dimen/xTextSize"
-                android:textColor="@android:color/darker_gray"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:layout_marginLeft="@dimen/dp_8_560"
-                android:layout_marginRight="@dimen/dp_8_560"
-                android:layout_marginStart="@dimen/dp_8_560"
-                android:layout_marginEnd="@dimen/dp_8_560"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/header_desc"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="@dimen/sTextSize"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_marginLeft="@dimen/dp_8_560"
+            android:layout_marginRight="@dimen/dp_8_560"
+            android:layout_marginStart="@dimen/dp_8_560"
+            android:layout_marginEnd="@dimen/dp_8_560"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
 
-            <TextView
-                android:id="@+id/header_desc"
-                android:textColor="@android:color/darker_gray"
-                android:textSize="@dimen/sTextSize"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:layout_marginLeft="@dimen/dp_8_560"
-                android:layout_marginRight="@dimen/dp_8_560"
-                android:layout_marginStart="@dimen/dp_8_560"
-                android:layout_marginEnd="@dimen/dp_8_560"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+    </LinearLayout>
 
 </LinearLayout>
-
-    <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/head_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="@dimen/dp_256_560"
-        android:layout_marginRight="@dimen/dp_40_560"
-        android:layout_marginEnd="@dimen/dp_40_560"
-        fab:fab_icon="@drawable/ic_play_arrow_white"
-        fab:fab_colorNormal="@color/air_accent_color"
-        fab:fab_colorPressed="@color/air_accent_color" />
-
-</FrameLayout>

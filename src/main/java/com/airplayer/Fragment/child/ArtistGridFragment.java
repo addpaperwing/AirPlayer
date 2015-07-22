@@ -8,17 +8,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.adapter.HeadPadAdapter;
 import com.airplayer.fragment.singleItem.ArtistFragment;
+import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;
-import com.airplayer.util.QueryUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -28,11 +26,12 @@ import java.util.List;
 public class ArtistGridFragment extends MyLibraryChildFragment {
 
     private List<Artist> mList;
+    private ArtistAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mList = QueryUtils.loadArtistList(getParentFragment().getActivity());
+        mList = AirModelSingleton.getInstance(getParentFragment().getActivity()).getArtistArrayList();
     }
 
     @Override
@@ -47,19 +46,25 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
         recyclerView.setLayoutManager(manager);
 
         // set adapter for recyclerView
-        ArtistAdapter adapter = new ArtistAdapter(getParentFragment().getActivity(), mList);
+        adapter = new ArtistAdapter(getParentFragment().getActivity(), mList);
         adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getParentFragment().getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, ArtistFragment.newInstance(mList.get(position - 1)));
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.addToBackStack(null);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
             }
         });
         recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
     private class ArtistAdapter extends HeadPadAdapter {

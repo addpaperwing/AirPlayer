@@ -10,9 +10,9 @@ import android.view.View;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
+import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.airplayer.util.QueryUtils;
 
 import java.util.List;
 
@@ -30,8 +30,8 @@ public class SongListFragment extends MyLibraryChildFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinder = ((AirMainActivity) getParentFragment().getActivity()).getPlayerControlBinder();
-        // get data base and load a list from it
-        mList = QueryUtils.loadSongList(getParentFragment().getActivity(), null, null, MediaStore.Audio.Media.TITLE);
+        mList = AirModelSingleton.getInstance(getParentFragment().getActivity())
+                .getSongArrayList(null, null, MediaStore.Audio.Media.TITLE);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SongListFragment extends MyLibraryChildFragment {
 //        @Override
 //        public SongListHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
 //            return new SongListHeadViewHolder(getLayoutInflater()
-//                    .inflate(R.layout.recycler_header_image, parent, false));
+//                    .inflate(R.layout.recycler_header_image_fab, parent, false));
 //        }
 //
 //        @Override

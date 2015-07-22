@@ -14,7 +14,7 @@ import java.io.Serializable;
 /**
  * Created by ZiyiTsang on 15/6/7.
  */
-public class Song extends AirModel implements Serializable {
+public class Song extends AirModel implements Comparable<Song>, Serializable {
 
     // control
     private boolean play;
@@ -125,5 +125,10 @@ public class Song extends AirModel implements Serializable {
         } else {
             return AirMainActivity.EXTERNAL_PICTURE_FOLDER + artist + " - " + album + ".jpg";
         }
+    }
+
+    @Override
+    public int compareTo(Song another) {
+        return this.getTrack() - another.getTrack();
     }
 }

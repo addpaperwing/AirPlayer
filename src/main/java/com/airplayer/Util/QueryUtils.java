@@ -38,8 +38,8 @@ public class QueryUtils {
         }
     }
 
-    public static List<Artist> loadArtistList(Context context) {
-        List<Artist> list = new ArrayList<>();
+    public static ArrayList<Artist> loadArtistList(Context context) {
+        ArrayList<Artist> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI,
                 new String[]{ MediaStore.Audio.Artists._ID, MediaStore.Audio.Artists.ARTIST },
@@ -58,8 +58,8 @@ public class QueryUtils {
         return list;
     }
 
-    public static List<Album> loadAlbumList(Context context, String selection, String[] selectionArgs, String sortOrder) {
-        List<Album> list = new ArrayList<>();
+    public static ArrayList<Album> loadAlbumList(Context context, String selection, String[] selectionArgs, String sortOrder) {
+        ArrayList<Album> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI,
                 new String[]{
@@ -77,7 +77,7 @@ public class QueryUtils {
                     album.setTitle(cursor.getString(0));
                     album.setId(cursor.getInt(1));
                     album.setAlbumArtist(cursor.getString(2));
-                    album.setYear(cursor.getString(3));
+                    album.setYear(cursor.getInt(3));
                     album.setAlbumArtPath(cursor.getString(4));
                     list.add(album);
                 } while (cursor.moveToNext());
@@ -87,8 +87,8 @@ public class QueryUtils {
         return list;
     }
 
-    public static List<Song> loadSongList(Context context, String selection, String[] selectionArgs, String sortOrder) {
-        List<Song> list = new ArrayList<>();
+    public static ArrayList<Song> loadSongList(Context context, String selection, String[] selectionArgs, String sortOrder) {
+        ArrayList<Song> list = new ArrayList<>();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 new String[]{
@@ -125,8 +125,8 @@ public class QueryUtils {
         return list;
     }
 
-    public static List<Album> loadRecentAlbum(Context context) {
-        List<Album> list = new ArrayList<>();
+    public static ArrayList<Album> loadRecentAlbum(Context context) {
+        ArrayList<Album> list = new ArrayList<>();
         String[] recentAlbums = new String[] { "leov", "leov", "leov", "leov", "leov", "leov" };
         int p = 0;
         Cursor cursor1 = context.getContentResolver().query(
@@ -181,7 +181,7 @@ public class QueryUtils {
                     album.setTitle(recentAlbums[i]);
                     album.setId(cursor2.getInt(0));
                     album.setAlbumArtist(cursor2.getString(1));
-                    album.setYear(cursor2.getString(2));
+                    album.setYear(cursor2.getInt(2));
                     album.setAlbumArtPath(cursor2.getString(3));
                     album.setSongsCount(cursor2.getInt(4));
                     list.add(album);

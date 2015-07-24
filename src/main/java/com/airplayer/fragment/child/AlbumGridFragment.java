@@ -11,8 +11,7 @@ import android.view.View;
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
-import com.airplayer.adapter.SongAdapter;
-import com.airplayer.fragment.singleItem.AlbumFragment;
+import com.airplayer.fragment.singleitem.AlbumFragment;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 

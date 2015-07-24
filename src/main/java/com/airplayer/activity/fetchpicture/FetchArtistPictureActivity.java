@@ -1,17 +1,14 @@
-package com.airplayer.activity.FetchPictureActivity;
+package com.airplayer.activity.fetchpicture;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.airplayer.model.Picture;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by ZiyiTsang on 15/7/21.

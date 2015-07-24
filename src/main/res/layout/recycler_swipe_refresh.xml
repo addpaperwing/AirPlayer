@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView
         android:background="#ddffffff"
         android:id="@+id/recycler_view"
@@ -12,10 +17,12 @@
         android:layout_height="match_parent"
         />
 
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/suppressible_toolbar"
+        android:background="@color/air_dark_primary_color"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content"/>
 
 </FrameLayout>

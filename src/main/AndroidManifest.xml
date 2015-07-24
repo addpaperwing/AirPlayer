@@ -24,8 +24,26 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.FetchPictureActivity.FetchAlbumArtActivity"/>
-        <activity android:name=".activity.FetchPictureActivity.FetchArtistPictureActivity"/>
+        <activity
+            android:name=".activity.fetchpicture.FetchAlbumArtActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+
+        <activity
+            android:name=".activity.fetchpicture.FetchArtistPictureActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+
         <service android:name=".service.PlayMusicService"/>
 
     </application>

@@ -1,4 +1,4 @@
-package com.airplayer.activity.FetchPictureActivity;
+package com.airplayer.activity.fetchpicture;
 
 import android.os.Bundle;
 

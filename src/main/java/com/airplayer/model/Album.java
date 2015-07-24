@@ -3,6 +3,8 @@ package com.airplayer.model;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.airplayer.util.StringUtils;
+
 /**
  * Created by ZiyiTsang on 15/6/10.
  */
@@ -79,22 +81,13 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
     }
 
     @Override
-    public String getSearchKeyword() {
+    public String getQueryKeyword() {
         return title;
     }
 
     @Override
     public String getSaveName() {
-        if ((albumArtist + " - " + title).contains("/")) {
-            String[] names = (albumArtist + " - " + title).split("/");
-            StringBuilder builder = new StringBuilder();
-            for (String str : names) {
-                builder.append(str);
-            }
-            return builder.toString();
-        } else {
-            return albumArtist + " - " + title;
-        }
+        return StringUtils.getPureFilename(albumArtist) + " - " + StringUtils.getPureFilename(title);
     }
 
     @Override

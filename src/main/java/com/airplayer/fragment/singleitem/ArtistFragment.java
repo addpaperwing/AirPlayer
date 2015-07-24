@@ -1,4 +1,4 @@
-package com.airplayer.fragment.singleItem;
+package com.airplayer.fragment.singleitem;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,9 +16,10 @@ import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.activity.fetchpicture.FetchArtistPictureActivity;
+import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
-import com.airplayer.listener.OnPictureClickListener;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 import com.airplayer.model.Artist;
@@ -110,10 +111,10 @@ public class ArtistFragment extends SingleItemChildFragment {
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             final ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
             header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(), mArtist.getArtistPicturePath(), false));
-            header.image.setOnClickListener(new OnPictureClickListener(getContext(), mArtist, mFragmentManager) {
+            header.image.setOnClickListener(new OnPictureClickListener(mArtist, FetchArtistPictureActivity.class) {
+
                 @Override
                 public void onPictureDelete() {
-                    super.onPictureDelete();
                     mArtist.setPictureDownloaded(false);
                     header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
                             mArtist.getArtistPicturePath(), false));

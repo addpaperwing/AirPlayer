@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.adapter.HeadPadAdapter;
-import com.airplayer.fragment.singleItem.ArtistFragment;
+import com.airplayer.fragment.singleitem.ArtistFragment;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Artist;
 import com.airplayer.adapter.AirAdapter;

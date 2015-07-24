@@ -1,10 +1,9 @@
-package com.airplayer.fragment.singleItem;
+package com.airplayer.fragment.singleitem;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,9 +13,10 @@ import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.activity.fetchpicture.FetchAlbumArtActivity;
+import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
-import com.airplayer.listener.OnPictureClickListener;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 import com.airplayer.model.PictureGettable;
@@ -44,8 +44,6 @@ public class AlbumFragment extends SingleItemChildFragment {
 
     private PlayMusicService.PlayerControlBinder mBinder;
 
-    private FragmentManager mFragmentManager;
-
     public static AlbumFragment newInstance(Album album) {
         AlbumFragment fragment = new AlbumFragment();
         Bundle args = new Bundle();
@@ -61,7 +59,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
         mSongList = AirModelSingleton.getInstance(getActivity()).getAlbumSong(mAlbum.getTitle());
         ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
-        mFragmentManager = getActivity().getSupportFragmentManager();
+
     }
 
     public void setupRecyclerView(RecyclerView recyclerView) {
@@ -105,12 +103,13 @@ public class AlbumFragment extends SingleItemChildFragment {
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
             final AlbumSongHeader header = (AlbumSongHeader) holder;
             header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), true));
-            header.image.setOnClickListener(new OnPictureClickListener(getContext(), mAlbum, mFragmentManager) {
+            header.image.setOnClickListener(new OnPictureClickListener(mAlbum, FetchAlbumArtActivity.class) {
+
                 @Override
                 public void onPictureDelete() {
                     mAlbum.setPictureDownloaded(false);
-                    header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
-                            mAlbum.getAlbumArtPath(), true));
+                    header.image.setImageBitmap(BitmapUtils
+                            .getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), false));
                 }
             });
             mImageView = header.image;

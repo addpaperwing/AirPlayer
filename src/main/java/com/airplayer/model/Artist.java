@@ -3,6 +3,8 @@ package com.airplayer.model;
 import android.net.Uri;
 import android.os.Environment;
 
+import com.airplayer.util.StringUtils;
+
 /**
  * Created by ZiyiTsang on 15/6/10.
  */
@@ -48,22 +50,13 @@ public class Artist extends AirModel implements PictureGettable {
     }
 
     @Override
-    public String getSearchKeyword() {
+    public String getQueryKeyword() {
         return name;
     }
 
     @Override
     public String getSaveName() {
-        if (name.contains("/")) {
-            String[] names = name.split("/");
-            StringBuilder builder = new StringBuilder();
-            for (String str : names) {
-                builder.append(str);
-            }
-            return builder.toString();
-        } else {
-            return name;
-        }
+        return StringUtils.getPureFilename(name);
     }
 
     @Override

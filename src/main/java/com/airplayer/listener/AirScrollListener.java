@@ -54,7 +54,7 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
 
-        // codes below makes tool bar act like a child view of recyclerView
+        // codes below makes tool bar move with recyclerView when it scrolled
         viewScrolledDistance += dy;
         if (dy > 0) {
             if (viewScrolledDistance > viewHeight) {
@@ -73,7 +73,7 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
         setTotalScrollDistance(dy);
 
         // set parallax translationY to half of totalScrollDistance every scrolled
-        // make it look like half distance scrolled than others
+        // it will look like half distance scrolled than others and create a parallax
         if (haveParallax) {
             mParallax.setTranslationY(getTotalScrollDistance() / 2);
         }
@@ -83,9 +83,9 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
 
-        if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-            // if parallax is null, initial it when user drag recycler view
-            if (mParallax == null && haveParallax) {
+        if (haveParallax) {
+            if (mParallax == null && newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                // if parallax is null, initial it when user drag recycler view
                 initParallax(recyclerView);
             }
         }

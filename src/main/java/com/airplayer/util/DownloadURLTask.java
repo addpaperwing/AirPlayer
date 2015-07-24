@@ -1,4 +1,4 @@
-package com.airplayer;
+package com.airplayer.util;
 
 import android.os.AsyncTask;
 

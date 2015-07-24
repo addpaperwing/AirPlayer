@@ -31,4 +31,14 @@ public class StringUtils {
         }
         return keyword;
     }
+
+    public static String getPureFilename(String saveName) {
+        String[] strings = new String[] { ",", "/", "?", "*", "<", ">", ":", "|" };
+        for (String str : strings) {
+            if (saveName.contains(str)) {
+                saveName = saveName.replace(str, "");
+            }
+        }
+        return saveName;
+    }
 }

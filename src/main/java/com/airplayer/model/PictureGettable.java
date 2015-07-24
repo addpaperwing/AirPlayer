@@ -9,7 +9,7 @@ public interface PictureGettable extends Serializable {
 
     int REQUEST_CODE_FETCH_PICTURE = 1;
 
-    String getSearchKeyword();
+    String getQueryKeyword();
     String getSaveName();
     void setPictureDownloaded(boolean b);
     String getPicturePath();

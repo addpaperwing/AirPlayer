@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.airplayer.R;
 import com.airplayer.listener.AirMulScrollListener;
 import com.airplayer.fragment.MyLibraryFragment;
-import com.airplayer.fragment.singleItem.itf.SettableRecyclerView;
+import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
 
 /**
  * Created by ZiyiTsang on 15/6/9.

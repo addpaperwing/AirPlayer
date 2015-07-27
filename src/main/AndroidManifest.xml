@@ -31,7 +31,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/album_searchable" />
         </activity>
 
         <activity
@@ -41,7 +41,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/artist_searchable"/>
         </activity>
 
         <service android:name=".service.PlayMusicService"/>

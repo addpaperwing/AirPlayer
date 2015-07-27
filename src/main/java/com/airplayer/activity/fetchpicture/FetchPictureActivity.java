@@ -15,6 +15,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,12 +116,12 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                     onBackPressed();
                     break;
                 case MSG_DOWNLOAD_PICTURE_FAIL:
-                    mSwipeRefreshLayout.setRefreshing(false);
                     Toast.makeText(FetchPictureActivity.this,
                             "download picture fail, picture source might not exist",
                             Toast.LENGTH_SHORT).show();
                     break;
                 case MSG_DOWNLOAD_IMAGE_URL_FAIL:
+                    mSwipeRefreshLayout.setRefreshing(false);
                     Toast.makeText(FetchPictureActivity.this,
                             "download fail, please check out network connection",
                             Toast.LENGTH_SHORT).show();
@@ -193,9 +195,13 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
         // setup toolbar
         mToolbar = (Toolbar) findViewById(R.id.suppressible_toolbar);
+        // setup toolbar background color
         mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
+        // setup toolbar elevation
         if (Build.VERSION.SDK_INT >= 21) mToolbar.setElevation(19);
+        // setup toolbar title
         mToolbar.setTitle(mQueryKeyword);
+        // setup toolbar navigation button
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,19 +209,23 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        // setup toolbar menu search action
         mToolbar.inflateMenu(R.menu.menu_search);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.action_search) {
-                    Bundle appSearchData = new Bundle();
-                    appSearchData.putString(EXTRA_SAVE_NAME, mSaveName);
-                    startSearch(mQueryKeyword, false, appSearchData, false);
+                    SearchManager manager = (SearchManager) getSystemService(SEARCH_SERVICE);
+                    SearchView searchView = (SearchView) item.getActionView();
+                    searchView.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+                    ((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text))
+                            .setHintTextColor(getResources().getColor(R.color.air_text_and_icon));
                     return true;
                 }
                 return false;
             }
         });
+
 
         // setup RecyclerView
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -237,7 +247,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
             mQueryKeyword = intent.getStringExtra(SearchManager.QUERY);
-            mSaveName = intent.getBundleExtra(SearchManager.APP_DATA).getString(EXTRA_SAVE_NAME);
             mToolbar.setTitle(mQueryKeyword);
         }
         executeDownloadTask(MODE_DOWNLOAD_REPLACE);
@@ -294,19 +303,21 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-                Message msg = new Message();
-                msg.what = MSG_DOWNLOAD_IMAGE_URL_FAIL;
-                handler.sendMessage(msg);
+                sendErrorMessage();
             }
 
             @Override
             public void onFinish(ArrayList<Picture> list) {
+                if (list == null) {
+                    sendErrorMessage();
+                    return;
+                }
                 switch (downloadMod) {
                     case MODE_DOWNLOAD_ADD:
                         for (Picture p : list) {
                             mPictureList.add(p);
                         }
-                        adapter.notifyItemRangeInserted(mPictureList.size(), list.size());
+                        adapter.notifyDataSetChanged();
                         break;
                     case MODE_DOWNLOAD_REPLACE:
                         mPictureList = list;
@@ -347,6 +358,12 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setAdapter(adapter);
+    }
+
+    private void sendErrorMessage() {
+        Message msg = new Message();
+        msg.what = MSG_DOWNLOAD_IMAGE_URL_FAIL;
+        handler.sendMessage(msg);
     }
 
     public abstract String getSearchLink();

@@ -84,7 +84,7 @@ public class StorageUtils {
     private static void saveBitmap(final Context context, final File file, final Bitmap bitmap) throws IOException, NullPointerException {
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
         if (bitmap != null) {
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 30, bos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
             bos.flush();
             bos.close();
             Log.d("StorageUtils.saveBitmap", "Success to save bitmap to " + file.getPath());

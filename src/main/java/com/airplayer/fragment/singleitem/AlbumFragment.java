@@ -109,7 +109,7 @@ public class AlbumFragment extends SingleItemChildFragment {
                 public void onPictureDelete() {
                     mAlbum.setPictureDownloaded(false);
                     header.image.setImageBitmap(BitmapUtils
-                            .getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), false));
+                            .getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), true));
                 }
             });
             mImageView = header.image;

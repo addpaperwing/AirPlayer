@@ -1,6 +1,7 @@
 package com.airplayer.activity.fetchpicture;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.airplayer.model.Picture;
 
@@ -43,5 +44,10 @@ public class FetchArtistPictureActivity extends FetchPictureActivity {
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void onMoreButtonClick(View v, int nextPage) {
+        executeDownloadTask(MODE_DOWNLOAD_ADD, "&pn=" + nextPage * 20);
     }
 }

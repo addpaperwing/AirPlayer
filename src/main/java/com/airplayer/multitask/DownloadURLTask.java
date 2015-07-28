@@ -1,4 +1,4 @@
-package com.airplayer.util;
+package com.airplayer.multitask;
 
 import android.os.AsyncTask;
 
@@ -20,7 +20,9 @@ public abstract class DownloadURLTask extends AsyncTask<String, Void, ArrayList<
     protected ArrayList<Picture> doInBackground(String... params) {
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(getUrl() + params[0]);
+            String urlParam = params[0];
+            if (params[1] != null) urlParam = urlParam + params[1];
+            URL url = new URL(getUrl() + urlParam);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setConnectTimeout(8000);

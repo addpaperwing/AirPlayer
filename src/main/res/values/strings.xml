@@ -24,8 +24,14 @@
     <string name="toast_picture_delete">Picture deleted</string>
     <string name="toast_picture_not_found">Picture not found</string>
 
+    <string name="toast_picture_source_not_exist">Download picture fail, picture source might not exist.</string>
+    <string name="toast_download_fail">Download fail, please check out network connection.</string>
+    <string name="toast_no_result_found_or_decode_fail">No result found or decode fail.</string>
+
     <string name="searchable_hint_album_art">Search album art</string>
     <string name="searchable_hint_artist_picture">Search artist picture</string>
+
+    <string name="button_text_fetch_more_pictures">More…</string>
 
     <string-array name="tab_item_array">
         <item>Artists</item>

@@ -1,6 +1,7 @@
 package com.airplayer.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.activity.TestActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.fragment.singleitem.AlbumFragment;
@@ -93,6 +95,13 @@ public class PlayNowFragment extends Fragment {
             PlayNowHeadViewHolder playNowHeadViewHolder = (PlayNowHeadViewHolder) holder;
             playNowHeadViewHolder.pad.setMinimumHeight(getResources().getInteger(R.integer.padding_action_bar));
             playNowHeadViewHolder.title.setText("Recent Added");
+            playNowHeadViewHolder.title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), TestActivity.class);
+                    startActivity(intent);
+                }
+            });
             int numOfSongs = 0;
             for (int i = 0; i < getList().size(); i++) {
                     numOfSongs += ((Album) getList().get(i)).getSongsCount();

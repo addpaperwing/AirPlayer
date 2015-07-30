@@ -1,6 +1,7 @@
 package com.airplayer.activity.fetchpicture;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.airplayer.model.Picture;
@@ -18,6 +19,7 @@ public class FetchArtistPictureActivity extends FetchPictureActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        triggerDistance = 7972;
         super.onCreate(savedInstanceState);
     }
 
@@ -47,7 +49,7 @@ public class FetchArtistPictureActivity extends FetchPictureActivity {
     }
 
     @Override
-    public void onMoreButtonClick(View v, int nextPage) {
+    public void onMoreButtonClick(int nextPage) {
         executeDownloadTask(MODE_DOWNLOAD_ADD, "&pn=" + nextPage * 20);
     }
 }

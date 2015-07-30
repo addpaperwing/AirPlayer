@@ -23,12 +23,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airplayer.listener.DistanceTriggerScrollListener;
 import com.airplayer.multitask.DownloadURLTask;
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.HeadPadAdapter;
 import com.airplayer.fragment.dialog.ReplacePicDialogFragment;
-import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.model.Picture;
 import com.airplayer.util.StorageUtils;
 import com.airplayer.util.StringUtils;
@@ -176,6 +176,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     private int nextPage = 2;
 
+    protected int triggerDistance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -244,9 +246,19 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setOnScrollListener(new SimpleAirScrollListener
-                (getResources().getInteger(R.integer.padding_action_bar), mToolbar));
+        mRecyclerView.setOnScrollListener(new DistanceTriggerScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar, triggerDistance) {
+            @Override
+            public void onScrollToTriggerDistance() {
+                onMoreButtonClick(nextPage);
+                nextPage++;
+                super.onScrollToTriggerDistance();
+            }
+        });
         setupAdapter();
+
+        if (triggerDistance == 0) {
+            throw new RuntimeException("must assign triggerDistance in SubClass");
+        }
     }
 
     @Override
@@ -282,26 +294,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         }
 
-        @Override
-        public AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
-            return new ResponseFootViewHolder(getLayoutInflater()
-                    .inflate(R.layout.recycler_footer_response, parent, false));
-        }
-
-        @Override
-        public void onBindFootViewHolder(AirFootViewHolder footHolder) {
-            if (footHolder instanceof ResponseFootViewHolder) {
-                ResponseFootViewHolder foot = (ResponseFootViewHolder) footHolder;
-                foot.moreButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onMoreButtonClick(v, nextPage);
-                        nextPage++;
-                    }
-                });
-            }
-        }
-
         private class ResponseItemViewHolder extends AirItemViewHolder {
 
             SimpleDraweeView image;
@@ -309,16 +301,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             public ResponseItemViewHolder(View itemView) {
                 super(itemView);
                 image = (SimpleDraweeView) itemView.findViewById(R.id.simple_drawee_view_item);
-            }
-        }
-
-        private class ResponseFootViewHolder extends AirFootViewHolder {
-
-            TextView moreButton;
-
-            public ResponseFootViewHolder(View itemView) {
-                super(itemView);
-                moreButton = (TextView) itemView.findViewById(R.id.foot_button);
             }
         }
     }
@@ -406,5 +388,5 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     public abstract String getSearchLink();
     public abstract ArrayList<Picture> onDecodeJson(String response);
-    public abstract void onMoreButtonClick(View v, int nextPage);
+    public abstract void onMoreButtonClick(int nextPage);
 }

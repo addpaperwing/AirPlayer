@@ -18,6 +18,7 @@ public class FetchAlbumArtActivity extends FetchPictureActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        triggerDistance = 4612;
         super.onCreate(savedInstanceState);
     }
 
@@ -61,7 +62,7 @@ public class FetchAlbumArtActivity extends FetchPictureActivity {
     }
 
     @Override
-    public void onMoreButtonClick(View v, int nextPage) {
+    public void onMoreButtonClick(int nextPage) {
         executeDownloadTask(MODE_DOWNLOAD_ADD, "&start=" + (nextPage - 1) * 20);
     }
 }

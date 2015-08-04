@@ -2,6 +2,7 @@ package com.airplayer.model;
 
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 
 import com.airplayer.util.StringUtils;
 
@@ -15,7 +16,6 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
     private String albumArtist;
     private int year;
     private String albumArtPath;
-    private int songsCount;
 
 
     public int getId() {
@@ -48,14 +48,6 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public int getSongsCount() {
-        return songsCount;
-    }
-
-    public void setSongsCount(int songsCount) {
-        this.songsCount = songsCount;
     }
 
     public String getAlbumArtPath() {
@@ -102,8 +94,12 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
                 + getSaveName() + ".jpg";
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public int compareTo(Album another) {
-        return this.getYear() - another.getYear();
+        if (another != null) {
+            return this.getYear() - another.getYear();
+        }
+        return -1;
     }
 }

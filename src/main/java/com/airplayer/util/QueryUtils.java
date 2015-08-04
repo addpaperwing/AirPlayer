@@ -100,7 +100,9 @@ public class QueryUtils {
                         MediaStore.Audio.Media.DURATION,    /* for displaying */
                         MediaStore.Audio.Media.DATA,        /* for playing */
                         MediaStore.Audio.Media.TRACK,       /* for displaying in album fragment */
-                        MediaStore.Audio.Media.ALBUM_ID     /* for getting the album art*/
+                        MediaStore.Audio.Media.ALBUM_ID,    /* for getting the album art*/
+                        MediaStore.Audio.Media.ARTIST_ID,   /* for save data */
+                        MediaStore.Audio.Media.YEAR         /* for displaying */
                 },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
@@ -116,6 +118,8 @@ public class QueryUtils {
                         song.setPath(cursor.getString(6));
                         song.setTrack(cursor.getInt(7));
                         song.setAlbumId(cursor.getInt(8));
+                        song.setArtistId(cursor.getInt(9));
+                        song.setYear(cursor.getInt(10));
                         list.add(song);
                     }
                 } while (cursor.moveToNext());
@@ -183,7 +187,6 @@ public class QueryUtils {
                     album.setAlbumArtist(cursor2.getString(1));
                     album.setYear(cursor2.getInt(2));
                     album.setAlbumArtPath(cursor2.getString(3));
-                    album.setSongsCount(cursor2.getInt(4));
                     list.add(album);
                 } catch (CursorIndexOutOfBoundsException e) {
                     Log.d("QueryUtils", "index out of bounds");

@@ -1,7 +1,6 @@
 package com.airplayer.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,12 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
-import com.airplayer.activity.TestActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.fragment.singleitem.AlbumFragment;
@@ -51,11 +48,11 @@ public class PlayNowFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        final GridLayoutManager manager = new GridLayoutManager(getActivity(), 2);
+        final GridLayoutManager manager = new GridLayoutManager(getActivity(), 3);
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return position == 0 ? manager.getSpanCount() : 1;
+                return position == 0 || position == 1 || position == 8 ? manager.getSpanCount() : 1;
             }
         });
         mRecyclerView.setLayoutManager(manager);
@@ -81,48 +78,71 @@ public class PlayNowFragment extends Fragment {
 
     private class PlayNowAdapter extends AlbumAdapter {
 
+        public static final int TYPE_MESSAGE = 4;
+
         public PlayNowAdapter(Context context, List<Album> list) {
             super(context, list);
         }
 
         @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new PlayNowHeadViewHolder(getLayoutInflater().inflate(R.layout.recycler_header_image, parent, false));
+        public int getItemViewType(int position) {
+            if (position == 0) return TYPE_HEADER;
+            if (position == 1) return TYPE_MESSAGE;
+            if (position == 8) return TYPE_MESSAGE;
+            if (position == 3 + getList().size()) return TYPE_FOOTER;
+            return TYPE_ITEM;
         }
 
         @Override
-        public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
-            PlayNowHeadViewHolder playNowHeadViewHolder = (PlayNowHeadViewHolder) holder;
-            playNowHeadViewHolder.pad.setMinimumHeight(getResources().getInteger(R.integer.padding_action_bar));
-            playNowHeadViewHolder.title.setText("Recent Added");
-            playNowHeadViewHolder.title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getActivity(), TestActivity.class);
-                    startActivity(intent);
-                }
-            });
-            int numOfSongs = 0;
-            for (int i = 0; i < getList().size(); i++) {
-                    numOfSongs += ((Album) getList().get(i)).getSongsCount();
-            }
-            playNowHeadViewHolder.subTitle.setText(getList().size() + " albums " + numOfSongs +" songs");
-            playNowHeadViewHolder.desc.setText("click to shuffle all recent added");
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            if (viewType == TYPE_MESSAGE) return onCreateMessageViewHolder(parent);
+            return super.onCreateViewHolder(parent, viewType);
         }
 
-        private class PlayNowHeadViewHolder extends AirAdapter.AirHeadViewHolder {
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof AirAdapter.AirItemViewHolder) {
+                AirItemViewHolder itemViewHolder = (AirItemViewHolder) holder;
+                super.onBindItemViewHolder(itemViewHolder, position - 1);
+                return;
+            } else if (holder instanceof MessageViewHolder) {
+                onBindMessageViewHolder(holder, position);
+                return;
+            }
+            super.onBindViewHolder(holder, position);
+        }
 
-            ImageView pad;
-            TextView title;
-            TextView subTitle;
-            TextView desc;
+        @Override
+        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
+            return new AirHeadViewHolder(getLayoutInflater()
+                    .inflate(R.layout.recycler_header_padding_actionbar, parent, false));
+        }
 
-            public PlayNowHeadViewHolder(View itemView) {
+        public MessageViewHolder onCreateMessageViewHolder(ViewGroup parent) {
+            return new MessageViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_message, parent, false));
+        }
+
+        public void onBindMessageViewHolder(RecyclerView.ViewHolder holder, int position) {
+            MessageViewHolder message = (MessageViewHolder) holder;
+            if (position == 1) {
+                message.textView.setText(R.string.title_text_recent_added);
+            } else if (position == 8) {
+                message.textView.setText(R.string.title_text_favour);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return super.getItemCount() + 2;
+        }
+
+        private class MessageViewHolder extends RecyclerView.ViewHolder {
+
+            TextView textView;
+
+            public MessageViewHolder(View itemView) {
                 super(itemView);
-                pad = (ImageView) itemView.findViewById(R.id.header_image);
-                title = (TextView) itemView.findViewById(R.id.header_title);
-                subTitle = (TextView) itemView.findViewById(R.id.header_sub_title);
-                desc = (TextView) itemView.findViewById(R.id.header_desc);
+                textView = (TextView) itemView.findViewById(R.id.title_text);
             }
         }
     }

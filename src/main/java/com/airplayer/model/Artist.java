@@ -8,7 +8,7 @@ import com.airplayer.util.StringUtils;
 /**
  * Created by ZiyiTsang on 15/6/10.
  */
-public class Artist extends AirModel implements PictureGettable {
+public class Artist extends AirModel implements PictureGettable, Comparable<Artist> {
 
     private int id;
 
@@ -69,5 +69,28 @@ public class Artist extends AirModel implements PictureGettable {
         return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                 + "/AirPlayer/"
                 + getSaveName() + ".jpg";
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public int compareTo(Artist another) {
+        if (another != null) {
+            return getName().compareTo(another.getName());
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Artist) {
+            Artist target = (Artist) o;
+            return getName().equals(target.getName()) && getId() == target.getId();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.getInteger(getName().hashCode() + "" + getId());
     }
 }

@@ -19,6 +19,7 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
     // control
     private boolean play;
     private boolean pause;
+    private int freq;
 
     public boolean isPause() {
         return pause;
@@ -34,6 +35,12 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
 
     public void setPlay(boolean play) {
         this.play = play;
+        sSp.edit().putInt(id + " ", freq + 1).apply();
+    }
+
+    public int getFreq() {
+        freq = sSp.getInt(id + "", 0);
+        return freq;
     }
 
     // display
@@ -42,9 +49,11 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
     private String album;
     private int albumId;
     private String artist;
+    private int artistId;
     private int duration;
     private String path;
     private int track;
+    private int year;
 
     public int getId() {
         return id;
@@ -74,12 +83,24 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
         this.albumId = albumId;
     }
 
+    public int getAlbumId() {
+        return albumId;
+    }
+
     public String getArtist() {
         return artist;
     }
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public int getArtistId() {
+        return artistId;
+    }
+
+    public void setArtistId(int artistId) {
+        this.artistId = artistId;
     }
 
     public int getDuration() {
@@ -106,6 +127,14 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
         this.track = track;
     }
 
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
     public Uri getAlbumArtUri() {
         boolean b = sSp.getBoolean(albumId + "", false);
         if (!b) {
@@ -129,6 +158,9 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
 
     @Override
     public int compareTo(Song another) {
-        return this.getTrack() - another.getTrack();
+        if (another != null) {
+            return getTrack() - another.getTrack();
+        }
+        return -1;
     }
 }

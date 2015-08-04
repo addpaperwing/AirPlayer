@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.airplayer.R;
 
@@ -123,7 +124,8 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      *
      */
     public  AirAdapter.AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-        return new AirHeadViewHolder(mLayoutInflater.inflate(R.layout.recycler_item_empty, parent, false));
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        return new AirHeadViewHolder(linearLayout);
     }
 
     /**
@@ -134,7 +136,8 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      *
      */
     public AirAdapter.AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
-        return new AirFootViewHolder(mLayoutInflater.inflate(R.layout.recycler_item_empty, parent, false));
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        return new AirFootViewHolder(linearLayout);
     }
 
 

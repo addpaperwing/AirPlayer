@@ -9,12 +9,12 @@ import android.support.v7.widget.Toolbar;
 public class DistanceTriggerScrollListener extends SimpleAirScrollListener {
 
     private int triggerDistance;
-    private int fixTriggerDistance;
+    private int regularDistance;
 
     public DistanceTriggerScrollListener(int viewHeight, Toolbar toolbar, int triggerDistance) {
         super(viewHeight, toolbar);
         this.triggerDistance = triggerDistance;
-        fixTriggerDistance = triggerDistance;
+        regularDistance = triggerDistance;
     }
 
     @Override
@@ -26,6 +26,6 @@ public class DistanceTriggerScrollListener extends SimpleAirScrollListener {
     }
 
     public void onScrollToTriggerDistance() {
-        triggerDistance = triggerDistance + fixTriggerDistance;
+        triggerDistance = triggerDistance + regularDistance;
     }
 }

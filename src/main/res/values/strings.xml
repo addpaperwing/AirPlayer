@@ -31,7 +31,8 @@
     <string name="searchable_hint_album_art">Search album art</string>
     <string name="searchable_hint_artist_picture">Search artist picture</string>
 
-    <string name="button_text_fetch_more_pictures">More…</string>
+    <string name="title_text_recent_added">Recent added</string>
+    <string name="title_text_favour">Favour</string>
 
     <string-array name="tab_item_array">
         <item>Artists</item>

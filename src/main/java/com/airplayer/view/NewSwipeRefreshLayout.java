@@ -121,6 +121,7 @@ public class NewSwipeRefreshLayout extends ViewGroup {
     private int mActivePointerId = INVALID_POINTER;
     // Whether this item is scaled up rather than clipped
     private boolean mScale;
+    private boolean nScale;
 
     // Target is returning to its start offset because it was cancelled or a
     // refresh was triggered.
@@ -280,8 +281,10 @@ public class NewSwipeRefreshLayout extends ViewGroup {
         final DisplayMetrics metrics = getResources().getDisplayMetrics();
         if (size == MaterialProgressDrawable.LARGE) {
             mCircleHeight = mCircleWidth = (int) (CIRCLE_DIAMETER_LARGE * metrics.density);
+            nCircleHeight = nCircleWidth = (int) (CIRCLE_DIAMETER_LARGE * metrics.density);
         } else {
             mCircleHeight = mCircleWidth = (int) (CIRCLE_DIAMETER * metrics.density);
+            nCircleHeight = nCircleWidth = (int) (CIRCLE_DIAMETER * metrics.density);
         }
         // force the bounds of the progress circle inside the circle view to
         // update by setting it to null before updating its size and then
@@ -289,12 +292,16 @@ public class NewSwipeRefreshLayout extends ViewGroup {
         mCircleView.setImageDrawable(null);
         mProgress.updateSizes(size);
         mCircleView.setImageDrawable(mProgress);
+
+        nCircleView.setImageDrawable(null);
+        nProgress.updateSizes(size);
+        nCircleView.setImageDrawable(nProgress);
     }
 
     /**
      * Simple constructor to use when creating a SwipeRefreshLayout from code.
      *
-     * @param context
+     * @param context context
      */
     public NewSwipeRefreshLayout(Context context) {
         this(context, null);
@@ -303,8 +310,8 @@ public class NewSwipeRefreshLayout extends ViewGroup {
     /**
      * Constructor that is called when inflating SwipeRefreshLayout from XML.
      *
-     * @param context
-     * @param attrs
+     * @param context context
+     * @param attrs attrs
      */
     public NewSwipeRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -325,11 +332,17 @@ public class NewSwipeRefreshLayout extends ViewGroup {
         mCircleWidth = (int) (CIRCLE_DIAMETER * metrics.density);
         mCircleHeight = (int) (CIRCLE_DIAMETER * metrics.density);
 
+        nCircleWidth = (int) (CIRCLE_DIAMETER * metrics.density);
+        nCircleHeight = (int) (CIRCLE_DIAMETER * metrics.density);
+
         createProgressView();
         ViewCompat.setChildrenDrawingOrderEnabled(this, true);
         // the absolute offset has to take into account that the circle starts at an offset
         mSpinnerFinalOffset = DEFAULT_CIRCLE_TARGET * metrics.density;
         mTotalDragDistance = mSpinnerFinalOffset;
+
+        nSpinnerFinalOffset = 640 * metrics.density;
+        mTotalPullDistance = nSpinnerFinalOffset;
     }
 
     protected int getChildDrawingOrder(int childCount, int i) {
@@ -354,6 +367,13 @@ public class NewSwipeRefreshLayout extends ViewGroup {
         mCircleView.setImageDrawable(mProgress);
         mCircleView.setVisibility(View.GONE);
         addView(mCircleView);
+
+        nCircleView = new CircleImageView(getContext(), CIRCLE_BG_LIGHT, CIRCLE_DIAMETER/2);
+        nProgress = new MaterialProgressDrawable(getContext(), this);
+        nProgress.setBackgroundColor(CIRCLE_BG_LIGHT);
+        nCircleView.setImageDrawable(mProgress);
+        nCircleView.setVisibility(View.GONE);
+        addView(nCircleView);
     }
 
     /**
@@ -364,6 +384,9 @@ public class NewSwipeRefreshLayout extends ViewGroup {
         mRListener = listener;
     }
 
+    public void setOnLoadListener(OnLoadListener listener) {
+        mLListener = listener;
+    }
     /**
      * Pre API 11, alpha is used to make the progress circle appear instead of scale.
      */
@@ -393,6 +416,12 @@ public class NewSwipeRefreshLayout extends ViewGroup {
             startScaleUpAnimation(mRefreshListener);
         } else {
             setRefreshing(refreshing, false /* notify */);
+        }
+    }
+
+    public void setLoading(boolean loading) {
+        if (loading && !mLoading) {
+            mLoading = loading;
         }
     }
 

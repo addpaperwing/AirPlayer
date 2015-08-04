@@ -6,6 +6,7 @@ import android.provider.MediaStore;
 import com.airplayer.util.QueryUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -51,6 +52,33 @@ public class AirModelSingleton {
         return sArtistArrayList;
     }
 
+    public ArrayList<Artist> getArtists() {
+        if (sArtistArrayList == null) {
+            if (sSongArrayList == null) {
+                getSongArrayList(null, null,  MediaStore.Audio.Media.TITLE);
+            }
+            boolean have;
+            for (int i = 0; i < sSongArrayList.size(); i++) {
+                int artistId = sSongArrayList.get(i).getArtistId();
+                have = false;
+                for (int j = 0; j < sArtistArrayList.size(); j++) {
+                    if (artistId == sArtistArrayList.get(j).getId()) {
+                        have = true;
+                        break;
+                    }
+                }
+                if (!have) {
+                    Artist artist = new Artist();
+                    artist.setId(artistId);
+                    artist.setName(sSongArrayList.get(i).getArtist());
+                    sArtistArrayList.add(artist);
+                }
+            }
+            Collections.sort(sArtistArrayList);
+        }
+        return sArtistArrayList;
+    }
+
     public ArrayList<Album> getAlbumArrayList(String selection, String[] selectionArgs, String sortOrder) {
         if (sAlbumArrayList == null) {
             synchronized (AirModelSingleton.class) {
@@ -58,6 +86,35 @@ public class AirModelSingleton {
                     sAlbumArrayList = QueryUtils.loadAlbumList(context, selection, selectionArgs, sortOrder);
                 }
             }
+        }
+        return sAlbumArrayList;
+    }
+
+    public ArrayList<Album> getAlbums() {
+        if (sAlbumArrayList == null) {
+            if (sSongArrayList == null) {
+                getSongArrayList(null, null,  MediaStore.Audio.Media.TITLE);
+            }
+            boolean have;
+            for (int i = 0; i < sSongArrayList.size(); i++) {
+                Song song = sSongArrayList.get(i);
+                have = false;
+                for (int j = 0; j < sAlbumArrayList.size(); j++) {
+                    if (song.getAlbumId() == sAlbumArrayList.get(j).getId()) {
+                        have = true;
+                        break;
+                    }
+                }
+                if (!have) {
+                    Album album = new Album();
+                    album.setId(song.getAlbumId());
+                    album.setTitle(song.getAlbum());
+                    album.setAlbumArtist(song.getArtist());
+                    album.setYear(song.getYear());
+                    album.setAlbumArtPath("");
+                }
+            }
+            Collections.sort(sAlbumArrayList);
         }
         return sAlbumArrayList;
     }

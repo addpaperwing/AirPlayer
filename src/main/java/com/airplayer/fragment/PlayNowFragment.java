@@ -36,7 +36,7 @@ public class PlayNowFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recentAlbumList = AirModelSingleton.getInstance(getActivity()).getRecentAlbumArrayList();
+        recentAlbumList = AirModelSingleton.getInstance(getActivity()).getRecentAlbums();
         Toolbar globalBar = ((AirMainActivity) getActivity()).getToolbar();
         globalBar.setTranslationY(0);
         globalBar.setVisibility(View.VISIBLE);
@@ -45,6 +45,10 @@ public class PlayNowFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (recentAlbumList.size() == 0) {
+            return super.onCreateView(inflater, container, savedInstanceState);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
@@ -62,7 +66,7 @@ public class PlayNowFragment extends Fragment {
             public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(recentAlbumList.get(position - 1)));
+                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(recentAlbumList.get(position - 2)));
                 ft.addToBackStack(null);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.commit();
@@ -88,7 +92,7 @@ public class PlayNowFragment extends Fragment {
         public int getItemViewType(int position) {
             if (position == 0) return TYPE_HEADER;
             if (position == 1) return TYPE_MESSAGE;
-            if (position == 8) return TYPE_MESSAGE;
+            if (position == recentAlbumList.size()/2 + 2) return TYPE_MESSAGE;
             if (position == 3 + getList().size()) return TYPE_FOOTER;
             return TYPE_ITEM;
         }
@@ -103,7 +107,11 @@ public class PlayNowFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof AirAdapter.AirItemViewHolder) {
                 AirItemViewHolder itemViewHolder = (AirItemViewHolder) holder;
-                super.onBindItemViewHolder(itemViewHolder, position - 1);
+                int correctPosition = position - 1;
+                if (position > recentAlbumList.size()/2 + 2) {
+                    correctPosition = position - 2;
+                }
+                super.onBindItemViewHolder(itemViewHolder, correctPosition);
                 return;
             } else if (holder instanceof MessageViewHolder) {
                 onBindMessageViewHolder(holder, position);

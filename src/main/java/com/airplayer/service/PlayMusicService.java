@@ -193,7 +193,6 @@ public class PlayMusicService extends Service {
                 intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PLAY);
                 sendBroadcast(intent);
                 notification.push(songPlaying);
-                Log.d(TAG, "player is resumed");
             }
         }
 
@@ -206,7 +205,6 @@ public class PlayMusicService extends Service {
                 intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PAUSE);
                 sendBroadcast(intent);
                 notification.push(songPlaying);
-                Log.d(TAG, "player is paused");
             }
         }
 
@@ -230,7 +228,6 @@ public class PlayMusicService extends Service {
 
         public void setPlayMode(int mode) {
             mPlayMode = mode;
-            Log.d(TAG, "switch loop succeed, now play mode is " + mPlayMode);
         }
 
         public int getPlayMode() {
@@ -335,7 +332,6 @@ public class PlayMusicService extends Service {
     }
 
     private void onNotificationActionsReceive(Intent intent) {
-        Log.d(TAG, intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1) + "");
         switch (intent.getIntExtra(NOTIFICATION_OPERATION_KEY, -1)) {
             case NOTIFICATION_OPERATION_PREVIOUS:
                 previousPosition();
@@ -360,7 +356,6 @@ public class PlayMusicService extends Service {
     private void onHeadsetPlugActionReceive(Intent intent) {
         if (intent.getIntExtra("state", -1) == 0) {
             mBinder.pauseMusic();
-            Log.d(TAG, "Headset unplug");
         }
     }
 }

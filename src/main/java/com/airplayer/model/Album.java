@@ -11,12 +11,35 @@ import com.airplayer.util.StringUtils;
  */
 public class Album extends AirModel implements Comparable<Album>, PictureGettable {
 
+    /**
+     * control
+     */
+    private int freq;
+
+    public void freqAddOne() {
+        if (freq == 0) {
+            freq = sSp.getInt(id + "freq", 0);
+        }
+        sSp.edit().putInt(id + "freq", freq + 1).apply();
+    }
+
+    public int getFreq() {
+        if (freq == 0) {
+            freq = sSp.getInt(id + "freq", 0);
+        }
+        return freq;
+    }
+
+
+    /**
+     * display
+     */
     private int id;
     private String title;
     private String albumArtist;
     private int year;
     private String albumArtPath;
-
+    private Artist artist;
 
     public int getId() {
         return id;
@@ -50,6 +73,14 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
         this.year = year;
     }
 
+    public Artist getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artist artist) {
+        this.artist = artist;
+    }
+
     public String getAlbumArtPath() {
         if (albumArtPath == null) {
             return "";
@@ -71,6 +102,11 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
     public Uri getAlbumArtUri() {
         return Uri.parse("file://" + Uri.decode(getAlbumArtPath()));
     }
+
+
+    /**
+     * Implements { @link com.airplayer.model.PictureGettable }
+     */
 
     @Override
     public String getQueryKeyword() {
@@ -94,6 +130,11 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
                 + getSaveName() + ".jpg";
     }
 
+    /**
+     * override compareTo method to sort album quickly
+     * @param another instance to compare with
+     * @return positive or 0 or negative
+     */
     @SuppressWarnings("NullableProblems")
     @Override
     public int compareTo(Album another) {

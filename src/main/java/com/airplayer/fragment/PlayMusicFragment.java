@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -288,16 +289,14 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
     }
 
     private void updateUI() {
-        Bitmap nowPlaySongArt = BitmapUtils.getWindowWideBitmap(
-                getActivity(), mSong.getAlbumArtPath(getActivity()), true);
+        //setup images
+        new LoadBitmapTask().execute();
 
         // head tool bar section
-        mTitleImageView.setImageBitmap(nowPlaySongArt);
         mTitleTextView.setText(mSong.getTitle());
-        mArtistTextView.setText(mSong.getArtist());
+        mArtistTextView.setText(mSong.getAlbum().getArtist().getName());
 
         // background and center image section
-        mCenterAlbumArt.setImageBitmap(nowPlaySongArt);
         mDurationTextView.setText(StringUtils.getFormatTime(mSong.getDuration()));
 
         // foot player control section
@@ -328,6 +327,20 @@ public class PlayMusicFragment extends Fragment implements View.OnClickListener{
         mLoopMode++;
         if (mLoopMode > 2) {
             mLoopMode = 0;
+        }
+    }
+
+    private class LoadBitmapTask extends AsyncTask<Void, Void, Bitmap> {
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            return BitmapUtils.getWindowWideBitmap(PlayMusicFragment.this.getActivity(), mSong.getAlbum().getAlbumArtPath(), true);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            mTitleImageView.setImageBitmap(bitmap);
+            mCenterAlbumArt.setImageBitmap(bitmap);
         }
     }
 }

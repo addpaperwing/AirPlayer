@@ -174,8 +174,8 @@ public class AirMainActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
-        unbindService(connection);                  /* unbind service when destroy activity */
-        unregisterReceiver(mPlayerStateReceiver);   /* unregister receiver when destroy activity */
+        unbindService(connection);                  /* unbind service */
+        unregisterReceiver(mPlayerStateReceiver);   /* unregister receiver */
         super.onDestroy();
     }
 

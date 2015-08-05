@@ -31,7 +31,7 @@ public class SongListFragment extends MyLibraryChildFragment {
         super.onCreate(savedInstanceState);
         mBinder = ((AirMainActivity) getParentFragment().getActivity()).getPlayerControlBinder();
         mList = AirModelSingleton.getInstance(getParentFragment().getActivity())
-                .getSongArrayList(null, null, MediaStore.Audio.Media.TITLE);
+                .getSongArrayList();
     }
 
     @Override
@@ -61,50 +61,4 @@ public class SongListFragment extends MyLibraryChildFragment {
         });
         recyclerView.setAdapter(adapter);
     }
-
-//    public class SongListAdapter extends SongAdapter {
-//        public SongListAdapter(Context context, List<Song> list) {
-//            super(context, list);
-//        }
-//
-//        @Override
-//        public SongListHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-//            return new SongListHeadViewHolder(getLayoutInflater()
-//                    .inflate(R.layout.recycler_header_image_fab, parent, false));
-//        }
-//
-//        @Override
-//        public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
-//            SongListHeadViewHolder header = (SongListHeadViewHolder) holder;
-//            header.image.setMinimumHeight(getContext().getResources().getInteger(R.integer.padding_tabs) + getContext().getResources().getInteger(R.integer.padding_action_bar));
-//            header.image.setMaxHeight(getContext().getResources().getInteger(R.integer.padding_tabs) + getContext().getResources().getInteger(R.integer.padding_action_bar));
-//            header.title.setText("My Songs");
-//            header.subTitle.setText(mList.size() + " songs");
-//
-//            int minYear = 2015;
-//            int maxYear = 1970;
-//            for (int i = 0; i < getList().size(); i++) {
-//                int year = ((Song)getList().get(i)).getYear();
-//                if (year < minYear && year != 0) minYear = year;
-//                if (year > maxYear && year != 0) maxYear = year;
-//            }
-//            header.desc.setText(minYear + " ~ " + maxYear);
-//        }
-//
-//        private class SongListHeadViewHolder extends AirAdapter.AirHeadViewHolder {
-//
-//            private ImageView image;
-//            private TextView title;
-//            private TextView subTitle;
-//            private TextView desc;
-//
-//            public SongListHeadViewHolder(View itemView) {
-//                super(itemView);
-//                image = (ImageView) itemView.findViewById(R.id.header_image);
-//                title = (TextView) itemView.findViewById(R.id.header_title);
-//                subTitle = (TextView) itemView.findViewById(R.id.header_sub_title);
-//                desc = (TextView) itemView.findViewById(R.id.header_desc);
-//            }
-//        }
-//    }
 }

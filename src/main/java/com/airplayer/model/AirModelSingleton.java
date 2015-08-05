@@ -6,21 +6,21 @@ import android.provider.MediaStore;
 import com.airplayer.util.QueryUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by ZiyiTsang on 15/7/22.
  */
 public class AirModelSingleton {
 
-    private static ArrayList<Artist> sArtistArrayList;
+    private static ArrayList<Artist> sArtists;
 
-    private static ArrayList<Album> sAlbumArrayList;
+    private static ArrayList<Album> sAlbums;
 
-    private static ArrayList<Song> sSongArrayList;
+    private static ArrayList<Song> sSongs;
 
-    private static ArrayList<Album> sRecentAlbumArrayList;
+    private static ArrayList<Album> sRecentAlbums;
 
     private static AirModelSingleton singleton;
 
@@ -30,7 +30,7 @@ public class AirModelSingleton {
         this.context = context;
     }
 
-    public static AirModelSingleton getInstance(Context context) {
+    public synchronized static AirModelSingleton getInstance(Context context) {
         if (singleton == null) {
             synchronized (AirModelSingleton.class) {
                 if (singleton == null) {
@@ -42,111 +42,114 @@ public class AirModelSingleton {
     }
 
     public ArrayList<Artist> getArtistArrayList() {
-        if (sArtistArrayList == null) {
+        if (sArtists == null) {
             synchronized (AirModelSingleton.class) {
-                if (sArtistArrayList == null) {
-                    sArtistArrayList = QueryUtils.loadArtistList(context);
+                if (sArtists == null) {
+                    sArtists = QueryUtils.loadArtistList(context);
                 }
             }
         }
-        return sArtistArrayList;
+        return sArtists;
     }
 
-    public ArrayList<Artist> getArtists() {
-        if (sArtistArrayList == null) {
-            if (sSongArrayList == null) {
-                getSongArrayList(null, null,  MediaStore.Audio.Media.TITLE);
-            }
-            boolean have;
-            for (int i = 0; i < sSongArrayList.size(); i++) {
-                int artistId = sSongArrayList.get(i).getArtistId();
-                have = false;
-                for (int j = 0; j < sArtistArrayList.size(); j++) {
-                    if (artistId == sArtistArrayList.get(j).getId()) {
-                        have = true;
-                        break;
+    public ArrayList<Album> getAlbumArrayList() {
+        if (sAlbums == null) {
+            synchronized (AirModelSingleton.class) {
+                if (sAlbums == null) {
+                    sAlbums = QueryUtils.loadAlbumList(context, null, null, MediaStore.Audio.Albums.ALBUM);
+                    if (sArtists == null) getArtistArrayList();
+                    for (int i = 0; i < sArtists.size(); i++) {
+                        Artist artist = sArtists.get(i);
+                        for (int j = 0; j < sAlbums.size(); j++) {
+                            Album album = sAlbums.get(j);
+                            if (artist.getName().equals(album.getAlbumArtist())) {
+                                sAlbums.get(j).setArtist(artist);
+                            }
+                        }
                     }
                 }
-                if (!have) {
-                    Artist artist = new Artist();
-                    artist.setId(artistId);
-                    artist.setName(sSongArrayList.get(i).getArtist());
-                    sArtistArrayList.add(artist);
-                }
             }
-            Collections.sort(sArtistArrayList);
         }
-        return sArtistArrayList;
+        return sAlbums;
     }
 
-    public ArrayList<Album> getAlbumArrayList(String selection, String[] selectionArgs, String sortOrder) {
-        if (sAlbumArrayList == null) {
+    public ArrayList<Song> getSongArrayList() {
+        if (sSongs == null) {
             synchronized (AirModelSingleton.class) {
-                if (sAlbumArrayList == null) {
-                    sAlbumArrayList = QueryUtils.loadAlbumList(context, selection, selectionArgs, sortOrder);
+                if (sSongs == null) {
+                    sSongs = QueryUtils.loadSongList(context, null, null, MediaStore.Audio.Media.TITLE);
                 }
-            }
-        }
-        return sAlbumArrayList;
-    }
-
-    public ArrayList<Album> getAlbums() {
-        if (sAlbumArrayList == null) {
-            if (sSongArrayList == null) {
-                getSongArrayList(null, null,  MediaStore.Audio.Media.TITLE);
-            }
-            boolean have;
-            for (int i = 0; i < sSongArrayList.size(); i++) {
-                Song song = sSongArrayList.get(i);
-                have = false;
-                for (int j = 0; j < sAlbumArrayList.size(); j++) {
-                    if (song.getAlbumId() == sAlbumArrayList.get(j).getId()) {
-                        have = true;
-                        break;
+                if (sAlbums == null) getAlbumArrayList();
+                for (int i = 0; i < sAlbums.size(); i++) {
+                    Album album = sAlbums.get(i);
+                    for (int j = 0; j < sSongs.size(); j++) {
+                        Song song = sSongs.get(j);
+                        if (album.getId() == song.getAlbumId()) {
+                            song.setAlbum(album);
+                        }
                     }
                 }
-                if (!have) {
-                    Album album = new Album();
-                    album.setId(song.getAlbumId());
-                    album.setTitle(song.getAlbum());
-                    album.setAlbumArtist(song.getArtist());
-                    album.setYear(song.getYear());
-                    album.setAlbumArtPath("");
-                }
             }
-            Collections.sort(sAlbumArrayList);
         }
-        return sAlbumArrayList;
+        return sSongs;
     }
 
-    public ArrayList<Song> getSongArrayList(String selection, String[] selectionArgs, String sortOrder) {
-        if (sSongArrayList == null) {
+    public ArrayList<Album> getRecentAlbums() {
+        if (sRecentAlbums == null) {
             synchronized (AirModelSingleton.class) {
-                if (sSongArrayList == null) {
-                    sSongArrayList = QueryUtils.loadSongList(context, selection, selectionArgs, sortOrder);
+                if (sRecentAlbums == null) {
+                    sRecentAlbums = QueryUtils.loadRecentAlbum(context);
+                    if (sAlbums == null) {
+                        getAlbumArrayList();
+                    }
+                    loadFavourAlbums();
                 }
             }
         }
-        return sSongArrayList;
+        return sRecentAlbums;
     }
 
-    public ArrayList<Album> getRecentAlbumArrayList() {
-        if (sRecentAlbumArrayList == null) {
-            synchronized (AirModelSingleton.class) {
-                if (sRecentAlbumArrayList == null) {
-                    sRecentAlbumArrayList = QueryUtils.loadRecentAlbum(context);
-                }
+    private void loadFavourAlbums() {
+        ArrayList<Album> freqAlbums = new ArrayList<>();
+        if (sAlbums == null) {
+            getAlbumArrayList();
+        }
+
+        if (sAlbums.size() == 0) {
+            return;
+        }
+
+        for (Album album : sAlbums) {
+            if (album.getFreq() > 0) {
+                freqAlbums.add(album);
             }
         }
-        return sRecentAlbumArrayList;
+
+        if (freqAlbums.size() == 0) {
+            return;
+        }
+
+        Collections.sort(freqAlbums, new Comparator<Album>() {
+            @Override
+            public int compare(Album lhs, Album rhs) {
+                return rhs.getFreq() - lhs.getFreq();
+            }
+        });
+
+        for (int i = 0; i < 6; i++) {
+            if (sRecentAlbums.size() == 12) {
+                sRecentAlbums.remove(6);
+            }
+            sRecentAlbums.add(freqAlbums.get(i));
+        }
     }
 
     public ArrayList<Album> getArtistAlbum(String artistName) {
         ArrayList<Album> list = new ArrayList<>();
-        if (sAlbumArrayList == null) {
-            getAlbumArrayList(null, null, MediaStore.Audio.Media.ALBUM);
+        if (sAlbums == null) {
+            getAlbumArrayList();
         }
-        for (Album album : sAlbumArrayList) {
+        for (Album album : sAlbums) {
             if (album.getAlbumArtist().equals(artistName)) {
                 list.add(album);
             }
@@ -157,10 +160,10 @@ public class AirModelSingleton {
 
     public ArrayList<Song> getAlbumSong(String albumTitle) {
         ArrayList<Song> list = new ArrayList<>();
-        if (sSongArrayList == null) {
-            getSongArrayList(null, null, MediaStore.Audio.Media.TITLE);
+        if (sSongs == null) {
+            getSongArrayList();
         }
-        for (Song song : sSongArrayList) {
+        for (Song song : sSongs) {
             if (song.getAlbum().equals(albumTitle)) {
                 list.add(song);
             }

@@ -28,8 +28,7 @@ public class AlbumGridFragment extends MyLibraryChildFragment  {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mList = AirModelSingleton.getInstance(getParentFragment().getActivity())
-                .getAlbumArrayList(null, null, MediaStore.Audio.Albums.ALBUM);
+        mList = AirModelSingleton.getInstance(getParentFragment().getActivity()).getAlbumArrayList();
     }
 
     @Override

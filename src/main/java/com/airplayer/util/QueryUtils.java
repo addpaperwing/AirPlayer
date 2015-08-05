@@ -94,15 +94,13 @@ public class QueryUtils {
                 new String[]{
                         MediaStore.Audio.Media.IS_MUSIC,    /* for checking if is music*/
                         MediaStore.Audio.Media._ID,         /* */
-                        MediaStore.Audio.Media.TITLE,       /* for displaying */
-                        MediaStore.Audio.Media.ALBUM,       /* for displaying */
-                        MediaStore.Audio.Media.ARTIST,      /* for displaying */
-                        MediaStore.Audio.Media.DURATION,    /* for displaying */
+                        MediaStore.Audio.Media.TITLE,       /* for displaying in SongListFragment */
+                        MediaStore.Audio.Media.DURATION,    /* for displaying in SongListFragment */
                         MediaStore.Audio.Media.DATA,        /* for playing */
-                        MediaStore.Audio.Media.TRACK,       /* for displaying in album fragment */
+                        MediaStore.Audio.Media.TRACK,       /* for displaying in AlbumFragment */
                         MediaStore.Audio.Media.ALBUM_ID,    /* for getting the album art*/
-                        MediaStore.Audio.Media.ARTIST_ID,   /* for save data */
-                        MediaStore.Audio.Media.YEAR         /* for displaying */
+//                        MediaStore.Audio.Media.ALBUM,       /* for displaying in SongListFragment */
+//                        MediaStore.Audio.Media.ARTIST       /* for displaying in SongListFragment */
                 },
                 selection, selectionArgs, sortOrder);
         if (cursor != null) {
@@ -112,14 +110,12 @@ public class QueryUtils {
                         Song song = new Song();
                         song.setId(cursor.getInt(1));
                         song.setTitle(cursor.getString(2));
-                        song.setAlbum(cursor.getString(3));
-                        song.setArtist(cursor.getString(4));
-                        song.setDuration(cursor.getInt(5));
-                        song.setPath(cursor.getString(6));
-                        song.setTrack(cursor.getInt(7));
-                        song.setAlbumId(cursor.getInt(8));
-                        song.setArtistId(cursor.getInt(9));
-                        song.setYear(cursor.getInt(10));
+                        song.setDuration(cursor.getInt(3));
+                        song.setPath(cursor.getString(4));
+                        song.setTrack(cursor.getInt(5));
+                        song.setAlbumId(cursor.getInt(6));
+//                        song.setAlbum(cursor.getString(7));
+//                        song.setArtist(cursor.getString(8));
                         list.add(song);
                     }
                 } while (cursor.moveToNext());
@@ -160,11 +156,6 @@ public class QueryUtils {
                 } while (cursor1.moveToNext());
             }
             cursor1.close();
-        }
-        for (int i = 0; i < 6; i++) {
-            if (recentAlbums[i].equals("")) {
-
-            }
         }
         for (int i = 0; i < 6; i++) {
             Cursor cursor2 = context.getContentResolver().query(

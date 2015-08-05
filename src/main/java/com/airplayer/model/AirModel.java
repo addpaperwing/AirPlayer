@@ -11,7 +11,16 @@ public class AirModel {
 
     protected static SharedPreferences sSp;
 
-    public static void initModels(Context context) {
+    public static void initModels(final Context context) {
         sSp = PreferenceManager.getDefaultSharedPreferences(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AirModelSingleton singleton = AirModelSingleton.getInstance(context);
+                singleton.getArtistArrayList();
+                singleton.getAlbumArrayList();
+                singleton.getSongArrayList();
+            }
+        }).start();
     }
 }

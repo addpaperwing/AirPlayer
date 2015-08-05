@@ -1,10 +1,9 @@
 package com.airplayer.model;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.util.QueryUtils;
@@ -16,10 +15,11 @@ import java.io.Serializable;
  */
 public class Song extends AirModel implements Comparable<Song>, Serializable {
 
-    // control
+    /**
+     * control
+     */
     private boolean play;
     private boolean pause;
-    private int freq;
 
     public boolean isPause() {
         return pause;
@@ -35,25 +35,19 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
 
     public void setPlay(boolean play) {
         this.play = play;
-        sSp.edit().putInt(id + " ", freq + 1).apply();
+        album.freqAddOne();
     }
 
-    public int getFreq() {
-        freq = sSp.getInt(id + "", 0);
-        return freq;
-    }
-
-    // display
+    /**
+     * display
+     */
     private int id;
     private String title;
-    private String album;
     private int albumId;
-    private String artist;
-    private int artistId;
     private int duration;
     private String path;
     private int track;
-    private int year;
+    private Album album;
 
     public int getId() {
         return id;
@@ -71,36 +65,12 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
         this.title = title;
     }
 
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
     public void setAlbumId(int albumId) {
         this.albumId = albumId;
     }
 
     public int getAlbumId() {
         return albumId;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public int getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(int artistId) {
-        this.artistId = artistId;
     }
 
     public int getDuration() {
@@ -127,35 +97,36 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
         this.track = track;
     }
 
-    public int getYear() {
-        return year;
+    public Album getAlbum() {
+        return album;
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public void setAlbum(Album album) {
+        this.album = album;
     }
 
-    public Uri getAlbumArtUri() {
-        boolean b = sSp.getBoolean(albumId + "", false);
-        if (!b) {
-            return Uri.parse("content://media/external/audio/albumart/" + albumId);
-        } else {
-            return Uri.parse("file://"
-                    + Uri.decode(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    + "/AirPlayer/"
-                    + artist + " - " + album + ".jpg"));
-        }
-    }
+//    public Uri getAlbumArtUri() {
+//        boolean b = sSp.getBoolean(albumId + "", false);
+//        if (!b) {
+//            return Uri.parse("content://media/external/audio/albumart/" + albumId);
+//        } else {
+//            return Uri.parse("file://"
+//                    + Uri.decode(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+//                    + "/AirPlayer/"
+//                    + artist + " - " + album + ".jpg"));
+//        }
+//    }
+//
+//    public String getAlbumArtPath(Context context) {
+//        boolean b = sSp.getBoolean(albumId + "", false);
+//        if (!b) {
+//            return QueryUtils.getAlbumArtPath(context, album);
+//        } else {
+//            return AirMainActivity.EXTERNAL_PICTURE_FOLDER + artist + " - " + album + ".jpg";
+//        }
+//    }
 
-    public String getAlbumArtPath(Context context) {
-        boolean b = sSp.getBoolean(albumId + "", false);
-        if (!b) {
-            return QueryUtils.getAlbumArtPath(context, album);
-        } else {
-            return AirMainActivity.EXTERNAL_PICTURE_FOLDER + artist + " - " + album + ".jpg";
-        }
-    }
-
+    @SuppressWarnings("NullableProblems")
     @Override
     public int compareTo(Song another) {
         if (another != null) {

@@ -57,12 +57,12 @@ public class SongAdapter extends HeadPadAdapter {
             Song item = (Song) getList().get(position - 1);
 
             songItemViewHolder.titleText.setText(item.getTitle());
-            songItemViewHolder.artistText.setText(item.getArtist());
+            songItemViewHolder.artistText.setText(item.getAlbum().getArtist().getName());
             songItemViewHolder.durationText.setText(StringUtils.getFormatTime(item.getDuration()));
 
             if (showImage) {
                 Picasso.with(getContext())
-                        .load(item.getAlbumArtUri())
+                        .load(item.getAlbum().getAlbumArtUri())
                         .into(songItemViewHolder.imageView);
             } else {
                 int track = item.getTrack();

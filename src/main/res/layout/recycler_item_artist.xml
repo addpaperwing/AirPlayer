@@ -17,7 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center|top"
-            android:padding="@dimen/dp_8_560"
             fresco:placeholderImage="@drawable/ic_default_art"
             />
 
@@ -26,11 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:background="@android:color/white">
+            android:background="@color/air_black_alpha">
 
             <TextView
                 android:id="@+id/artist_name"
-                android:textColor="@color/air_primary_text"
                 android:textSize="@dimen/mTextSize"
                 android:ellipsize="end"
                 android:singleLine="true"

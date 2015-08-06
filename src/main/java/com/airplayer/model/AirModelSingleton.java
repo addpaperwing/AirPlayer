@@ -20,7 +20,8 @@ public class AirModelSingleton {
 
     private static ArrayList<Song> sSongs;
 
-    private static ArrayList<Album> sRecentAlbums;
+    private static ArrayList<Album> sActivityAlbums;
+    private static int sRecentAlbumsSize;
 
     private static AirModelSingleton singleton;
 
@@ -94,11 +95,12 @@ public class AirModelSingleton {
         return sSongs;
     }
 
-    public ArrayList<Album> getRecentAlbums() {
-        if (sRecentAlbums == null) {
+    public ArrayList<Album> getActivityAlbums() {
+        if (sActivityAlbums == null) {
             synchronized (AirModelSingleton.class) {
-                if (sRecentAlbums == null) {
-                    sRecentAlbums = QueryUtils.loadRecentAlbum(context);
+                if (sActivityAlbums == null) {
+                    sActivityAlbums = QueryUtils.loadRecentAlbum(context);
+                    sRecentAlbumsSize = sActivityAlbums.size();
                     if (sAlbums == null) {
                         getAlbumArrayList();
                     }
@@ -106,7 +108,11 @@ public class AirModelSingleton {
                 }
             }
         }
-        return sRecentAlbums;
+        return sActivityAlbums;
+    }
+
+    public int getRecentAlbumsSize() {
+        return sRecentAlbumsSize;
     }
 
     private void loadFavourAlbums() {
@@ -137,10 +143,10 @@ public class AirModelSingleton {
         });
 
         for (int i = 0; i < 6; i++) {
-            if (sRecentAlbums.size() == 12) {
-                sRecentAlbums.remove(6);
+            if (sActivityAlbums.size() == 12) {
+                sActivityAlbums.remove(6);
             }
-            sRecentAlbums.add(freqAlbums.get(i));
+            sActivityAlbums.add(freqAlbums.get(i));
         }
     }
 
@@ -164,7 +170,7 @@ public class AirModelSingleton {
             getSongArrayList();
         }
         for (Song song : sSongs) {
-            if (song.getAlbum().equals(albumTitle)) {
+            if (song.getAlbum().getTitle().equals(albumTitle)) {
                 list.add(song);
             }
         }

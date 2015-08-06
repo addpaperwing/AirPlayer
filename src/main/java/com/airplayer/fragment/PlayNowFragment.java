@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
@@ -30,13 +31,16 @@ import java.util.List;
  */
 public class PlayNowFragment extends Fragment {
 
-    private List<Album> recentAlbumList;
+    private List<Album> mActivityAlbums;
     private RecyclerView mRecyclerView;
+    private int mRecentAlbumsSize;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recentAlbumList = AirModelSingleton.getInstance(getActivity()).getRecentAlbums();
+        AirModelSingleton singleton = AirModelSingleton.getInstance(getActivity());
+        mActivityAlbums = singleton.getActivityAlbums();
+        mRecentAlbumsSize = singleton.getRecentAlbumsSize();
         Toolbar globalBar = ((AirMainActivity) getActivity()).getToolbar();
         globalBar.setTranslationY(0);
         globalBar.setVisibility(View.VISIBLE);
@@ -45,7 +49,7 @@ public class PlayNowFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (recentAlbumList.size() == 0) {
+        if (mActivityAlbums.size() == 0) {
             return super.onCreateView(inflater, container, savedInstanceState);
         }
 
@@ -56,17 +60,18 @@ public class PlayNowFragment extends Fragment {
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                return position == 0 || position == 1 || position == 8 ? manager.getSpanCount() : 1;
+                return position == 0 || position == 1 || position == mRecentAlbumsSize + 2 ?
+                        manager.getSpanCount() : 1;
             }
         });
         mRecyclerView.setLayoutManager(manager);
-        PlayNowAdapter adapter = new PlayNowAdapter(getActivity(), recentAlbumList);
+        PlayNowAdapter adapter = new PlayNowAdapter(getActivity(), mActivityAlbums);
         adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(recentAlbumList.get(position - 2)));
+                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mActivityAlbums.get(correctPostion(position))));
                 ft.addToBackStack(null);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.commit();
@@ -78,6 +83,14 @@ public class PlayNowFragment extends Fragment {
         toolbar.setVisibility(View.VISIBLE);
         mRecyclerView.setOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), toolbar));
         return rootView;
+    }
+
+    private int correctPostion(int position) {
+        if (position > mRecentAlbumsSize + 2) {
+            return position - 3;
+        } else {
+            return position - 2;
+        }
     }
 
     private class PlayNowAdapter extends AlbumAdapter {
@@ -92,7 +105,7 @@ public class PlayNowFragment extends Fragment {
         public int getItemViewType(int position) {
             if (position == 0) return TYPE_HEADER;
             if (position == 1) return TYPE_MESSAGE;
-            if (position == recentAlbumList.size()/2 + 2) return TYPE_MESSAGE;
+            if (position == mRecentAlbumsSize + 2) return TYPE_MESSAGE;
             if (position == 3 + getList().size()) return TYPE_FOOTER;
             return TYPE_ITEM;
         }
@@ -107,11 +120,7 @@ public class PlayNowFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof AirAdapter.AirItemViewHolder) {
                 AirItemViewHolder itemViewHolder = (AirItemViewHolder) holder;
-                int correctPosition = position - 1;
-                if (position > recentAlbumList.size()/2 + 2) {
-                    correctPosition = position - 2;
-                }
-                super.onBindItemViewHolder(itemViewHolder, correctPosition);
+                super.onBindItemViewHolder(itemViewHolder, correctPostion(position) + 1);
                 return;
             } else if (holder instanceof MessageViewHolder) {
                 onBindMessageViewHolder(holder, position);
@@ -122,8 +131,7 @@ public class PlayNowFragment extends Fragment {
 
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new AirHeadViewHolder(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_padding_actionbar, parent, false));
+            return new AirHeadViewHolder(newPaddingLayout(getResources().getDimensionPixelOffset(R.dimen.dp_56_560)));
         }
 
         public MessageViewHolder onCreateMessageViewHolder(ViewGroup parent) {
@@ -134,9 +142,22 @@ public class PlayNowFragment extends Fragment {
             MessageViewHolder message = (MessageViewHolder) holder;
             if (position == 1) {
                 message.textView.setText(R.string.title_text_recent_added);
-            } else if (position == 8) {
+            } else if (position == mRecentAlbumsSize + 2) {
                 message.textView.setText(R.string.title_text_favour);
             }
+        }
+
+        @Override
+        public AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
+            return new AirFootViewHolder(newPaddingLayout(getResources().getInteger(R.integer.padding_tabs)));
+        }
+
+        private LinearLayout newPaddingLayout(int layoutHeight) {
+            LinearLayout linearLayout = new LinearLayout(getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                    (ViewGroup.LayoutParams.MATCH_PARENT, layoutHeight);
+            linearLayout.setLayoutParams(params);
+            return linearLayout;
         }
 
         @Override

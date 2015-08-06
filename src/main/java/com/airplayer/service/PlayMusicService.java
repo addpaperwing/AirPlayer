@@ -132,6 +132,9 @@ public class PlayMusicService extends Service {
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                if (songPlaying != null) {
+                    songPlaying.addFreqOne();
+                }
                 if (mPlayMode != SINGLE_SONG_LOOP_MODE) {
                     if (shuffle) {
                         mPosition = (int) Math.round(Math.random() * (mPlayList.size() - 1));

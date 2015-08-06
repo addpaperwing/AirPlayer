@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.airplayer.R;
 import com.airplayer.model.Song;
 import com.airplayer.util.StringUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -61,9 +62,7 @@ public class SongAdapter extends HeadPadAdapter {
             songItemViewHolder.durationText.setText(StringUtils.getFormatTime(item.getDuration()));
 
             if (showImage) {
-                Picasso.with(getContext())
-                        .load(item.getAlbum().getAlbumArtUri())
-                        .into(songItemViewHolder.imageView);
+                songItemViewHolder.draweeView.setImageURI(item.getAlbum().getAlbumArtUri());
             } else {
                 int track = item.getTrack();
                 if (track != 0) {
@@ -95,7 +94,7 @@ public class SongAdapter extends HeadPadAdapter {
     }
 
     public class SongItemViewHolder extends AirItemViewHolder {
-        ImageView imageView;
+        SimpleDraweeView draweeView;
         TextView titleText;
         TextView artistText;
         TextView durationText;
@@ -105,7 +104,7 @@ public class SongAdapter extends HeadPadAdapter {
 
         public SongItemViewHolder(View itemView) {
             super(itemView);
-            imageView = (ImageView) itemView.findViewById(R.id.song_imageView);
+            draweeView = (SimpleDraweeView) itemView.findViewById(R.id.song_imageView);
             titleText = (TextView) itemView.findViewById(R.id.song_title);
             artistText = (TextView) itemView.findViewById(R.id.song_artist_name);
             durationText = (TextView) itemView.findViewById(R.id.song_duration);

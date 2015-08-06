@@ -35,6 +35,9 @@ public class Song extends AirModel implements Comparable<Song>, Serializable {
 
     public void setPlay(boolean play) {
         this.play = play;
+    }
+
+    public void addFreqOne() {
         album.freqAddOne();
     }
 

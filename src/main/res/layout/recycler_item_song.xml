@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true">
 
-            <ImageView
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/song_imageView"
                 android:layout_width="@dimen/dp_64_560"
                 android:layout_height="@dimen/dp_64_560" />

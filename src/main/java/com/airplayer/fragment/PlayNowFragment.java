@@ -1,16 +1,19 @@
 package com.airplayer.fragment;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -117,6 +120,13 @@ public class PlayNowFragment extends Fragment {
         }
 
         @Override
+        public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {
+            CardView itemView = (CardView) getLayoutInflater().inflate(
+                    R.layout.recycler_item_album_three_pre_line, parent, false);
+            return new AlbumItemViewHolder(itemView);
+        }
+
+        @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof AirAdapter.AirItemViewHolder) {
                 AirItemViewHolder itemViewHolder = (AirItemViewHolder) holder;
@@ -149,7 +159,7 @@ public class PlayNowFragment extends Fragment {
 
         @Override
         public AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
-            return new AirFootViewHolder(newPaddingLayout(getResources().getInteger(R.integer.padding_tabs)));
+            return new AirFootViewHolder(newPaddingLayout(20));
         }
 
         private LinearLayout newPaddingLayout(int layoutHeight) {

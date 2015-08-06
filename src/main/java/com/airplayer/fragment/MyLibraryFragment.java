@@ -1,6 +1,7 @@
 package com.airplayer.fragment;
 
 
+import android.animation.Animator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,18 +39,22 @@ public class MyLibraryFragment extends Fragment {
         return listener;
     }
 
+    private boolean shouldSend = true;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listener = new AirMulScrollListener(getResources().getInteger(R.integer.padding_action_bar) + getResources().getInteger(R.integer.padding_tabs)) {
+        int viewHeight = getResources().getInteger(R.integer.padding_action_bar) + getResources().getInteger(R.integer.padding_tabs);
+        listener = new AirMulScrollListener(viewHeight) {
             @Override
             public void onViewScrolled(int viewScrolledDistance) {
                 noAnimateTranslate(-viewScrolledDistance);
+                shouldSend = toolbarHide;
             }
 
             @Override
             public void onHide() {
-                animateTranslate(-getResources().getInteger(R.integer.padding_action_bar) - getResources().getInteger(R.integer.padding_tabs));
+                animateTranslate(-viewHeight);
             }
 
             @Override
@@ -66,7 +72,7 @@ public class MyLibraryFragment extends Fragment {
         globalBar.setVisibility(View.VISIBLE);
 
         FragmentManager fm = getChildFragmentManager();
-        fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+        fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
         paddingBar = (Toolbar) rootView.findViewById(R.id.padding_toolbar);
 
@@ -78,12 +84,16 @@ public class MyLibraryFragment extends Fragment {
 
         tabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (listener.isToolbarHide() && shouldSend) {
+                    animateTranslate(0);
+                    listener.reset();
+                    shouldSend = false;
+                }
+            }
 
             @Override
             public void onPageSelected(int position) {
-                animateTranslate(0);
-                listener.reset();
                 listener.setPage(position);
             }
 
@@ -133,10 +143,25 @@ public class MyLibraryFragment extends Fragment {
         tabLayout.setTranslationY(y);
     }
 
-    private void animateTranslate(int y) {
-        globalBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(2));
-        paddingBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(2));
-        tabLayout.animate().translationY(y).setInterpolator(new AccelerateInterpolator(2));
+    private void animateTranslate(final int y) {
+        globalBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(3));
+        paddingBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(3));
+        tabLayout.animate().setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) { }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                shouldSend = listener.isToolbarHide();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) { }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) { }
+        });
+        tabLayout.animate().translationY(y).setInterpolator(new AccelerateInterpolator(3));
     }
 }
 

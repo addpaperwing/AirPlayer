@@ -7,9 +7,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.Image;
 import android.net.Uri;
 import android.util.Log;
 import android.view.Display;
+import android.widget.ImageView;
 
 import com.airplayer.R;
 
@@ -90,6 +92,30 @@ public class BitmapUtils {
         } else {
             return null;
         }
+    }
+
+    public static Bitmap setMatchSizeBitmap(ImageView imageView, String path) {
+        if (path != null) {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 1;
+            options.inJustDecodeBounds = true;
+            Bitmap bitmap = BitmapFactory.decodeFile(path, options);
+            int bitmapHeight = bitmap.getHeight();
+            int bitmapWidth = bitmap.getWidth();
+            int imageViewHeight = imageView.getHeight();
+            int imageViewWidth = imageView.getWidth();
+            if (bitmapHeight > imageViewHeight || bitmapWidth > imageViewWidth) {
+                options.inSampleSize = bitmapHeight / imageViewHeight;
+                options.inJustDecodeBounds = false;
+                return BitmapFactory.decodeFile(path, options);
+            } else {
+                Matrix matrix = new Matrix();
+                /**
+                 *
+                 */
+            }
+        }
+        return null;
     }
 
     public static Bitmap getBitmap(Context context, Uri uri) {

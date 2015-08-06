@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/album_item"
+    android:layout_width="@dimen/dp_160_560"
+    android:layout_height="@dimen/dp_160_560"
+    android:layout_margin="@dimen/dp_4_560"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/album_art"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|top"
+            fresco:placeholderImage="@drawable/ic_default_art"
+            />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:background="@color/air_black_alpha"
+            >
+
+            <TextView
+                android:id="@+id/album_title"
+                android:textSize="@dimen/mTextSize"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginLeft="@dimen/dp_8_560"
+                android:layout_marginRight="@dimen/dp_8_560"
+                android:layout_marginStart="@dimen/dp_8_560"
+                android:layout_marginEnd="@dimen/dp_8_560"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <TextView
+                android:id="@+id/album_artist_name"
+                android:textSize="@dimen/sTextSize"
+                android:textColor="@android:color/darker_gray"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginLeft="@dimen/dp_8_560"
+                android:layout_marginRight="@dimen/dp_8_560"
+                android:layout_marginStart="@dimen/dp_8_560"
+                android:layout_marginEnd="@dimen/dp_8_560"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/clickable_mask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:background="@drawable/custom_selector"
+            />
+
+    </FrameLayout>
+
+</android.support.v7.widget.CardView>

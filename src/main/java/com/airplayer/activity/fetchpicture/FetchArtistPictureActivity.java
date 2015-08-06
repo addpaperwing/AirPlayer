@@ -19,7 +19,6 @@ public class FetchArtistPictureActivity extends FetchPictureActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        triggerDistance = 7972;
         super.onCreate(savedInstanceState);
     }
 

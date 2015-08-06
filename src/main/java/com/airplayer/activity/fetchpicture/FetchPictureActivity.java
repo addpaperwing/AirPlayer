@@ -20,10 +20,9 @@ import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airplayer.listener.DistanceTriggerScrollListener;
+import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.multitask.DownloadURLTask;
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
@@ -176,8 +175,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     private int nextPage = 2;
 
-    protected int triggerDistance;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -246,19 +243,15 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setOnScrollListener(new DistanceTriggerScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar, triggerDistance) {
+        mRecyclerView.setOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar) {
             @Override
-            public void onScrollToTriggerDistance() {
+            public void onScrollToBottom() {
                 onMoreButtonClick(nextPage);
                 nextPage++;
-                super.onScrollToTriggerDistance();
             }
         });
-        setupAdapter();
 
-        if (triggerDistance == 0) {
-            throw new RuntimeException("must assign triggerDistance in SubClass");
-        }
+        setupAdapter();
     }
 
     @Override

@@ -48,7 +48,12 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
 
     protected int viewHeight;
     protected int viewScrolledDistance = 0;
+
     protected boolean toolbarHide = false;
+
+    public boolean isToolbarHide() {
+        return toolbarHide;
+    }
 
     public AirScrollListener(int viewHeight) {
         this.viewHeight = viewHeight;
@@ -80,6 +85,10 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
         // it will look like half distance scrolled than others and create a parallax
         if (haveParallax) {
             mParallax.setTranslationY(getTotalScrollDistance() / 2);
+        }
+
+        if (!recyclerView.canScrollVertically(1) && recyclerView.canScrollVertically(-1)) {
+            onScrollToBottom();
         }
     }
 
@@ -118,4 +127,5 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
     public abstract void onHide();
     public abstract void onShow();
     public void onScrollBackToTop() { }
+    public void onScrollToBottom() { }
 }

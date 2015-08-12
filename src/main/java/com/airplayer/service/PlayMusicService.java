@@ -134,6 +134,7 @@ public class PlayMusicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        // ===== create MediaPlayer =====
         mPlayer = new MediaPlayer();
         mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -156,13 +157,24 @@ public class PlayMusicService extends Service {
                 play();
             }
         });
+
+        // ===== create Equalizer =====
+        mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
+        mEqualizer.setEnabled(true);
+        for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
+            mEqualizer.setBandLevel(i, (short)0);
+        }
+
+        // ===== register Receiver =====
         playMusicReceiver = new PlayMusicReceiver();
         IntentFilter filter = new IntentFilter(NOTIFICATION_OPERATION);
         filter.addAction(Intent.ACTION_HEADSET_PLUG);
         registerReceiver(playMusicReceiver, filter);
-        Log.d(TAG, "service create");
+
+        // ===== clear notification =====
         notification = new AirNotification(this);
         notification.cancel();
+        Log.d(TAG, "service create");
     }
 
     @Override
@@ -179,6 +191,7 @@ public class PlayMusicService extends Service {
     public void onDestroy() {
         unregisterReceiver(playMusicReceiver);
         mPlayer.release();
+        mEqualizer.release();
         notification.cancel();
         super.onDestroy();
         Log.d(TAG, "service destroy");
@@ -271,6 +284,20 @@ public class PlayMusicService extends Service {
             return mPosition;
         }
 
+        // ============= Equalizer =============
+        public Equalizer getEqualizer() {
+            return mEqualizer;
+        }
+
+        public ArrayList<String> getPresetsList() {
+            ArrayList<String> presets = new ArrayList<>();
+            short numberOfPresets = mEqualizer.getNumberOfPresets();
+            for (short i = 0; i < numberOfPresets; i++) {
+                presets.add(mEqualizer.getPresetName(i));
+            }
+            return presets;
+        }
+
     }
 
     private void play() {
@@ -287,18 +314,6 @@ public class PlayMusicService extends Service {
             mPlayer.setDataSource(songPlaying.getPath());
             mPlayer.prepare();
             mPlayer.start();
-            if (mEqualizer == null) {
-                mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
-                short numberOfBands = mEqualizer.getNumberOfBands();
-                Log.d(TAG, "Number of bands: " + numberOfBands);
-                for (short i = 0; i < numberOfBands; i++) {
-                    Log.d(TAG, mEqualizer.getCenterFreq(i) / 1000 + " Hz");
-                }
-                short numberOfPresets = mEqualizer.getNumberOfPresets();
-                for (short i = 0; i < numberOfPresets; i++) {
-                    Log.d(TAG, mEqualizer.getPresetName(i));
-                }
-            }
             Intent intent = new Intent(PLAY_STATE_CHANGE);
             intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PLAY);
             sendBroadcast(intent);

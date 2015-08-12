@@ -1,12 +1,8 @@
 package com.airplayer.listener;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.airplayer.adapter.AirAdapter;
 
 
 /**
@@ -84,7 +80,14 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
         // set parallax translationY to half of totalScrollDistance every scrolled
         // it will look like half distance scrolled than others and create a parallax
         if (haveParallax) {
+            if (mParallax == null) {
+                initParallax(recyclerView);
+            }
             mParallax.setTranslationY(getTotalScrollDistance() / 2);
+        }
+
+        if (!recyclerView.canScrollVertically(-1) && recyclerView.canScrollVertically(1)) {
+            onScrollToTop();
         }
 
         if (!recyclerView.canScrollVertically(1) && recyclerView.canScrollVertically(-1)) {
@@ -95,13 +98,6 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-
-        if (haveParallax) {
-            if (mParallax == null && newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                // if parallax is null, initial it when user drag recycler view
-                initParallax(recyclerView);
-            }
-        }
 
         // when recyclerView is settled, toolbar start to animate (show/hide) in different situation
         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
@@ -118,7 +114,7 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
             if (getTotalScrollDistance() == 0) {
                 // when toolbar back to top of the view (totalScrollDistance back to 0)
                 // set it's color to transparent
-                onScrollBackToTop();
+                onScrollToTop();
             }
         }
     }
@@ -126,6 +122,6 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
     public abstract void onViewScrolled(int viewScrolledDistance);
     public abstract void onHide();
     public abstract void onShow();
-    public void onScrollBackToTop() { }
+    public void onScrollToTop() { }
     public void onScrollToBottom() { }
 }

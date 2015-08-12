@@ -176,7 +176,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerRecycler = (RecyclerView) rootView.findViewById(R.id.navigation_recycler);
         mDrawerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDrawerRecycler.setAdapter(new NaviRecyclerAdapter(getActivity(),
-                new String[]{getString(R.string.title_play_now), getString(R.string.title_my_library)}));
+                new String[]{getString(R.string.title_activity), getString(R.string.title_library), getString(R.string.title_equalizer)}));
 
         mTopImageHint = (TextView) rootView.findViewById(R.id.navigation_top_image_hint);
         mTopImage = (SimpleDraweeView) rootView.findViewById(R.id.navigation_image);
@@ -344,28 +344,15 @@ public class NavigationDrawerFragment extends Fragment {
             }
         }
 
-        private void switchDisplay (NaviRecyclerViewHolder holder, int position) {
-            switch (mCurrentSelectedPosition) {
-                case 0:
-                    if (position == 0) {
-                        holder.checkedHighlight.setVisibility(View.VISIBLE);
-                        holder.textView.setTextColor(getResources().getColor(R.color.air_text_and_icon));
-                    }
-                    if (position == 1) {
-                        holder.checkedHighlight.setVisibility(View.INVISIBLE);
-                        holder.textView.setTextColor(getResources().getColor(R.color.air_primary_text));
-                    }
-                    break;
-                case 1:
-                    if (position == 0) {
-                        holder.checkedHighlight.setVisibility(View.INVISIBLE);
-                        holder.textView.setTextColor(getResources().getColor(R.color.air_primary_text));
-                    }
-                    if (position == 1) {
-                        holder.checkedHighlight.setVisibility(View.VISIBLE);
-                        holder.textView.setTextColor(getResources().getColor(R.color.air_text_and_icon));
-                    }
-                    break;
+        private void switchDisplay(NaviRecyclerViewHolder holder, int position) {
+            for (int i = 0; i < 3; i++) {
+                if (mCurrentSelectedPosition == position) {
+                    holder.checkedHighlight.setVisibility(View.VISIBLE);
+                    holder.textView.setTextColor(getResources().getColor(R.color.air_text_and_icon));
+                } else {
+                    holder.checkedHighlight.setVisibility(View.INVISIBLE);
+                    holder.textView.setTextColor(getResources().getColor(R.color.air_primary_text));
+                }
             }
         }
     }

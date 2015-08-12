@@ -3,6 +3,7 @@ package com.airplayer.model;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.airplayer.util.StringUtils;
 
@@ -20,7 +21,9 @@ public class Album extends AirModel implements Comparable<Album>, PictureGettabl
         if (freq == 0) {
             freq = sSp.getInt(id + "freq", 0);
         }
-        sSp.edit().putInt(id + "freq", freq + 1).apply();
+        freq = freq + 1;
+        sSp.edit().putInt(id + "freq", freq).apply();
+        Log.d("Album", title + "'s freq has added, now is: " + freq);
     }
 
     public int getFreq() {

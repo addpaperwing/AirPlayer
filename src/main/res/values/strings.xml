@@ -1,8 +1,9 @@
 <resources>
     <string name="app_name">AirPlayer</string>
 
-    <string name="title_play_now">Play Now</string>
-    <string name="title_my_library">My Library</string>
+    <string name="title_activity">Activity</string>
+    <string name="title_library">Library</string>
+    <string name="title_equalizer">Equalizer</string>
 
     <string name="recent">Recent Add</string>
 
@@ -33,6 +34,14 @@
 
     <string name="title_text_recent_added">Recent added</string>
     <string name="title_text_favour">Favour</string>
+
+    <string name="image_button_content_desc_loop">loop</string>
+    <string name="image_button_content_desc_previous">previous</string>
+    <string name="image_button_content_desc_play_and_pause">play and pause</string>
+    <string name="image_button_content_desc_next">next</string>
+    <string name="image_button_content_desc_shuffle">shuffle</string>
+
+    <string name="equalizer_text_desc">Enable global equalizer</string>
 
     <string-array name="tab_item_array">
         <item>Artists</item>

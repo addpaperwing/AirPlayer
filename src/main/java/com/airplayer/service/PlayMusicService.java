@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
+import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
@@ -79,6 +80,11 @@ public class PlayMusicService extends Service {
      * <br>Media player</br>
      */
     private MediaPlayer mPlayer;
+
+    /**
+     * Equalizer
+     */
+    private Equalizer mEqualizer;
 
     /**
      * <br>Play list</br>
@@ -281,6 +287,18 @@ public class PlayMusicService extends Service {
             mPlayer.setDataSource(songPlaying.getPath());
             mPlayer.prepare();
             mPlayer.start();
+            if (mEqualizer == null) {
+                mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
+                short numberOfBands = mEqualizer.getNumberOfBands();
+                Log.d(TAG, "Number of bands: " + numberOfBands);
+                for (short i = 0; i < numberOfBands; i++) {
+                    Log.d(TAG, mEqualizer.getCenterFreq(i) / 1000 + " Hz");
+                }
+                short numberOfPresets = mEqualizer.getNumberOfPresets();
+                for (short i = 0; i < numberOfPresets; i++) {
+                    Log.d(TAG, mEqualizer.getPresetName(i));
+                }
+            }
             Intent intent = new Intent(PLAY_STATE_CHANGE);
             intent.putExtra(PLAY_STATE_KEY, PLAY_STATE_PLAY);
             sendBroadcast(intent);

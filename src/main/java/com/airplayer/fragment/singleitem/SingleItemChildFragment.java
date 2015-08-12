@@ -82,7 +82,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
             }
 
             @Override
-            public void onScrollBackToTop() {
+            public void onScrollToTop() {
                 toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
             }
         };

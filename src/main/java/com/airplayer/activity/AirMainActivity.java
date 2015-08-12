@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import com.airplayer.fragment.EqualizerFragment;
 import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.NavigationDrawerFragment;
 import com.airplayer.fragment.PlayNowFragment;
@@ -275,17 +276,14 @@ public class AirMainActivity extends AppCompatActivity
 
         switch (position) {
             case 0:
-                mToolbar.setTitle(getString(R.string.title_play_now));
-                if (Build.VERSION.SDK_INT >= 21) {
-                    mToolbar.setElevation(19);
-                }
+                changeToolbar(R.string.title_activity, 19);
                 return new PlayNowFragment();
             case 1:
-                mToolbar.setTitle(getString(R.string.title_my_library));
-                if (Build.VERSION.SDK_INT >= 21) {
-                    mToolbar.setElevation(0);
-                }
+                changeToolbar(R.string.title_library, 0);
                 return new MyLibraryFragment();
+            case 2:
+                changeToolbar(R.string.title_equalizer, 19);
+                return new EqualizerFragment();
             default:
                 return null;
         }
@@ -311,5 +309,12 @@ public class AirMainActivity extends AppCompatActivity
                 }
             }
         }).start();
+    }
+
+    private void changeToolbar(int resId, int elevation) {
+        mToolbar.setTitle(getString(resId));
+        if (Build.VERSION.SDK_INT >= 21) {
+            mToolbar.setElevation(elevation);
+        }
     }
 }

@@ -1,12 +1,5 @@
 package com.airplayer.model;
 
-import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
-
-import com.airplayer.activity.AirMainActivity;
-import com.airplayer.util.QueryUtils;
 
 import java.io.Serializable;
 

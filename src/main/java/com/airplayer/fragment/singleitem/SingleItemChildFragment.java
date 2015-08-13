@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import java.io.File;
  * Created by ZiyiTsang on 15/6/14.
  */
 public abstract class SingleItemChildFragment extends Fragment implements SettableRecyclerView {
+
+    private static final String TAG = SingleItemChildFragment.class.getSimpleName();
 
     private RecyclerView mRecyclerView;
 
@@ -76,7 +79,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
             @Override
             public void onViewScrolled(int viewScrolledDistance) {
                 super.onViewScrolled(viewScrolledDistance);
-                if (viewScrolledDistance >= toolbar.getHeight()) {
+                if (viewScrolledDistance >= viewHeight) {
                     toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
                 }
             }

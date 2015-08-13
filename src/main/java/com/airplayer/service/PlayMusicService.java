@@ -5,12 +5,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.airplayer.fragment.EqualizerFragment;
 import com.airplayer.model.Song;
 import com.airplayer.notification.AirNotification;
 
@@ -161,8 +164,14 @@ public class PlayMusicService extends Service {
         // ===== create Equalizer =====
         mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
         mEqualizer.setEnabled(true);
-        for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
-            mEqualizer.setBandLevel(i, (short)0);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        int genres = sp.getInt(EqualizerFragment.EQUALIZER_GENRES, 0);
+        if (genres < mEqualizer.getNumberOfPresets()) {
+            mEqualizer.usePreset((short)genres);
+        } else {
+            for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
+                mEqualizer.setBandLevel(i, (short)sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
+            }
         }
 
         // ===== register Receiver =====

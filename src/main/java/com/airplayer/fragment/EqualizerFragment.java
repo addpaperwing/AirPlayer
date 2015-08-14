@@ -1,6 +1,11 @@
 package com.airplayer.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -18,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
+import com.airplayer.service.PlayMusicService;
 
 import java.util.ArrayList;
 
@@ -31,25 +37,34 @@ public class EqualizerFragment extends Fragment {
     private Spinner spinner;
     private SeekBar[] bandSeekBars = new SeekBar[5];
     private SeekBar seekBarBassBoost;
-    private SeekBar seekBarSurroundSound;
 
     private Equalizer mEqualizer;
+    private BassBoost mBassBoost;
 
     //===== sharedPreferences =====
     public static final String EQUALIZER_GENRES = "equalizer_genres";
     public static final String EQUALIZER_USER_BAND = "equalizer_user_band";
-    private SharedPreferences mSp;
+    public static final String BASS_BOOST = "bass_boost";
+    private SharedPreferences sp;
+
+    private HeadsetPlugReceiver receiver;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mEqualizer = ((AirMainActivity) getActivity()).getPlayerControlBinder().getEqualizer();
-        mSp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Toolbar toolbar = ((AirMainActivity)getActivity()).getToolbar();
+        AirMainActivity activity = ((AirMainActivity) getActivity());
+        mEqualizer = activity.getPlayerControlBinder().getEqualizer();
+        mBassBoost = activity.getPlayerControlBinder().getBassBoost();
+        sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        Toolbar toolbar = activity.getToolbar();
         if (toolbar.getY() < 0) {
-            Log.d(TAG, "toolbar.y < 0");
             toolbar.setTranslationY(0);
         }
+
+        //===== receiver =====
+        receiver = new HeadsetPlugReceiver();
+        IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+        activity.registerReceiver(receiver, filter);
     }
 
     @Nullable
@@ -65,18 +80,18 @@ public class EqualizerFragment extends Fragment {
                 (getActivity(), R.layout.spinner_item_equalizer, presets);
         spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_equalizer);
         spinner.setAdapter(spinnerAdapter);
-        spinner.setSelection(mSp.getInt(EQUALIZER_GENRES, 0));
+        spinner.setSelection(sp.getInt(EQUALIZER_GENRES, 0));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mSp.edit().putInt(EQUALIZER_GENRES, position).apply();
+                sp.edit().putInt(EQUALIZER_GENRES, position).apply();
                 short presetPosition = (short) position;
                 if (presetPosition < mEqualizer.getNumberOfPresets()) {
                     mEqualizer.usePreset(presetPosition);
                     updateBandSeekBarProgress();
                 } else {
                     for (int i = 0; i < mEqualizer.getNumberOfBands(); i++) {
-                        bandSeekBars[i].setProgress(mSp.getInt(EQUALIZER_USER_BAND + i, 0) + 1500);
+                        bandSeekBars[i].setProgress(sp.getInt(EQUALIZER_USER_BAND + i, 0) + 1500);
                     }
                 }
 
@@ -93,11 +108,30 @@ public class EqualizerFragment extends Fragment {
 
         // ----- bass booster -----
         seekBarBassBoost = (SeekBar) rootView.findViewById(R.id.seek_bar_bass_boost);
+        seekBarBassBoost.setMax(1000);
+        seekBarBassBoost.setProgress(mBassBoost.getRoundedStrength());
+        seekBarBassBoost.setEnabled(mBassBoost.getEnabled());
+        seekBarBassBoost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mBassBoost.setStrength((short)progress);
+                sp.edit().putInt(BASS_BOOST, progress).apply();
+            }
 
-        // ----- surround sound -----
-        seekBarSurroundSound = (SeekBar) rootView.findViewById(R.id.seek_bar_surround_sound);
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
 
         return rootView;
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(receiver);
+        super.onDestroy();
     }
 
     private ArrayList<String> getPresets() {
@@ -131,7 +165,7 @@ public class EqualizerFragment extends Fragment {
                     mEqualizer.setBandLevel(bandNum, (short) userBandLevel);
                     if (fromUser) {
                         spinner.setSelection(mEqualizer.getNumberOfPresets());
-                        mSp.edit().putInt(EQUALIZER_USER_BAND + bandNum, userBandLevel).apply();
+                        sp.edit().putInt(EQUALIZER_USER_BAND + bandNum, userBandLevel).apply();
                     }
                 }
 
@@ -147,6 +181,19 @@ public class EqualizerFragment extends Fragment {
     private void updateBandSeekBarProgress() {
         for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
             bandSeekBars[i].setProgress(mEqualizer.getBandLevel(i) + 1500);
+        }
+    }
+
+    private class HeadsetPlugReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+                if (intent.getIntExtra("state", -1) == 0) {
+                    seekBarBassBoost.setEnabled(false);
+                } else {
+                    seekBarBassBoost.setEnabled(true);
+                }
+            }
         }
     }
 }

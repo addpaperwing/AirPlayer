@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.IBinder;
@@ -85,9 +86,10 @@ public class PlayMusicService extends Service {
     private MediaPlayer mPlayer;
 
     /**
-     * Equalizer
+     * audio effect
      */
     private Equalizer mEqualizer;
+    private BassBoost mBassBoost;
 
     /**
      * <br>Play list</br>
@@ -173,6 +175,9 @@ public class PlayMusicService extends Service {
                 mEqualizer.setBandLevel(i, (short)sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
             }
         }
+
+        mBassBoost = new BassBoost(0, mPlayer.getAudioSessionId());
+        mBassBoost.setStrength((short)sp.getInt(EqualizerFragment.BASS_BOOST, 0));
 
         // ===== register Receiver =====
         playMusicReceiver = new PlayMusicReceiver();
@@ -293,20 +298,11 @@ public class PlayMusicService extends Service {
             return mPosition;
         }
 
-        // ============= Equalizer =============
+        // ============= Audio Effect =============
         public Equalizer getEqualizer() {
             return mEqualizer;
         }
-
-        public ArrayList<String> getPresetsList() {
-            ArrayList<String> presets = new ArrayList<>();
-            short numberOfPresets = mEqualizer.getNumberOfPresets();
-            for (short i = 0; i < numberOfPresets; i++) {
-                presets.add(mEqualizer.getPresetName(i));
-            }
-            return presets;
-        }
-
+        public BassBoost getBassBoost() { return mBassBoost; }
     }
 
     private void play() {
@@ -401,6 +397,11 @@ public class PlayMusicService extends Service {
     private void onHeadsetPlugActionReceive(Intent intent) {
         if (intent.getIntExtra("state", -1) == 0) {
             mBinder.pauseMusic();
+            mBassBoost.setEnabled(false);
+            Log.d(TAG, "bassboost disable");
+        } else {
+            mBassBoost.setEnabled(true);
+            Log.d(TAG, "bassboost enable");
         }
     }
 }

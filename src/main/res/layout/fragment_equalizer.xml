@@ -221,37 +221,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_16_560"
-            android:layout_marginEnd="@dimen/dp_16_560"
-            android:layout_marginLeft="@dimen/dp_16_560"
-            android:layout_marginRight="@dimen/dp_16_560"
-            android:gravity="center">
-
-            <TextView
-                android:text="Surround sound"
-                android:textColor="@color/air_primary_text"
-                android:textSize="@dimen/xxTextSize"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_marginEnd="@dimen/dp_8_560"
-                android:layout_marginRight="@dimen/dp_8_560"
-                />
-
-            <SeekBar
-                android:id="@+id/seek_bar_surround_sound"
-                android:padding="@dimen/dp_8_560"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                />
-
-        </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

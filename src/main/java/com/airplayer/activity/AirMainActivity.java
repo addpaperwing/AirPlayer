@@ -43,18 +43,13 @@ public class AirMainActivity extends AppCompatActivity
     public static final String EXTERNAL_PICTURE_FOLDER = Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_PICTURES).getPath() + "/AirPlayer/";
 
-    /* shared preference */
-//    public static final String PREF_IS_FIRST_OPEN = "pref_is_first_open";
-//    public static final String PREF_DATA_BASE_VERSION = "pref_data_base_version";
-//    private SharedPreferences mSp;
-
-    /* user interface */
+    // ===== user interface =====
     private DrawerLayout mDrawerLayout;
     private NavigationDrawerFragment mNavigationDrawFragment;
     private Toolbar mToolbar;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
-    /* service */
+    // ===== service =====
     private PlayMusicService.PlayerControlBinder playerControlBinder;
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -79,7 +74,7 @@ public class AirMainActivity extends AppCompatActivity
         }
     };
 
-    /* receiver */
+    // ===== receiver =====
     private PlayerStateReceiver mPlayerStateReceiver;
 
     /* helper classes */

@@ -7,4 +7,6 @@ material design 风格的音乐播放器，练手原因未使用 [support design
 向前兼容至 api 14<br>
 学习中...
 
-##To do list
+##ScreenShot
+![](https://raw.githubusercontent.com/Jaysaw/AirPlayer/master/ScreenShot/Screenshot_2015-08-19-14-15-44.jpg)
+

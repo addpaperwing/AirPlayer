@@ -22,7 +22,7 @@ public class SimpleAirScrollListener extends AirScrollListener {
 
     @Override
     public void onHide() {
-        toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(1));
+        toolbar.animate().translationY(-viewHeight).setInterpolator(new AccelerateInterpolator(1));
     }
 
     @Override

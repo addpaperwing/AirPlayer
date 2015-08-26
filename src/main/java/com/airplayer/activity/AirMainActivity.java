@@ -57,9 +57,11 @@ public class AirMainActivity extends AppCompatActivity
             playerControlBinder = (PlayMusicService.PlayerControlBinder) service;
             // set up bottom sliding fragment when service is connected
             mPlayMusicFragment = new PlayMusicFragment();
-            mFragmentManager.beginTransaction()
-                    .add(R.id.sliding_fragment_container,
-                            mPlayMusicFragment).commit();
+            if (mFragmentManager.getFragments().size() < 0) {
+                mFragmentManager.beginTransaction()
+                        .add(R.id.sliding_fragment_container,
+                                mPlayMusicFragment).commit();
+            }
             // set sliding up panel invisible when activity create
             if (!playerControlBinder.isPlaying()) {
                 mSlidingUpPanelLayout.setTouchEnabled(false);

@@ -124,8 +124,7 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      *
      */
     public  AirAdapter.AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        return new AirHeadViewHolder(linearLayout);
+        return new AirHeadViewHolder(createEmptyPadding());
     }
 
     /**
@@ -136,8 +135,15 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      *
      */
     public AirAdapter.AirFootViewHolder onCreateFootViewHolder(ViewGroup parent) {
+        return new AirFootViewHolder(createEmptyPadding());
+    }
+
+    private LinearLayout createEmptyPadding() {
         LinearLayout linearLayout = new LinearLayout(getContext());
-        return new AirFootViewHolder(linearLayout);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
+                (ViewGroup.LayoutParams.MATCH_PARENT, 10);
+        linearLayout.setLayoutParams(params);
+        return linearLayout;
     }
 
 

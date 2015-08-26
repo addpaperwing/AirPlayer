@@ -1,6 +1,7 @@
 package com.airplayer.listener;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -92,6 +93,7 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
 
         if (!recyclerView.canScrollVertically(1) && recyclerView.canScrollVertically(-1)) {
             onScrollToBottom();
+            Log.d("test", "onScrollToBottom");
         }
     }
 

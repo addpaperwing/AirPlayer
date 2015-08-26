@@ -243,7 +243,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar) {
+        mRecyclerView.addOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar) {
             @Override
             public void onScrollToBottom() {
                 onMoreButtonClick(nextPage);

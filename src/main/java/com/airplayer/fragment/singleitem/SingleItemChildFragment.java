@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +15,11 @@ import android.widget.Toast;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
-import com.airplayer.activity.fetchpicture.FetchAlbumArtActivity;
-import com.airplayer.activity.fetchpicture.FetchArtistPictureActivity;
 import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
 import com.airplayer.listener.AirScrollListener;
 import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
 import com.airplayer.listener.SimpleAirScrollListener;
-import com.airplayer.model.Album;
 import com.airplayer.model.PictureGettable;
 
 import java.io.File;
@@ -90,7 +86,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
             }
         };
         listener.setHaveParallax(true);
-        mRecyclerView.setOnScrollListener(listener);
+        mRecyclerView.addOnScrollListener(listener);
 
 
         return rootView;

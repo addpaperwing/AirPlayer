@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -14,7 +15,6 @@ import android.widget.TextView;
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchAlbumArtActivity;
-import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.SongAdapter;
 import com.airplayer.model.AirModelSingleton;
@@ -23,7 +23,6 @@ import com.airplayer.model.PictureGettable;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.BitmapUtils;
-import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 

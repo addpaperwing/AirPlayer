@@ -16,23 +16,10 @@
         sothree:umanoDragView="@+id/sliding_fragment_container">
 
         <FrameLayout
+            android:id="@+id/fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/fragment_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal|top" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/air_dark_primary_color"
-                android:elevation="@dimen/dp_4_560" />
-
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|top" />
 
         <FrameLayout
             android:id="@+id/sliding_fragment_container"

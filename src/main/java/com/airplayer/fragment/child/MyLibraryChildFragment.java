@@ -33,7 +33,7 @@ public abstract class MyLibraryChildFragment extends Fragment implements Settabl
         this.setupRecyclerView(recyclerView);
 
         AirMulScrollListener listener = ((MyLibraryFragment)getParentFragment()).getListener();
-        recyclerView.setOnScrollListener(listener);
+        recyclerView.addOnScrollListener(listener);
 
         return rootView;
     }

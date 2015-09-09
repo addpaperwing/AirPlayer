@@ -57,7 +57,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         mAlbum = (Album) getArguments().getSerializable(ALBUM_RECEIVED);
         mBinder = ((AirMainActivity) getActivity()).getPlayerControlBinder();
         mSongList = AirModelSingleton.getInstance(getActivity()).getAlbumSong(mAlbum.getTitle());
-        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
+//        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
 
     }
 

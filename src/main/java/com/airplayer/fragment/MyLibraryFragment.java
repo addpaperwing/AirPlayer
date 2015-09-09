@@ -27,85 +27,26 @@ import com.airplayer.fragment.child.SongListFragment;
 public class MyLibraryFragment extends Fragment {
 
     private ViewPager mViewPager;
-//    private Toolbar globalBar;
-    private Toolbar paddingBar;
-//    private SlidingTabLayout tabLayout;
-
-    private Toolbar mToolbar;
     private TabLayout mTabLayout;
-
-    private AirMulScrollListener listener;
-    public AirMulScrollListener getListener() {
-        return listener;
-    }
-
-    private boolean shouldSend = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int viewHeight = getResources().getInteger(R.integer.padding_action_bar) + getResources().getInteger(R.integer.padding_tabs);
-        listener = new AirMulScrollListener(viewHeight) {
-            @Override
-            public void onViewScrolled(int viewScrolledDistance) {
-                noAnimateTranslate(-viewScrolledDistance);
-                shouldSend = toolbarHide;
-            }
-
-            @Override
-            public void onHide() {
-                animateTranslate(-viewHeight);
-            }
-
-            @Override
-            public void onShow() {
-                animateTranslate(0);
-            }
-        };
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
-//        globalBar = ((AirMainActivity) getActivity()).getToolbar();
-//        globalBar.setVisibility(View.VISIBLE);
 
         FragmentManager fm = getChildFragmentManager();
         fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
-//        paddingBar = (Toolbar) rootView.findViewById(R.id.padding_toolbar);
-
         mViewPager = (ViewPager) rootView.findViewById(R.id.my_library_pager);
         mViewPager.setAdapter(new LibraryPagerAdapter(fm));
-        mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar_my_library);
         mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
 
-//        tabLayout = (SlidingTabLayout) rootView.findViewById(R.id.tabs);
-//        tabLayout.setDistributeEvenly(true);
-//        tabLayout.setViewPager(mViewPager);
-
-//        tabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//                if (listener.isToolbarHide() && shouldSend) {
-//                    animateTranslate(0);
-//                    listener.reset();
-//                    shouldSend = false;
-//                }
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                listener.setPage(position);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) { }
-//        });
-
-        noAnimateTranslate(0);
         return rootView;
     }
 
@@ -139,33 +80,6 @@ public class MyLibraryFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return tabItemArray[position];
         }
-    }
-
-    private void noAnimateTranslate(int y) {
-//        globalBar.setTranslationY(y);
-        paddingBar.setTranslationY(y);
-//        tabLayout.setTranslationY(y);
-    }
-
-    private void animateTranslate(final int y) {
-//        globalBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(3));
-        paddingBar.animate().translationY(y).setInterpolator(new AccelerateInterpolator(3));
-//        tabLayout.animate().setListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animation) { }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                shouldSend = listener.isToolbarHide();
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animation) { }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animation) { }
-//        });
-//        tabLayout.animate().translationY(y).setInterpolator(new AccelerateInterpolator(3));
     }
 }
 

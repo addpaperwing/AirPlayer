@@ -53,13 +53,9 @@ public class EqualizerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AirMainActivity activity = ((AirMainActivity) getActivity());
-        mEqualizer = activity.getPlayerControlBinder().getEqualizer();
-        mBassBoost = activity.getPlayerControlBinder().getBassBoost();
+//        mEqualizer = activity.getPlayerControlBinder().getEqualizer();
+//        mBassBoost = activity.getPlayerControlBinder().getBassBoost();
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Toolbar toolbar = activity.getToolbar();
-        if (toolbar.getY() < 0) {
-            toolbar.setTranslationY(0);
-        }
 
         //===== receiver =====
         receiver = new HeadsetPlugReceiver();

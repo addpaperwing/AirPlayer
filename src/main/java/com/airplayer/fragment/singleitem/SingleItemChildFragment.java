@@ -38,7 +38,6 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
         mFragmentManager = getActivity().getSupportFragmentManager();
     }
 

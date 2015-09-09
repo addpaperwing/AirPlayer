@@ -44,7 +44,7 @@ public class AirMainActivity extends AppCompatActivity
 
     // ===== user interface =====
     private DrawerLayout mDrawerLayout;
-//    private Toolbar mToolbar;
+    private Toolbar mToolbar;
     private NavigationDrawerFragment mNavigationDrawFragment;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
@@ -139,7 +139,7 @@ public class AirMainActivity extends AppCompatActivity
         mFragmentManager = getSupportFragmentManager();
 
         // set up tool bar
-//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
 
         // set up navigation drawer fragment
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -209,13 +209,13 @@ public class AirMainActivity extends AppCompatActivity
                 .replace(R.id.fragment_container, switchFragment(position)).commit();
     }
 
-//    /**
-//     * getter of main tool bar
-//     * @return tool bar of the hole app
-//     */
-//    public Toolbar getToolbar() {
-//        return mToolbar;
-//    }
+    /**
+     * getter of main tool bar
+     * @return tool bar of the hole app
+     */
+    public Toolbar getToolbar() {
+        return mToolbar;
+    }
 
     /**
      * getter of binder of service
@@ -270,13 +270,13 @@ public class AirMainActivity extends AppCompatActivity
 
         switch (position) {
             case 0:
-//                changeToolbar(R.string.title_activity, 19);
+                changeToolbar(R.string.title_activities, 19);
                 return new PlayNowFragment();
             case 1:
-//                changeToolbar(R.string.title_library, 0);
+                changeToolbar(R.string.title_library, 0);
                 return new MyLibraryFragment();
             case 2:
-//                changeToolbar(R.string.title_equalizer, 19);
+                changeToolbar(R.string.title_equalizer, 19);
                 return new EqualizerFragment();
             default:
                 return null;
@@ -305,10 +305,10 @@ public class AirMainActivity extends AppCompatActivity
         }).start();
     }
 
-//    private void changeToolbar(int resId, int elevation) {
-//        mToolbar.setTitle(getString(resId));
-//        if (Build.VERSION.SDK_INT >= 21) {
-//            mToolbar.setElevation(elevation);
-//        }
-//    }
+    private void changeToolbar(int resId, int elevation) {
+        mToolbar.setTitle(getString(resId));
+        if (Build.VERSION.SDK_INT >= 21) {
+            mToolbar.setElevation(elevation);
+        }
+    }
 }

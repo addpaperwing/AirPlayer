@@ -58,7 +58,6 @@ public class ArtistFragment extends SingleItemChildFragment {
         mArtist = (Artist) getArguments().get(ARTIST_RECEIVED);
         mAlbumList = AirModelSingleton.getInstance(getActivity()).getArtistAlbum(mArtist.getName());
         mFragmentManager = getActivity().getSupportFragmentManager();
-        ((AirMainActivity) getActivity()).getToolbar().setVisibility(View.INVISIBLE);
     }
 
     public void setupRecyclerView(RecyclerView recyclerView) {

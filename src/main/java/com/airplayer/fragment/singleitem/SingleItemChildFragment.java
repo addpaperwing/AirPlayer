@@ -14,12 +14,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
-import com.airplayer.listener.AirScrollListener;
 import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
-import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.model.PictureGettable;
 
 import java.io.File;
@@ -57,35 +54,6 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         this.setupRecyclerView(mRecyclerView);
-        AirScrollListener listener = new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), toolbar) {
-
-            @Override
-            public void onHide() {
-                super.onHide();
-                toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-            }
-
-            @Override
-            public void onShow() {
-                super.onShow();
-                toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-            }
-
-            @Override
-            public void onViewScrolled(int viewScrolledDistance) {
-                super.onViewScrolled(viewScrolledDistance);
-                if (viewScrolledDistance >= viewHeight) {
-                    toolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-                }
-            }
-
-            @Override
-            public void onScrollToTop() {
-                toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-            }
-        };
-        listener.setHaveParallax(true);
-        mRecyclerView.addOnScrollListener(listener);
 
 
         return rootView;

@@ -10,16 +10,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
-import com.airplayer.listener.AirMulScrollListener;
 import com.airplayer.fragment.child.AlbumGridFragment;
 import com.airplayer.fragment.child.ArtistGridFragment;
 import com.airplayer.fragment.child.SongListFragment;

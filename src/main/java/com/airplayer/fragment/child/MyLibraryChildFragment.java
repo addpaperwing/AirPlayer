@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airplayer.R;
-import com.airplayer.listener.AirMulScrollListener;
-import com.airplayer.fragment.MyLibraryFragment;
 import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
 
 /**

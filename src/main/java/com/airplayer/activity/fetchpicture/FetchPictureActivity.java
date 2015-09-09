@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.multitask.DownloadURLTask;
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
@@ -243,13 +242,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.addOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar) {
-            @Override
-            public void onScrollToBottom() {
-                onMoreButtonClick(nextPage);
-                nextPage++;
-            }
-        });
 
         setupAdapter();
     }
@@ -381,5 +373,4 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     public abstract String getSearchLink();
     public abstract ArrayList<Picture> onDecodeJson(String response);
-    public abstract void onMoreButtonClick(int nextPage);
 }

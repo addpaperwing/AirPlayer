@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -45,6 +45,7 @@ public class AirMainActivity extends AppCompatActivity
     // ===== user interface =====
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
+    private AppBarLayout mAppBarLayout;
     private NavigationDrawerFragment mNavigationDrawFragment;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
@@ -140,6 +141,7 @@ public class AirMainActivity extends AppCompatActivity
 
         // set up tool bar
         mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar_layout);
 
         // set up navigation drawer fragment
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -205,16 +207,22 @@ public class AirMainActivity extends AppCompatActivity
      */
     @Override
     public void onNavigationDrawItemSelected(int position) {
+        String[] titles = getResources().getStringArray(R.array.toolbar_title_array);
+        mToolbar.setTitle(titles[position]);
         mFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, switchFragment(position)).commit();
     }
 
     /**
      * getter of main tool bar
-     * @return tool bar of the hole app
+     * @return tool bar of the whole app
      */
     public Toolbar getToolbar() {
         return mToolbar;
+    }
+
+    public AppBarLayout getAppBarLayout() {
+        return mAppBarLayout;
     }
 
     /**
@@ -263,20 +271,17 @@ public class AirMainActivity extends AppCompatActivity
         // pop all fragments in back stack
         mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        // set play list is not showing when it was pop
+        // set play list is not showing when it popped
         if (mPlayMusicFragment != null) {
             mPlayMusicFragment.setIsPlayListShow(false);
         }
 
         switch (position) {
             case 0:
-                changeToolbar(R.string.title_activities, 19);
                 return new PlayNowFragment();
             case 1:
-                changeToolbar(R.string.title_library, 0);
                 return new MyLibraryFragment();
             case 2:
-                changeToolbar(R.string.title_equalizer, 19);
                 return new EqualizerFragment();
             default:
                 return null;
@@ -303,12 +308,5 @@ public class AirMainActivity extends AppCompatActivity
                 }
             }
         }).start();
-    }
-
-    private void changeToolbar(int resId, int elevation) {
-        mToolbar.setTitle(getString(resId));
-        if (Build.VERSION.SDK_INT >= 21) {
-            mToolbar.setElevation(elevation);
-        }
     }
 }

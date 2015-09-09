@@ -67,7 +67,6 @@ public class EqualizerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_equalizer, container, false);
-        rootView.setPadding(0, getResources().getInteger(R.integer.padding_action_bar), 0, 0);
 
         // ===== spinner =====
         spinner = (Spinner) rootView.findViewById(R.id.equalizer_spinner);

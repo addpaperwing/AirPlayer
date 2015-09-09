@@ -3,6 +3,7 @@ package com.airplayer.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,12 +11,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 
 import com.airplayer.R;
+import com.airplayer.activity.AirMainActivity;
 import com.airplayer.listener.AirMulScrollListener;
 import com.airplayer.fragment.child.AlbumGridFragment;
 import com.airplayer.fragment.child.ArtistGridFragment;
@@ -26,8 +29,11 @@ import com.airplayer.fragment.child.SongListFragment;
  */
 public class MyLibraryFragment extends Fragment {
 
+    public static final String TAG = MyLibraryFragment.class.getSimpleName();
+
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    private AppBarLayout mAppBarLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,14 +43,19 @@ public class MyLibraryFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_my_library, container, false);
 
         FragmentManager fm = getChildFragmentManager();
         fm.beginTransaction().setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN).commit();
 
         mViewPager = (ViewPager) rootView.findViewById(R.id.my_library_pager);
+
+        mAppBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
+
+        initTabLayout();
+        mAppBarLayout.addView(mTabLayout);
+
         mViewPager.setAdapter(new LibraryPagerAdapter(fm));
-        mTabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
 
         return rootView;
@@ -80,6 +91,23 @@ public class MyLibraryFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return tabItemArray[position];
         }
+    }
+
+    private void initTabLayout() {
+        if (mTabLayout == null) {
+            mTabLayout = new TabLayout(getActivity());
+            TabLayout.LayoutParams params = new TabLayout
+                    .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mTabLayout.setLayoutParams(params);
+            mTabLayout.setSelectedTabIndicatorColor(0xffffffff);
+            mTabLayout.setBackgroundResource(R.color.air_dark_primary_color);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mAppBarLayout.removeView(mTabLayout);
     }
 }
 

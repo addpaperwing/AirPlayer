@@ -176,7 +176,7 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerRecycler = (RecyclerView) rootView.findViewById(R.id.navigation_recycler);
         mDrawerRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mDrawerRecycler.setAdapter(new NaviRecyclerAdapter(getActivity(),
-                new String[]{getString(R.string.title_activities), getString(R.string.title_library), getString(R.string.title_equalizer)}));
+                getResources().getStringArray(R.array.toolbar_title_array)));
 
         mTopImageHint = (TextView) rootView.findViewById(R.id.navigation_top_image_hint);
         mTopImage = (SimpleDraweeView) rootView.findViewById(R.id.navigation_image);

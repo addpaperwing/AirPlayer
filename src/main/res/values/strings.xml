@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">AirPlayer</string>
 
-    <string name="title_activities">Activities</string>
-    <string name="title_library">Library</string>
-    <string name="title_equalizer">Equalizer</string>
+    <!--<string name="title_activities">Activities</string>-->
+    <!--<string name="title_library">Library</string>-->
+    <!--<string name="title_equalizer">Equalizer</string>-->
 
     <string name="recent">Recent Add</string>
 
@@ -42,6 +42,12 @@
     <string name="image_button_content_desc_shuffle">shuffle</string>
 
     <string name="equalizer_text_desc">Enable global equalizer</string>
+
+    <string-array name="toolbar_title_array">
+        <item>Activities</item>
+        <item>My Library</item>
+        <item>Equalizer</item>
+    </string-array>
 
     <string-array name="tab_item_array">
         <item>Artists</item>

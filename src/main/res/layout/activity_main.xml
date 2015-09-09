@@ -27,16 +27,22 @@
                 android:layout_gravity="center_horizontal|top" />
 
             <android.support.design.widget.AppBarLayout
+                android:id="@+id/main_appbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/global_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="?attr/actionBarSize"
                     android:background="@color/air_dark_primary_color"
-                    app:layout_scrollFlags="scroll|enterAlways"
+                    android:minHeight="36dp"
+                    app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
                     />
+
+                <android.support.design.widget.TabLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"/>
 
             </android.support.design.widget.AppBarLayout>
 

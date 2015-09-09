@@ -1,11 +1,10 @@
 package com.airplayer.fragment;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,7 +20,6 @@ import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.fragment.singleitem.AlbumFragment;
-import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 
@@ -74,7 +71,7 @@ public class PlayNowFragment extends Fragment {
             public void onItemClicked(View view, int position) {
                 FragmentTransaction ft = getActivity()
                         .getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mActivityAlbums.get(correctPostion(position))));
+                ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mActivityAlbums.get(correctPosition(position))));
                 ft.addToBackStack(null);
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                 ft.commit();
@@ -82,13 +79,10 @@ public class PlayNowFragment extends Fragment {
         });
         mRecyclerView.setAdapter(adapter);
 
-        final Toolbar toolbar = ((AirMainActivity) getActivity()).getToolbar();
-        toolbar.setVisibility(View.VISIBLE);
-        mRecyclerView.setOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), toolbar));
         return rootView;
     }
 
-    private int correctPostion(int position) {
+    private int correctPosition(int position) {
         if (position > mRecentAlbumsSize + 2) {
             return position - 3;
         } else {
@@ -130,7 +124,7 @@ public class PlayNowFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             if (holder instanceof AirAdapter.AirItemViewHolder) {
                 AirItemViewHolder itemViewHolder = (AirItemViewHolder) holder;
-                super.onBindItemViewHolder(itemViewHolder, correctPostion(position) + 1);
+                super.onBindItemViewHolder(itemViewHolder, correctPosition(position) + 1);
                 return;
             } else if (holder instanceof MessageViewHolder) {
                 onBindMessageViewHolder(holder, position);

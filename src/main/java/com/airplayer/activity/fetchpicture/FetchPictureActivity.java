@@ -81,7 +81,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
      */
     private ArrayList<Picture> mPictureList = new ArrayList<>();
 
-    /* handle download image task */
+    // handle download image task
     /**
      * What value of message that will be sent when { @link #downloadImage } download succeed.
      * 在 { @link #downloadImage } 方法下载成功时发送的 message 的 what 值。
@@ -198,15 +198,19 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
         // task to download a array list of image links
         executeDownloadTask(MODE_DOWNLOAD_ADD, null);
 
-        // setup toolbar
+        // ===== setup toolbar =====
         mToolbar = (Toolbar) findViewById(R.id.suppressible_toolbar);
-        // setup toolbar background color
+
+        // ----- toolbar background color -----
         mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-        // setup toolbar elevation
+
+        // ----- toolbar elevation -----
         if (Build.VERSION.SDK_INT >= 21) mToolbar.setElevation(19);
-        // setup toolbar title
+
+        // ----- toolbar title -----
         mToolbar.setTitle(mQueryKeyword);
-        // setup toolbar navigation button
+
+        // ----- toolbar navigation button -----
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,7 +218,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        // setup toolbar menu search action
+
+        // ----- toolbar menu search action -----
         mToolbar.inflateMenu(R.menu.menu_search);
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -232,10 +237,11 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
         });
 
 
-        // setup RecyclerView
+        // ===== setup RecyclerView =====
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         final GridLayoutManager manager = new GridLayoutManager(this, 2);
 
+        // ----- LayoutManager -----
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -243,6 +249,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
+
+        // ----- ScrollListener -----
         mRecyclerView.addOnScrollListener(new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), mToolbar) {
             @Override
             public void onScrollToBottom() {

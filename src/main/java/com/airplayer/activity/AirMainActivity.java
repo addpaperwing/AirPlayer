@@ -139,11 +139,11 @@ public class AirMainActivity extends AppCompatActivity
         // get fragment manager
         mFragmentManager = getSupportFragmentManager();
 
-        // set up tool bar
+        // setup tool bar
         mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar_layout);
 
-        // set up navigation drawer fragment
+        // setup navigation drawer fragment
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
                 .findFragmentById(R.id.navigation_drawer);

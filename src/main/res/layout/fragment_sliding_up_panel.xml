@@ -46,7 +46,7 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/sliding_layout_top_tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/air_text_color_alpha"
         android:elevation="@dimen/dp_4_560">
 

@@ -23,6 +23,7 @@ import com.airplayer.model.PictureGettable;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.BitmapUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -34,8 +35,6 @@ public class AlbumFragment extends SingleItemChildFragment {
     public static final String TAG = AlbumFragment.class.getSimpleName();
 
     public static final String ALBUM_RECEIVED = "album_received";
-
-    private ImageView mImageView;
 
     private Album mAlbum;
 
@@ -74,12 +73,22 @@ public class AlbumFragment extends SingleItemChildFragment {
     }
 
     @Override
+    public void setupDraweeView() {
+        mDraweeView.setOnClickListener(new OnPictureClickListener(mAlbum, FetchAlbumArtActivity.class) {
+            @Override
+            public void onPictureDelete() {
+                mAlbum.setPictureDownloaded(false);
+                mDraweeView.setImageURI(mAlbum.getAlbumArtUri());
+            }
+        });
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PictureGettable.REQUEST_CODE_FETCH_PICTURE) {
                 mAlbum.setPictureDownloaded(true);
-                mImageView.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
-                        mAlbum.getAlbumArtPath(), true));
+                mDraweeView.setImageURI(mAlbum.getAlbumArtUri());
             }
         }
     }
@@ -98,25 +107,8 @@ public class AlbumFragment extends SingleItemChildFragment {
 
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
-            final AlbumSongHeader header = (AlbumSongHeader) holder;
-            header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), true));
-            header.image.setOnClickListener(new OnPictureClickListener(mAlbum, FetchAlbumArtActivity.class) {
+            AlbumSongHeader header = (AlbumSongHeader) holder;
 
-                @Override
-                public void onPictureDelete() {
-                    mAlbum.setPictureDownloaded(false);
-                    header.image.setImageBitmap(BitmapUtils
-                            .getWindowWideBitmap(getActivity(), mAlbum.getAlbumArtPath(), true));
-                }
-            });
-            mImageView = header.image;
-
-            header.fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mBinder.playMusic(0, mSongList);
-                }
-            });
             header.title.setText(mAlbum.getTitle());
             header.subTitle.setText(mAlbum.getAlbumArtist());
             if (mAlbum.getYear() != 0) {
@@ -128,16 +120,12 @@ public class AlbumFragment extends SingleItemChildFragment {
 
         private class AlbumSongHeader extends AirAdapter.AirHeadViewHolder {
 
-            private ImageView image;
-            private FloatingActionButton fab;
             private TextView title;
             private TextView subTitle;
             private TextView desc;
 
             public AlbumSongHeader(View itemView) {
                 super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.header_image);
-                fab = (FloatingActionButton) itemView.findViewById(R.id.header_fab);
                 title = (TextView) itemView.findViewById(R.id.header_title);
                 subTitle = (TextView) itemView.findViewById(R.id.header_sub_title);
                 desc = (TextView) itemView.findViewById(R.id.header_desc);

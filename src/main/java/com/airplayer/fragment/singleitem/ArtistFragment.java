@@ -25,6 +25,7 @@ import com.airplayer.model.Album;
 import com.airplayer.model.Artist;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.util.BitmapUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -38,8 +39,6 @@ public class ArtistFragment extends SingleItemChildFragment {
     private Artist mArtist;
 
     private List<Album> mAlbumList;
-
-    private ImageView mImageView;
 
     private FragmentManager mFragmentManager;
 
@@ -84,12 +83,22 @@ public class ArtistFragment extends SingleItemChildFragment {
     }
 
     @Override
+    public void setupDraweeView() {
+        mDraweeView.setOnClickListener(new OnPictureClickListener(mArtist, FetchArtistPictureActivity.class) {
+            @Override
+            public void onPictureDelete() {
+                mArtist.setPictureDownloaded(false);
+                mDraweeView.setImageURI(mArtist.getArtistPictureUri());
+            }
+        });
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == PictureGettable.REQUEST_CODE_FETCH_PICTURE) {
                 mArtist.setPictureDownloaded(true);
-                mImageView.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
-                        mArtist.getArtistPicturePath(), false));
+                mDraweeView.setImageURI(mArtist.getArtistPictureUri());
             }
         }
     }
@@ -108,18 +117,7 @@ public class ArtistFragment extends SingleItemChildFragment {
 
         @Override
         public void onBindHeadViewHolder(AirAdapter.AirHeadViewHolder holder) {
-            final ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
-            header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(), mArtist.getArtistPicturePath(), false));
-            header.image.setOnClickListener(new OnPictureClickListener(mArtist, FetchArtistPictureActivity.class) {
-
-                @Override
-                public void onPictureDelete() {
-                    mArtist.setPictureDownloaded(false);
-                    header.image.setImageBitmap(BitmapUtils.getWindowWideBitmap(getActivity(),
-                            mArtist.getArtistPicturePath(), false));
-                }
-            });
-            mImageView = header.image;
+            ArtistAlbumHeader header = (ArtistAlbumHeader) holder;
 
             header.name.setText(mArtist.getName());
             header.albumCount.setText(mAlbumList.size() + " albums");
@@ -127,13 +125,11 @@ public class ArtistFragment extends SingleItemChildFragment {
 
         private class ArtistAlbumHeader extends AirAdapter.AirHeadViewHolder {
 
-            private ImageView image;
             private TextView name;
             private TextView albumCount;
 
             public ArtistAlbumHeader(View itemView) {
                 super(itemView);
-                image = (ImageView) itemView.findViewById(R.id.header_image);
                 name = (TextView) itemView.findViewById(R.id.header_title);
                 albumCount = (TextView) itemView.findViewById(R.id.header_sub_title);
             }

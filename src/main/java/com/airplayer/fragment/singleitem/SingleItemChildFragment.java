@@ -18,6 +18,7 @@ import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
 import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
 import com.airplayer.model.PictureGettable;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.io.File;
 
@@ -32,6 +33,8 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
     private FragmentManager mFragmentManager;
 
+    protected SimpleDraweeView mDraweeView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recycler_collapsing_toolbar, container, false);
 
-        final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.suppressible_toolbar);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.suppressible_toolbar);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +54,9 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
                 getActivity().onBackPressed();
             }
         });
+
+        mDraweeView = (SimpleDraweeView) rootView.findViewById(R.id.head_image);
+        setupDraweeView();
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         this.setupRecyclerView(mRecyclerView);
@@ -98,4 +104,6 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
         public abstract void onPictureDelete();
     }
+
+    public abstract void setupDraweeView();
 }

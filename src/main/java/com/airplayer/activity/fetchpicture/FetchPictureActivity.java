@@ -373,4 +373,5 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     public abstract String getSearchLink();
     public abstract ArrayList<Picture> onDecodeJson(String response);
+    public abstract void onMoreButtonClick(int nextPage);
 }

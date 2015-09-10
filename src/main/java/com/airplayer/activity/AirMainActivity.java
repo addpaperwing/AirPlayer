@@ -60,6 +60,7 @@ public class AirMainActivity extends AppCompatActivity
             mFragmentManager.beginTransaction()
                     .replace(R.id.sliding_fragment_container,
                             mPlayMusicFragment).commit();
+
             // set sliding up panel invisible when activity create
             if (!playerControlBinder.isPlaying()) {
                 mSlidingUpPanelLayout.setTouchEnabled(false);
@@ -77,7 +78,7 @@ public class AirMainActivity extends AppCompatActivity
     // ===== receiver =====
     private PlayerStateReceiver mPlayerStateReceiver;
 
-    /* helper classes */
+    // ===== helper classes =====
     private FragmentManager mFragmentManager;
     private PlayMusicFragment mPlayMusicFragment;
 
@@ -97,13 +98,13 @@ public class AirMainActivity extends AppCompatActivity
         AirModel.initModels(this);
         setContentView(R.layout.activity_main);
 
-        // bind service
+        // ===== bind service =====
         Intent playMusicServiceIntent = new Intent(this, PlayMusicService.class);
         playMusicServiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startService(playMusicServiceIntent);
         bindService(playMusicServiceIntent, connection, BIND_AUTO_CREATE);
 
-        // get sliding up panel and set panel slide listener
+        // ===== get sliding up panel and set panel slide listener =====
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         mSlidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -136,14 +137,14 @@ public class AirMainActivity extends AppCompatActivity
             public void onPanelHidden(View view) { }
         });
 
-        // get fragment manager
+        // ===== get fragment manager =====
         mFragmentManager = getSupportFragmentManager();
 
-        // setup tool bar
+        // ===== setup tool bar =====
         mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar_layout);
 
-        // setup navigation drawer fragment
+        // ===== setup navigation drawer fragment =====
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
                 .findFragmentById(R.id.navigation_drawer);
@@ -215,12 +216,16 @@ public class AirMainActivity extends AppCompatActivity
 
     /**
      * getter of main tool bar
-     * @return tool bar of the whole app
+     * @return main Toolbar
      */
     public Toolbar getToolbar() {
         return mToolbar;
     }
 
+    /**
+     * getter of main app bar layout, use for add a TabLayout in { @link com.airplayer.fragment.MyLibraryFragment}
+     * @return main AppBarLayout
+     */
     public AppBarLayout getAppBarLayout() {
         return mAppBarLayout;
     }

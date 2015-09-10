@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
 import com.airplayer.listener.AirScrollListener;
 import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
+import com.airplayer.listener.EasyAirScrollListener;
 import com.airplayer.listener.SimpleAirScrollListener;
 import com.airplayer.model.PictureGettable;
 
@@ -57,6 +57,19 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         this.setupRecyclerView(mRecyclerView);
+        mRecyclerView.addOnScrollListener(new EasyAirScrollListener() {
+            @Override
+            public void onScrollToTop() {
+                toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+            }
+
+            @Override
+            public void onScrollToBottom() {
+
+            }
+        });
+
+
         AirScrollListener listener = new SimpleAirScrollListener(getResources().getInteger(R.integer.padding_action_bar), toolbar) {
 
             @Override
@@ -81,7 +94,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
             @Override
             public void onScrollToTop() {
-                toolbar.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
             }
         };
         listener.setHaveParallax(true);

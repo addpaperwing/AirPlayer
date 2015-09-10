@@ -93,7 +93,6 @@ public abstract class AirScrollListener extends RecyclerView.OnScrollListener {
 
         if (!recyclerView.canScrollVertically(1) && recyclerView.canScrollVertically(-1)) {
             onScrollToBottom();
-            Log.d("test", "onScrollToBottom");
         }
     }
 

@@ -70,28 +70,28 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     public static final String SEARCH_LINK_ALBUM_ART = "https://api.douban.com/v2/music/search?q=";
 
     /**
-     * a link to search a artist picture, use as a param to execute { @see DownloadURLTask  }.
-     * 查询艺人图片的链接，执行 { @see DownloadURLTask } 时作为传入参数。
+     * a link to search a artist picture, use as a param to execute { @link #DownloadURLTask  }.
+     * 查询艺人图片的链接，执行 { @link #DownloadURLTask } 时作为传入参数。
      */
     public static final String SEARCH_LINK_ARTIST_PICTURE = "http://image.baidu.com/i?tn=baiduimagejson&word=";
 
     /**
-     * Image url array list fetch from { @see DownloadURLTask }.
-     * 图片 url 的数组列表，从 { @see DownloadURLTask } 获取。
+     * Image url array list fetch from { @link #DownloadURLTask }.
+     * 图片 url 的数组列表，从 { @link #DownloadURLTask } 获取。
      */
     private ArrayList<Picture> mPictureList = new ArrayList<>();
 
     /* handle download image task */
     /**
-     * What value of message that will be sent when { @see downloadImage } download succeed.
-     * 在 { @see downloadImage } 方法下载成功时发送的 message 的 what 值。
+     * What value of message that will be sent when { @link #downloadImage } download succeed.
+     * 在 { @link #downloadImage } 方法下载成功时发送的 message 的 what 值。
      */
     private static final int MSG_DOWNLOAD_PICTURE_SUCCEED = 1;
     private static final int MSG_DOWNLOAD_PICTURE_FAIL = 2;
 
     /**
-     * What value of message that will be sent when { @see DownloadURLTask } download fail.
-     * 在 { @see DownloadURLTask } 下载失败时发送的 message 的 what 值。
+     * What value of message that will be sent when { @link #DownloadURLTask } download fail.
+     * 在 { @link #DownloadURLTask } 下载失败时发送的 message 的 what 值。
      */
     private static final int MSG_DOWNLOAD_IMAGE_URL_FAIL = 3;
     private static final int MSG_NO_RESULT_FOUND_OR_DECODE_FAIL = 4;
@@ -99,10 +99,10 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     private ProgressDialog progress;
 
     /**
-     * If msg is { @see MSG_DOWNLOAD_PICTURE_SUCCEED } dismiss progress and set resultCode to RESULT_OK.
-     * If msg is { @see MSG_DOWNLOAD_IMAGE_URL_FAIL } make a toast to tell user.
-     * 如果 msg 是 { @see MSG_DOWNLOAD_PICTURE_SUCCEED } 撤销进度条并设置 resultCode 为 RESULT_OK。
-     * 如果 msg 是 { @see MSG_DOWNLOAD_IMAGE_URL_FAIL } 发出一条 toast 告诉用户下载失败。
+     * If msg is { @link #MSG_DOWNLOAD_PICTURE_SUCCEED } dismiss progress and set resultCode to RESULT_OK.
+     * If msg is { @link #MSG_DOWNLOAD_IMAGE_URL_FAIL } make a toast to tell user.
+     * 如果 msg 是 { @link #MSG_DOWNLOAD_PICTURE_SUCCEED } 撤销进度条并设置 resultCode 为 RESULT_OK。
+     * 如果 msg 是 { @link #MSG_DOWNLOAD_IMAGE_URL_FAIL } 发出一条 toast 告诉用户下载失败。
      */
     private Handler handler = new Handler() {
         @Override
@@ -136,9 +136,9 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     /**
      * New thread to download picture from @param url to external storage and show a progress.
-     * When download succeed send a { @see MSG_DOWNLOAD_PICTURE_SUCCEED } message.
-     * 新建一个线程下载 @param url 中的图片到手机扩展储存，并现实一个进度条。
-     * 当下载成功时，发送一个 { @see MSG_DOWNLOAD_PICTURE_SUCCEED } message 。
+     * When download succeed send a { @link #MSG_DOWNLOAD_PICTURE_SUCCEED } message.
+     * 新建一个线程下载 url(传入参数) 中的图片到手机扩展储存，并出现一个进度条。
+     * 当下载成功时，发送一个 { @link #MSG_DOWNLOAD_PICTURE_SUCCEED } message 。
      * @param url the url of picture when it was clicked. 被点击的图片的url
      */
     private void downloadImage(final String url) {
@@ -264,8 +264,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     }
 
     /**
-     * Adapter of RecyclerView has a head padding, two columns and every item is a { @link SimpleDraweeView }
-     * RecyclerView 的 adapter 头部有一部分空白填充，两列每一项都是一个 { @link SimpleDraweeView }
+     * Adapter of RecyclerView has a head padding, two columns and every item is a { @link #SimpleDraweeView }
+     * RecyclerView 的 adapter 头部有一部分空白填充，两列每一项都是一个 { @link #SimpleDraweeView }
      */
     private class FPAdapter extends HeadPadAdapter {
 

@@ -48,7 +48,7 @@ public class FetchArtistPictureActivity extends FetchPictureActivity {
     }
 
     @Override
-    public void onMoreButtonClick(int nextPage) {
+    public void onFetchMorePictures(int nextPage) {
         executeDownloadTask(MODE_DOWNLOAD_ADD, "&pn=" + nextPage * 20);
     }
 }

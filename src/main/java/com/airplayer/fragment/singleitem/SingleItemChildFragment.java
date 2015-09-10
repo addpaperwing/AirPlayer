@@ -41,7 +41,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recycler_suppressible_toolbar, container, false);
+        View rootView = inflater.inflate(R.layout.recycler_collapsing_toolbar, container, false);
 
         final Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.suppressible_toolbar);
         toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);

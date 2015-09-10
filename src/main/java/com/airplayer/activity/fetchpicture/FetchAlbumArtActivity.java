@@ -61,7 +61,7 @@ public class FetchAlbumArtActivity extends FetchPictureActivity {
     }
 
     @Override
-    public void onMoreButtonClick(int nextPage) {
+    public void onFetchMorePictures(int nextPage) {
         executeDownloadTask(MODE_DOWNLOAD_ADD, "&start=" + (nextPage - 1) * 20);
     }
 }

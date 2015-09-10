@@ -243,10 +243,11 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
+
         mRecyclerView.addOnScrollListener(new EasyRecyclerViewListener() {
             @Override
             public void onScrollToBottom() {
-                onMoreButtonClick(nextPage);
+                onFetchMorePictures(nextPage);
                 nextPage++;
             }
         });
@@ -381,5 +382,5 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
     public abstract String getSearchLink();
     public abstract ArrayList<Picture> onDecodeJson(String response);
-    public abstract void onMoreButtonClick(int nextPage);
+    public abstract void onFetchMorePictures(int nextPage);
 }

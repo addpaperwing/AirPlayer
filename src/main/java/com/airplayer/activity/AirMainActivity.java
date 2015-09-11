@@ -324,7 +324,6 @@ public class AirMainActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                 }
-                Log.d(TAG, R.attr.actionBarSize + "");
             }
         }).start();
     }

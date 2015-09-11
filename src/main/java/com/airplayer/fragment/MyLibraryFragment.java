@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +30,14 @@ public class MyLibraryFragment extends Fragment {
 
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
-    private AppBarLayout mAppBarLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // ===== AppbarLayout =====
+        AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
+        appBarLayout.setExpanded(true);
     }
 
     @Nullable
@@ -46,10 +50,7 @@ public class MyLibraryFragment extends Fragment {
 
         mViewPager = (ViewPager) rootView.findViewById(R.id.my_library_pager);
 
-        mAppBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
-
         initTabLayout();
-        mAppBarLayout.addView(mTabLayout);
 
         mViewPager.setAdapter(new LibraryPagerAdapter(fm));
         mTabLayout.setupWithViewPager(mViewPager);
@@ -97,13 +98,20 @@ public class MyLibraryFragment extends Fragment {
             mTabLayout.setLayoutParams(params);
             mTabLayout.setSelectedTabIndicatorColor(0xffffffff);
             mTabLayout.setBackgroundResource(R.color.air_dark_primary_color);
+
+            AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
+            appBarLayout.addView(mTabLayout);
+        } else {
+            mTabLayout.setVisibility(View.VISIBLE);
         }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAppBarLayout.removeView(mTabLayout);
+        if (mTabLayout != null) {
+            mTabLayout.setVisibility(View.GONE);
+        }
     }
 }
 

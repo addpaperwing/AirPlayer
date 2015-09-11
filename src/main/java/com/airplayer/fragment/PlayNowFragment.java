@@ -3,6 +3,7 @@ package com.airplayer.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -41,9 +42,10 @@ public class PlayNowFragment extends Fragment {
         AirModelSingleton singleton = AirModelSingleton.getInstance(getActivity());
         mActivityAlbums = singleton.getActivityAlbums();
         mRecentAlbumsSize = singleton.getRecentAlbumsSize();
-        Toolbar globalBar = ((AirMainActivity) getActivity()).getToolbar();
-        globalBar.setTranslationY(0);
-        globalBar.setVisibility(View.VISIBLE);
+
+        // ===== AppbarLayout =====
+        AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
+        appBarLayout.setExpanded(true);
     }
 
     @Nullable

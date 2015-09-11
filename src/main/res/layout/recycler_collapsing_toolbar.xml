@@ -4,24 +4,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
-        android:background="#ddffffff"
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+    android:layout_height="match_parent"
+    >
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:contentScrim="?attr/colorPrimary">
+        android:layout_height="@dimen/dp_384_560"
+        android:fitsSystemWindows="true"
+        app:expandedTitleMarginStart="48dp"
+        app:expandedTitleMarginEnd="64dp"
+        >
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/app_bar_layout"
+            android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_256_560">
+            android:layout_height="match_parent"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="?attr/colorPrimary"
+            >
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/head_image"
@@ -29,19 +30,29 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center|top"
                 android:scaleType="centerCrop"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax"
                 />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/suppressible_toolbar"
+                android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_collapseMode="parallax"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
                 app:layout_collapseParallaxMultiplier="0.7"
                 />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:background="#ddffffff"
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/header_fab"
@@ -50,6 +61,7 @@
         android:src="@android:drawable/ic_media_play"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:clickable="true"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="right|bottom|end"
         />

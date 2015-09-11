@@ -10,6 +10,7 @@ import android.media.audiofx.Equalizer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +62,10 @@ public class EqualizerFragment extends Fragment {
         receiver = new HeadsetPlugReceiver();
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         activity.registerReceiver(receiver, filter);
+
+        // ===== AppbarLayout =====
+        AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
+        appBarLayout.setExpanded(true);
     }
 
     @Nullable

@@ -12,6 +12,7 @@ import android.media.audiofx.Equalizer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.airplayer.fragment.EqualizerFragment;
@@ -88,8 +89,8 @@ public class PlayMusicService extends Service {
     /**
      * audio effect
      */
-//    private Equalizer mEqualizer;
-//    private BassBoost mBassBoost;
+    private Equalizer mEqualizer;
+    private BassBoost mBassBoost;
 
     /**
      * <br>Play list</br>
@@ -164,20 +165,22 @@ public class PlayMusicService extends Service {
         });
 
         // ===== create Equalizer =====
-//        mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
-//        mEqualizer.setEnabled(true);
-//        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-//        int genres = sp.getInt(EqualizerFragment.EQUALIZER_GENRES, 0);
-//        if (genres < mEqualizer.getNumberOfPresets()) {
-//            mEqualizer.usePreset((short)genres);
-//        } else {
-//            for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
-//                mEqualizer.setBandLevel(i, (short)sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
-//            }
-//        }
-//
-//        mBassBoost = new BassBoost(0, mPlayer.getAudioSessionId());
-//        mBassBoost.setStrength((short)sp.getInt(EqualizerFragment.BASS_BOOST, 0));
+        if (!isEmulatorByImei(getApplicationContext())) {
+            mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
+            mEqualizer.setEnabled(true);
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            int genres = sp.getInt(EqualizerFragment.EQUALIZER_GENRES, 0);
+            if (genres < mEqualizer.getNumberOfPresets()) {
+                mEqualizer.usePreset((short) genres);
+            } else {
+                for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
+                    mEqualizer.setBandLevel(i, (short) sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
+                }
+            }
+
+            mBassBoost = new BassBoost(0, mPlayer.getAudioSessionId());
+            mBassBoost.setStrength((short) sp.getInt(EqualizerFragment.BASS_BOOST, 0));
+        }
 
         // ===== register Receiver =====
         playMusicReceiver = new PlayMusicReceiver();
@@ -189,6 +192,7 @@ public class PlayMusicService extends Service {
         notification = new AirNotification(this);
         notification.cancel();
         Log.d(TAG, "service create");
+
     }
 
     @Override
@@ -205,7 +209,12 @@ public class PlayMusicService extends Service {
     public void onDestroy() {
         unregisterReceiver(playMusicReceiver);
         mPlayer.release();
-//        mEqualizer.release();
+
+        if (mEqualizer != null) {
+            mEqualizer.release();
+            mBassBoost.release();
+        }
+
         notification.cancel();
         super.onDestroy();
         Log.d(TAG, "service destroy");
@@ -278,31 +287,19 @@ public class PlayMusicService extends Service {
             return shuffle;
         }
 
-        public List<Song> getPlayList() {
-            return mPlayList;
-        }
+        public List<Song> getPlayList() { return mPlayList; }
 
-        public Song getSongPlaying() {
-            return songPlaying;
-        }
+        public Song getSongPlaying() { return songPlaying; }
 
-        public boolean isPlaying() {
-            return mPlayer.isPlaying() || pause;
-        }
+        public boolean isPlaying() { return mPlayer.isPlaying() || pause; }
 
-        public boolean isPause() {
-            return pause;
-        }
+        public boolean isPause() { return pause; }
 
-        public int getPosition() {
-            return mPosition;
-        }
+        public int getPosition() { return mPosition; }
 
         // ============= Audio Effect =============
-//        public Equalizer getEqualizer() {
-//            return mEqualizer;
-//        }
-//        public BassBoost getBassBoost() { return mBassBoost; }
+        public Equalizer getEqualizer() { return mEqualizer; }
+        public BassBoost getBassBoost() { return mBassBoost; }
     }
 
     private void play() {
@@ -397,11 +394,21 @@ public class PlayMusicService extends Service {
     private void onHeadsetPlugActionReceive(Intent intent) {
         if (intent.getIntExtra("state", -1) == 0) {
             mBinder.pauseMusic();
-//            mBassBoost.setEnabled(false);
-//            Log.d(TAG, "bassboost disable");
+
+            if (mBassBoost != null) {
+                mBassBoost.setEnabled(false);
+            }
         } else {
-//            mBassBoost.setEnabled(true);
-//            Log.d(TAG, "bassboost enable");
+
+            if (mBassBoost != null) {
+                mBassBoost.setEnabled(true);
+            }
         }
+    }
+
+    private static boolean isEmulatorByImei(Context context){
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String imei = tm.getDeviceId();
+        return (imei == null || imei.equals("000000000000000"));
     }
 }

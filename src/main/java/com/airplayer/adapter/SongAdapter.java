@@ -22,7 +22,7 @@ import java.util.List;
  * an abstract class, which is used by recycler view that shows a song list
  */
 
-public class SongAdapter extends HeadPadAdapter {
+public class SongAdapter extends AirAdapter {
 
     private boolean showImage = true;
 
@@ -38,10 +38,6 @@ public class SongAdapter extends HeadPadAdapter {
 
     public SongAdapter(Context context, List<Song> list) {
         super(context, list);
-    }
-
-    public SongAdapter(Context context, List<?> list, int paddingHeight) {
-        super(context, list, paddingHeight);
     }
 
     @Override

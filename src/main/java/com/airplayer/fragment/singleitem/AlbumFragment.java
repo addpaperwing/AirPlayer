@@ -102,7 +102,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new AlbumSongHeader(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_image_fab, parent, false));
+                    .inflate(R.layout.recycler_header_image, parent, false));
         }
 
         @Override

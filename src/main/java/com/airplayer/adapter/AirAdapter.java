@@ -141,7 +141,7 @@ public abstract class AirAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private LinearLayout createEmptyPadding() {
         LinearLayout linearLayout = new LinearLayout(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
-                (ViewGroup.LayoutParams.MATCH_PARENT, 10);
+                (ViewGroup.LayoutParams.MATCH_PARENT, 1);
         linearLayout.setLayoutParams(params);
         return linearLayout;
     }

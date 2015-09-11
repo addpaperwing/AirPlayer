@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airplayer.R;
-import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
+import com.airplayer.fragment.singleitem.SettableRecyclerView;
 
 /**
  * Created by ZiyiTsang on 15/6/9.
@@ -28,7 +28,7 @@ public abstract class MyLibraryChildFragment extends Fragment implements Settabl
 
         //find a recycler view and set it up
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-        this.setupRecyclerView(recyclerView);
+        setupRecyclerView(recyclerView);
 
         return rootView;
     }

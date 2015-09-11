@@ -3,23 +3,19 @@ package com.airplayer.fragment.singleitem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
-import com.airplayer.fragment.singleitem.itf.SettableRecyclerView;
 import com.airplayer.model.PictureGettable;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -38,15 +34,10 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
     protected SimpleDraweeView mDraweeView;
 
-    AppBarLayout mGlobalAppBar;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getActivity().getSupportFragmentManager();
-
-        mGlobalAppBar = ((AirMainActivity) getActivity()).getAppBarLayout();
-        mGlobalAppBar.setVisibility(View.GONE);
     }
 
     @Nullable
@@ -111,13 +102,6 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
         }
 
         public abstract void onPictureDelete();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mGlobalAppBar.setVisibility(View.VISIBLE);
-        Log.d(TAG, "onDestroyView");
     }
 
     public abstract void setupDraweeView();

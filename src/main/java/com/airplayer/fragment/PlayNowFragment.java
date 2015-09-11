@@ -135,11 +135,6 @@ public class PlayNowFragment extends Fragment {
             super.onBindViewHolder(holder, position);
         }
 
-        @Override
-        public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
-            return new AirHeadViewHolder(newPaddingLayout(getResources().getDimensionPixelOffset(R.dimen.dp_56_560)));
-        }
-
         public MessageViewHolder onCreateMessageViewHolder(ViewGroup parent) {
             return new MessageViewHolder(getLayoutInflater().inflate(R.layout.recycler_item_message, parent, false));
         }

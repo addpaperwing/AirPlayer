@@ -19,7 +19,7 @@ import java.util.List;
  * an abstract class, which is used by recycler view that shows a album grid view
  * 一个以 grid view 显示专辑类型 item 的抽象类
  */
-public class AlbumAdapter extends HeadPadAdapter {
+public class AlbumAdapter extends AirAdapter {
 
     public AlbumAdapter(Context context, List<Album> list) {
         super(context, list);

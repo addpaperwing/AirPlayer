@@ -54,8 +54,8 @@ public class EqualizerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AirMainActivity activity = ((AirMainActivity) getActivity());
-//        mEqualizer = activity.getPlayerControlBinder().getEqualizer();
-//        mBassBoost = activity.getPlayerControlBinder().getBassBoost();
+        mEqualizer = activity.getPlayerControlBinder().getEqualizer();
+        mBassBoost = activity.getPlayerControlBinder().getBassBoost();
         sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         //===== receiver =====
@@ -86,6 +86,10 @@ public class EqualizerFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 sp.edit().putInt(EQUALIZER_GENRES, position).apply();
                 short presetPosition = (short) position;
+
+                if (mEqualizer == null) return;
+
+
                 if (presetPosition < mEqualizer.getNumberOfPresets()) {
                     mEqualizer.usePreset(presetPosition);
                     updateBandSeekBarProgress();
@@ -98,8 +102,7 @@ public class EqualizerFragment extends Fragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) { }
         });
 
         // ===== seek bars =====
@@ -114,6 +117,9 @@ public class EqualizerFragment extends Fragment {
         seekBarBassBoost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (mBassBoost == null) return;
+
                 mBassBoost.setStrength((short)progress);
                 sp.edit().putInt(BASS_BOOST, progress).apply();
             }
@@ -136,6 +142,9 @@ public class EqualizerFragment extends Fragment {
 
     private ArrayList<String> getPresets() {
         ArrayList<String> presets = new ArrayList<>();
+
+        if (mEqualizer == null) return new ArrayList<>();
+
         short presetsNum = mEqualizer.getNumberOfPresets();
         for (short i = 0; i < presetsNum + 1; i++) {
             if (i == presetsNum) {
@@ -162,6 +171,9 @@ public class EqualizerFragment extends Fragment {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     int userBandLevel = progress - 1500;
+
+                    if (mEqualizer == null) return;
+
                     mEqualizer.setBandLevel(bandNum, (short) userBandLevel);
                     if (fromUser) {
                         spinner.setSelection(mEqualizer.getNumberOfPresets());
@@ -179,6 +191,9 @@ public class EqualizerFragment extends Fragment {
     }
 
     private void updateBandSeekBarProgress() {
+
+        if (mEqualizer == null) return;
+
         for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
             bandSeekBars[i].setProgress(mEqualizer.getBandLevel(i) + 1500);
         }

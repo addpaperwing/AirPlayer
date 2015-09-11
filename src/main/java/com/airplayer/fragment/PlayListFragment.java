@@ -55,7 +55,7 @@ public class PlayListFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new SongAdapter(getActivity(), mPlayList, getResources().getInteger(R.integer.padding_tabs)) {
+        mAdapter = new SongAdapter(getActivity(), mPlayList) {
 
             @Override
             public AirItemViewHolder onCreateItemViewHolder(ViewGroup parent) {

@@ -26,7 +26,6 @@ import com.airplayer.listener.EasyRecyclerViewListener;
 import com.airplayer.multitask.DownloadURLTask;
 import com.airplayer.R;
 import com.airplayer.adapter.AirAdapter;
-import com.airplayer.adapter.HeadPadAdapter;
 import com.airplayer.fragment.dialog.ReplacePicDialogFragment;
 import com.airplayer.model.Picture;
 import com.airplayer.util.StorageUtils;
@@ -193,7 +192,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mSwipeRefreshLayout.setColorSchemeResources(R.color.air_accent_color);
-        mSwipeRefreshLayout.setProgressViewOffset(false, 0, getResources().getInteger(R.integer.padding_action_bar) + 20);
 
         // task to download a array list of image links
         executeDownloadTask(MODE_DOWNLOAD_ADD, null);
@@ -268,10 +266,10 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
      * Adapter of RecyclerView has a head padding, two columns and every item is a { @link #SimpleDraweeView }
      * RecyclerView 的 adapter 头部有一部分空白填充，两列每一项都是一个 { @link #SimpleDraweeView }
      */
-    private class FPAdapter extends HeadPadAdapter {
+    private class FPAdapter extends AirAdapter {
 
-        public FPAdapter(Context context, List<?> list, int paddingHeight) {
-            super(context, list, paddingHeight);
+        public FPAdapter(Context context, List<?> list) {
+            super(context, list);
         }
 
         @Override
@@ -351,8 +349,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
      * 一个封装好的简易方法来配置 RecyclerView adapter，以便多次调用
      */
     private void setupAdapter() {
-        adapter = new FPAdapter(FetchPictureActivity.this,
-                mPictureList, getResources().getInteger(R.integer.padding_action_bar));
+        adapter = new FPAdapter(FetchPictureActivity.this, mPictureList);
         adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, final int position) {

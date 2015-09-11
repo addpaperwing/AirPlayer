@@ -1,6 +1,7 @@
 package com.airplayer.fragment.child;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.airplayer.R;
-import com.airplayer.adapter.HeadPadAdapter;
+import com.airplayer.activity.SingleItemActivity.ArtistActivity;
 import com.airplayer.fragment.singleitem.ArtistFragment;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Artist;
@@ -50,6 +51,10 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
         adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
+
+//                Intent intent = new Intent(getActivity(), ArtistActivity.class);
+//                intent.putExtra(KEY_EXTRA_ARTIST, mList.get(position - 1));
+
                 FragmentTransaction ft = getParentFragment().getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, ArtistFragment.newInstance(mList.get(position - 1)));
@@ -67,7 +72,7 @@ public class ArtistGridFragment extends MyLibraryChildFragment {
         adapter.notifyDataSetChanged();
     }
 
-    private class ArtistAdapter extends HeadPadAdapter {
+    private class ArtistAdapter extends AirAdapter {
 
         public ArtistAdapter(Context context, List<Artist> list) {
             super(context, list);

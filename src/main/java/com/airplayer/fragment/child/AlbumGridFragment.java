@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.airplayer.R;
-import com.airplayer.activity.SingleItemActivity.AlbumActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.fragment.singleitem.AlbumFragment;
@@ -49,9 +48,6 @@ public class AlbumGridFragment extends MyLibraryChildFragment  {
         adapter.setOnItemClickListener(new AirAdapter.OnItemClickListener() {
             @Override
             public void onItemClicked(View view, int position) {
-//                Intent intent = new Intent(getActivity(), AlbumActivity.class);
-//                intent.putExtra(KEY_EXTRA_ALBUM, mList.get(position - 1));
-
                 FragmentTransaction ft = getParentFragment().getActivity()
                         .getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, AlbumFragment.newInstance(mList.get(position - 1)));

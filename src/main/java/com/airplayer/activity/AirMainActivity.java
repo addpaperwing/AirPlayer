@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
@@ -65,6 +66,9 @@ public class AirMainActivity extends AppCompatActivity
             if (!playerControlBinder.isPlaying()) {
                 mSlidingUpPanelLayout.setTouchEnabled(false);
                 mSlidingUpPanelLayout.setPanelHeight(0);
+            } else {
+                mSlidingUpPanelLayout.setTouchEnabled(true);
+                mSlidingUpPanelLayout.setPanelHeight(mSize);
             }
             Log.d(TAG, "service has connected");
         }
@@ -91,12 +95,21 @@ public class AirMainActivity extends AppCompatActivity
         }
     };
 
+    // ===== other resource =====
+    private int mSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fresco.initialize(this);
         AirModel.initModels(this);
         setContentView(R.layout.activity_main);
+
+        // ===== get actionbarSize in attr
+        int defaultInt = getResources().getDimensionPixelOffset(R.dimen.sliding_up_fragment_bottom_bar_height);
+        int[] attrsArray = { R.attr.actionBarSize };
+        TypedArray typedArray = obtainStyledAttributes(attrsArray);
+        mSize = typedArray.getDimensionPixelOffset(0, defaultInt);
 
         // ===== bind service =====
         Intent playMusicServiceIntent = new Intent(this, PlayMusicService.class);
@@ -300,7 +313,7 @@ public class AirMainActivity extends AppCompatActivity
         new Thread(new Runnable() {
             @Override
             public void run() {
-                for (int height = 0; height < getResources().getInteger(R.integer.sliding_panel_height); height += 2) {
+                for (int height = 0; height < mSize; height += 2) {
                     Message msg = new Message();
                     msg.what = 0;
                     msg.obj = height;
@@ -311,6 +324,7 @@ public class AirMainActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                 }
+                Log.d(TAG, R.attr.actionBarSize + "");
             }
         }).start();
     }

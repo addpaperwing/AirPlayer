@@ -3,9 +3,12 @@ package com.airplayer.fragment.singleitem;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.airplayer.R;
+import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
 
@@ -35,10 +39,28 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
     protected SimpleDraweeView mDraweeView;
 
+    protected Toolbar mToolbar;
+
+    // ===== global widget setting =====
+    private AppBarLayout mAppBarLayout;
+    private TabLayout mPaddingTabs;
+
+    private DrawerLayout mDrawerLayout;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getActivity().getSupportFragmentManager();
+
+        // ===== Invisible main app bar =====
+        mAppBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
+        mPaddingTabs = ((AirMainActivity) getActivity()).getPaddingTabLayout();
+        mPaddingTabs.setVisibility(View.GONE);
+        mAppBarLayout.setExpanded(false);
+
+        // ===== lock DrawerLayout =====
+        mDrawerLayout = ((AirMainActivity) getActivity()).getDrawerLayout();
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Nullable
@@ -46,9 +68,9 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recycler_collapsing_toolbar, container, false);
 
-        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.collapsing_toolbar);
-        toolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolbar = (Toolbar) rootView.findViewById(R.id.collapsing_toolbar);
+        mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
@@ -86,7 +108,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
                 @Override
                 public void onDeleteButtonClick(View v) {
-                    File file = new File(item.getPicturePath());
+                     File file = new File(item.getPicturePath());
                     if (file.exists()) {
                         file.delete();
                         onPictureDelete();
@@ -106,6 +128,11 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
+        // global widget reset when destroy
+        mAppBarLayout.setExpanded(true);
+        mPaddingTabs.setVisibility(View.VISIBLE);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
     public abstract void setupDraweeView();

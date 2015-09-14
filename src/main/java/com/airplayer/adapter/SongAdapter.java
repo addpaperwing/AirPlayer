@@ -62,7 +62,10 @@ public class SongAdapter extends AirAdapter {
             } else {
                 int track = item.getTrack();
                 if (track != 0) {
-                    songItemViewHolder.trackNum.setText(track % 1000 + "");
+                    int num = track % 1000;
+                    String numText = "";
+                    if (num != 0) numText = numText + num;
+                    songItemViewHolder.trackNum.setText(numText);
                 }
             }
 

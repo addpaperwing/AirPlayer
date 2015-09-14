@@ -74,6 +74,7 @@ public class AlbumFragment extends SingleItemChildFragment {
 
     @Override
     public void setupDraweeView() {
+        mToolbar.setTitle(mAlbum.getTitle());
         mDraweeView.setImageURI(mAlbum.getAlbumArtUri());
         mDraweeView.setOnClickListener(new OnPictureClickListener(mAlbum, FetchAlbumArtActivity.class) {
             @Override

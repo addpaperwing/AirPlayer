@@ -13,6 +13,7 @@ import android.os.IBinder;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -48,6 +49,7 @@ public class AirMainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
+    private TabLayout mPaddingTabs;
     private NavigationDrawerFragment mNavigationDrawFragment;
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
@@ -157,6 +159,7 @@ public class AirMainActivity extends AppCompatActivity
         // ===== setup tool bar =====
         mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar_layout);
+        mPaddingTabs = (TabLayout) findViewById(R.id.padding_tabs);
 
         // ===== setup navigation drawer fragment =====
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -237,11 +240,27 @@ public class AirMainActivity extends AppCompatActivity
     }
 
     /**
-     * getter of main app bar layout, use for add a TabLayout in { @link com.airplayer.fragment.MyLibraryFragment}
+     * getter of main AppbarLayout, use to add a TabLayout in { @link com.airplayer.fragment.MyLibraryFragment}
      * @return main AppBarLayout
      */
     public AppBarLayout getAppBarLayout() {
         return mAppBarLayout;
+    }
+
+    /**
+     * getter of main PaddingTabs, use to setup a 1px tab to block the hiding action
+     * @return padding tabs
+     */
+    public TabLayout getPaddingTabLayout() {
+        return mPaddingTabs;
+    }
+
+    /**
+     * getter of main DrawerLayout, use to lock in child fragment
+     * @return main DrawerLayout
+     */
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
     }
 
     /**

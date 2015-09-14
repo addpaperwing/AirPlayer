@@ -13,16 +13,14 @@
         android:layout_height="@dimen/dp_384_560"
         android:fitsSystemWindows="true"
         app:expandedTitleMarginStart="48dp"
-        app:expandedTitleMarginEnd="64dp"
-        >
+        app:expandedTitleMarginEnd="64dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorPrimary"
-            >
+            app:contentScrim="?attr/colorPrimary">
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/head_image"

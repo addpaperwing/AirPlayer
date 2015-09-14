@@ -84,6 +84,7 @@ public class ArtistFragment extends SingleItemChildFragment {
 
     @Override
     public void setupDraweeView() {
+        mToolbar.setTitle(mArtist.getName());
         mDraweeView.setImageURI(mArtist.getArtistPictureUri());
         mDraweeView.setOnClickListener(new OnPictureClickListener(mArtist, FetchArtistPictureActivity.class) {
             @Override

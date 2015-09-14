@@ -198,7 +198,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
         executeDownloadTask(MODE_DOWNLOAD_ADD, null);
 
         // ===== setup toolbar =====
-        mToolbar = (Toolbar) findViewById(R.id.suppressible_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.collapsing_toolbar);
 
         // ----- toolbar background color -----
         mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));

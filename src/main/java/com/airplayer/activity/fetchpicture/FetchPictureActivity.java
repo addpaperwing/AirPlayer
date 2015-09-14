@@ -69,24 +69,14 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     public static final String SEARCH_LINK_ALBUM_ART = "https://api.douban.com/v2/music/search?q=";
 
     /**
-<<<<<<< HEAD
      * a link to search a artist picture, use as a param to execute { @link com.airplayer.multitask.DownloadURLTask  }.
      * 查询艺人图片的链接，执行 { @link com.airplayer.multitask.DownloadURLTask } 时作为传入参数。
-=======
-     * a link to search a artist picture, use as a param to execute { @link #DownloadURLTask  }.
-     * 查询艺人图片的链接，执行 { @link #DownloadURLTask } 时作为传入参数。
->>>>>>> master
      */
     public static final String SEARCH_LINK_ARTIST_PICTURE = "http://image.baidu.com/i?tn=baiduimagejson&word=";
 
     /**
-<<<<<<< HEAD
      * Image url array list fetch from { @link com.airplayer.multitask.DownloadURLTask }.
      * 图片 url 的数组列表，从 { @link com.airplayer.multitask.DownloadURLTask } 获取。
-=======
-     * Image url array list fetch from { @link #DownloadURLTask }.
-     * 图片 url 的数组列表，从 { @link #DownloadURLTask } 获取。
->>>>>>> master
      */
     private ArrayList<Picture> mPictureList = new ArrayList<>();
 
@@ -99,13 +89,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     private static final int MSG_DOWNLOAD_PICTURE_FAIL = 2;
 
     /**
-<<<<<<< HEAD
      * What value of message that will be sent when { @link com.airplayer.multitask.DownloadURLTask } download fail.
      * 在 { @link com.airplayer.multitask.DownloadURLTask } 下载失败时发送的 message 的 what 值。
-=======
-     * What value of message that will be sent when { @link #DownloadURLTask } download fail.
-     * 在 { @link #DownloadURLTask } 下载失败时发送的 message 的 what 值。
->>>>>>> master
      */
     private static final int MSG_DOWNLOAD_IMAGE_URL_FAIL = 3;
     private static final int MSG_NO_RESULT_FOUND_OR_DECODE_FAIL = 4;
@@ -272,6 +257,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
+        setupAdapter();
         // ----- ScrollListener -----
         mRecyclerView.addOnScrollListener(new EasyRecyclerViewListener() {
             @Override

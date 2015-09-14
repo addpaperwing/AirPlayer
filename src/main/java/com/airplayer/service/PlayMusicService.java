@@ -177,7 +177,6 @@ public class PlayMusicService extends Service {
                     mEqualizer.setBandLevel(i, (short) sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
                 }
             }
-
             mBassBoost = new BassBoost(0, mPlayer.getAudioSessionId());
             mBassBoost.setStrength((short) sp.getInt(EqualizerFragment.BASS_BOOST, 0));
         }
@@ -192,7 +191,6 @@ public class PlayMusicService extends Service {
         notification = new AirNotification(this);
         notification.cancel();
         Log.d(TAG, "service create");
-
     }
 
     @Override

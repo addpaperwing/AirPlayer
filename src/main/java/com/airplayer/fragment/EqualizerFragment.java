@@ -107,9 +107,12 @@ public class EqualizerFragment extends Fragment {
 
         // ===== seek bars =====
         // ----- band seek bars -----
-        setupBandSeekBar(rootView);
+        if (mEqualizer != null) {
+            setupBandSeekBar(rootView);
+        }
 
         // ----- bass booster -----
+<<<<<<< HEAD
         seekBarBassBoost = (SeekBar) rootView.findViewById(R.id.seek_bar_bass_boost);
         seekBarBassBoost.setMax(1000);
         seekBarBassBoost.setProgress(mBassBoost.getRoundedStrength());
@@ -123,13 +126,29 @@ public class EqualizerFragment extends Fragment {
                 mBassBoost.setStrength((short)progress);
                 sp.edit().putInt(BASS_BOOST, progress).apply();
             }
+=======
+        if (mBassBoost != null) {
+            seekBarBassBoost = (SeekBar) rootView.findViewById(R.id.seek_bar_bass_boost);
+            seekBarBassBoost.setMax(1000);
+            seekBarBassBoost.setProgress(mBassBoost.getRoundedStrength());
+            seekBarBassBoost.setEnabled(mBassBoost.getEnabled());
+            seekBarBassBoost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mBassBoost.setStrength((short) progress);
+                    sp.edit().putInt(BASS_BOOST, progress).apply();
+                }
+>>>>>>> master
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
+        }
 
         return rootView;
     }

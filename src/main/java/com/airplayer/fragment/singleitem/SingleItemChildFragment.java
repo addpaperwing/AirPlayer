@@ -17,9 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.fragment.dialog.MenuDialogFragment;
+
+import com.airplayer.listener.AirScrollListener;
+import com.airplayer.listener.EasyAirScrollListener;
 import com.airplayer.model.PictureGettable;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -63,8 +65,6 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         this.setupRecyclerView(mRecyclerView);
-
-
         return rootView;
     }
 

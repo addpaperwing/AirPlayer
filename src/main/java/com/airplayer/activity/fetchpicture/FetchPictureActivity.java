@@ -69,28 +69,43 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     public static final String SEARCH_LINK_ALBUM_ART = "https://api.douban.com/v2/music/search?q=";
 
     /**
+<<<<<<< HEAD
      * a link to search a artist picture, use as a param to execute { @link com.airplayer.multitask.DownloadURLTask  }.
      * 查询艺人图片的链接，执行 { @link com.airplayer.multitask.DownloadURLTask } 时作为传入参数。
+=======
+     * a link to search a artist picture, use as a param to execute { @link #DownloadURLTask  }.
+     * 查询艺人图片的链接，执行 { @link #DownloadURLTask } 时作为传入参数。
+>>>>>>> master
      */
     public static final String SEARCH_LINK_ARTIST_PICTURE = "http://image.baidu.com/i?tn=baiduimagejson&word=";
 
     /**
+<<<<<<< HEAD
      * Image url array list fetch from { @link com.airplayer.multitask.DownloadURLTask }.
      * 图片 url 的数组列表，从 { @link com.airplayer.multitask.DownloadURLTask } 获取。
+=======
+     * Image url array list fetch from { @link #DownloadURLTask }.
+     * 图片 url 的数组列表，从 { @link #DownloadURLTask } 获取。
+>>>>>>> master
      */
     private ArrayList<Picture> mPictureList = new ArrayList<>();
 
-    /* handle download image task */
+    // handle download image task
     /**
-     * What value of message that will be sent when { @see downloadImage } download succeed.
-     * 在 { @see downloadImage } 方法下载成功时发送的 message 的 what 值。
+     * What value of message that will be sent when { @link #downloadImage } download succeed.
+     * 在 { @link #downloadImage } 方法下载成功时发送的 message 的 what 值。
      */
     private static final int MSG_DOWNLOAD_PICTURE_SUCCEED = 1;
     private static final int MSG_DOWNLOAD_PICTURE_FAIL = 2;
 
     /**
+<<<<<<< HEAD
      * What value of message that will be sent when { @link com.airplayer.multitask.DownloadURLTask } download fail.
      * 在 { @link com.airplayer.multitask.DownloadURLTask } 下载失败时发送的 message 的 what 值。
+=======
+     * What value of message that will be sent when { @link #DownloadURLTask } download fail.
+     * 在 { @link #DownloadURLTask } 下载失败时发送的 message 的 what 值。
+>>>>>>> master
      */
     private static final int MSG_DOWNLOAD_IMAGE_URL_FAIL = 3;
     private static final int MSG_NO_RESULT_FOUND_OR_DECODE_FAIL = 4;
@@ -137,6 +152,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
      * New thread to download picture from @param url to external storage and show a progress.
      * When download succeed send a { @link #MSG_DOWNLOAD_PICTURE_SUCCEED } message.
      * 新建一个线程下载 @param url 中的图片到手机扩展储存，并现实一个进度条。
+     * 新建一个线程下载 url(传入参数) 中的图片到手机扩展储存，并出现一个进度条。
      * 当下载成功时，发送一个 { @link #MSG_DOWNLOAD_PICTURE_SUCCEED } message 。
      * @param url the url of picture when it was clicked. 被点击的图片的url
      */
@@ -198,12 +214,25 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
         // ===== setup toolbar =====
         mToolbar = (Toolbar) findViewById(R.id.suppressible_toolbar);
+
         // ----- toolbar background color -----
         mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
         // ----- toolbar elevation -----
         if (Build.VERSION.SDK_INT >= 21) mToolbar.setElevation(19);
         // ----- toolbar title -----
         mToolbar.setTitle(mQueryKeyword);
+
+
+        // ----- toolbar background color -----
+        mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
+
+        // ----- toolbar elevation -----
+        if (Build.VERSION.SDK_INT >= 21) mToolbar.setElevation(19);
+
+        // ----- toolbar title -----
+        mToolbar.setTitle(mQueryKeyword);
+
+
         // ----- toolbar navigation button -----
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -231,9 +260,11 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
 
         // ===== RecyclerView =====
+        // ===== setup RecyclerView =====
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         final GridLayoutManager manager = new GridLayoutManager(this, 2);
 
+        // ----- LayoutManager -----
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -241,7 +272,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(manager);
-
+        // ----- ScrollListener -----
         mRecyclerView.addOnScrollListener(new EasyRecyclerViewListener() {
             @Override
             public void onScrollToBottom() {
@@ -249,9 +280,9 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 nextPage++;
             }
         });
-
-        setupAdapter();
     }
+
+
 
     @Override
     protected void onNewIntent(Intent intent) {

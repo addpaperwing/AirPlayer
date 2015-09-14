@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -29,22 +30,19 @@ import java.io.File;
 /**
  * Created by ZiyiTsang on 15/6/14.
  */
-public abstract class SingleItemChildFragment extends Fragment implements SettableRecyclerView {
+public abstract class SingleItemChildFragment extends Fragment implements SettableFragmentView {
 
     private static final String TAG = SingleItemChildFragment.class.getSimpleName();
 
+    // ===== views and widgets =====
     private RecyclerView mRecyclerView;
-
     private FragmentManager mFragmentManager;
-
     protected SimpleDraweeView mDraweeView;
-
     protected Toolbar mToolbar;
 
     // ===== global widget setting =====
     private AppBarLayout mAppBarLayout;
     private TabLayout mPaddingTabs;
-
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -55,18 +53,15 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
         // ===== Invisible main app bar =====
         mAppBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
         mPaddingTabs = ((AirMainActivity) getActivity()).getPaddingTabLayout();
-        mPaddingTabs.setVisibility(View.GONE);
-        mAppBarLayout.setExpanded(false);
 
         // ===== lock DrawerLayout =====
         mDrawerLayout = ((AirMainActivity) getActivity()).getDrawerLayout();
-        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recycler_collapsing_toolbar, container, false);
+        View rootView = inflater.inflate(getRootViewId(), container, false);
 
         mToolbar = (Toolbar) rootView.findViewById(R.id.collapsing_toolbar);
         mToolbar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
@@ -77,12 +72,24 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
             }
         });
 
+        setupFab(rootView);
+
         mDraweeView = (SimpleDraweeView) rootView.findViewById(R.id.head_image);
         setupDraweeView();
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         this.setupRecyclerView(mRecyclerView);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // hide or lock global widget when resume
+        mPaddingTabs.setVisibility(View.GONE);
+        mAppBarLayout.setExpanded(false);
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
 
     /* package */ abstract class OnPictureClickListener implements View.OnClickListener {
@@ -136,4 +143,6 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
     }
 
     public abstract void setupDraweeView();
+
+    public void setupFab(View rootView) {}
 }

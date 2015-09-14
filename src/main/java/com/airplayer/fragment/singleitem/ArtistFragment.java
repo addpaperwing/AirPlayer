@@ -105,6 +105,11 @@ public class ArtistFragment extends SingleItemChildFragment {
         }
     }
 
+    @Override
+    public int getRootViewId() {
+        return R.layout.recycler_collapsing_toolbar_no_fab;
+    }
+
     private class ArtistAlbumAdapter extends AlbumAdapter {
 
         public ArtistAlbumAdapter(Context context, List<Album> list) {

@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -129,7 +131,16 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 default:
                     return;
             }
-            Toast.makeText(FetchPictureActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
+            Snackbar.make(mCoordinatorLayout, toastMessage, Snackbar.LENGTH_SHORT).setAction("Retry", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (adapter.getList().size() > 0) {
+                        onFetchMorePictures(nextPage);
+                    } else {
+                        executeDownloadTask(MODE_DOWNLOAD_REPLACE, null);
+                    }
+                }
+            }).show();
         }
     };
 
@@ -165,13 +176,20 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     protected static final int MODE_DOWNLOAD_REPLACE = 0;
     protected static final int MODE_DOWNLOAD_ADD = 1;
 
-    private RecyclerView mRecyclerView;
+    // ===== views and widgets =====
+    // ----- Root CoordinatorLayout -----
+    private CoordinatorLayout mCoordinatorLayout;
 
+    // ----- RecyclerView -----
+    private RecyclerView mRecyclerView;
+    // ----- RecyclerAdapter -----
+    private FPAdapter adapter;
+
+    // ----- SwipeRefreshLayout -----
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    // ----- Toolbar -----
     private Toolbar mToolbar;
-
-    private FPAdapter adapter;
 
     private int nextPage = 2;
 
@@ -179,6 +197,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recycler_swipe_refresh);
+
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.fetch_picture_root_view);
 
         if (mQueryKeyword == null) {
             mQueryKeyword = getIntent().getStringExtra(EXTRA_QUERY_KEYWORD);

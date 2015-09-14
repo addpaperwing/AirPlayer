@@ -58,6 +58,17 @@ public class AlbumFragment extends SingleItemChildFragment {
         mSongList = AirModelSingleton.getInstance(getActivity()).getAlbumSong(mAlbum.getTitle());
     }
 
+    @Override
+    public void setupFab(View rootView) {
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinder.playMusic(0, mSongList);
+            }
+        });
+    }
+
     public void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         AlbumSongAdapter adapter = new AlbumSongAdapter(getActivity(), mSongList);
@@ -75,6 +86,7 @@ public class AlbumFragment extends SingleItemChildFragment {
     @Override
     public void setupDraweeView() {
         mToolbar.setTitle(mAlbum.getTitle());
+
         mDraweeView.setImageURI(mAlbum.getAlbumArtUri());
         mDraweeView.setOnClickListener(new OnPictureClickListener(mAlbum, FetchAlbumArtActivity.class) {
             @Override
@@ -93,6 +105,11 @@ public class AlbumFragment extends SingleItemChildFragment {
                 mDraweeView.setImageURI(mAlbum.getAlbumArtUri());
             }
         }
+    }
+
+    @Override
+    public int getRootViewId() {
+        return R.layout.recycler_collapsing_toolbar;
     }
 
     public class AlbumSongAdapter extends SongAdapter {

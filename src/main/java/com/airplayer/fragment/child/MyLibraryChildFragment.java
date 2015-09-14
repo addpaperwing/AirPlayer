@@ -9,12 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airplayer.R;
-import com.airplayer.fragment.singleitem.SettableRecyclerView;
+import com.airplayer.fragment.singleitem.SettableFragmentView;
 
 /**
  * Created by ZiyiTsang on 15/6/9.
  */
-public abstract class MyLibraryChildFragment extends Fragment implements SettableRecyclerView {
+public abstract class MyLibraryChildFragment extends Fragment implements SettableFragmentView {
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,12 +24,17 @@ public abstract class MyLibraryChildFragment extends Fragment implements Settabl
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_recycler, container, false);
+        View rootView = inflater.inflate(getRootViewId(), container, false);
 
         //find a recycler view and set it up
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         setupRecyclerView(recyclerView);
 
         return rootView;
+    }
+
+    @Override
+    public int getRootViewId() {
+        return R.layout.fragment_recycler;
     }
 }

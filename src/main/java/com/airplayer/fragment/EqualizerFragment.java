@@ -112,28 +112,10 @@ public class EqualizerFragment extends Fragment {
         }
 
         // ----- bass booster -----
-        seekBarBassBoost = (SeekBar) rootView.findViewById(R.id.seek_bar_bass_boost);
-        seekBarBassBoost.setMax(1000);
-        seekBarBassBoost.setProgress(mBassBoost.getRoundedStrength());
-        seekBarBassBoost.setEnabled(mBassBoost.getEnabled());
-        seekBarBassBoost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (mBassBoost != null) {
+            setupBassBoostSeekBar(rootView);
+        }
 
-                if (mBassBoost == null) return;
-
-                mBassBoost.setStrength((short)progress);
-                sp.edit().putInt(BASS_BOOST, progress).apply();
-            }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                }
-            });
         return rootView;
     }
 
@@ -191,6 +173,31 @@ public class EqualizerFragment extends Fragment {
                 public void onStopTrackingTouch(SeekBar seekBar) { }
             });
         }
+    }
+
+    private void setupBassBoostSeekBar(View rootView) {
+        seekBarBassBoost = (SeekBar) rootView.findViewById(R.id.seek_bar_bass_boost);
+        seekBarBassBoost.setMax(1000);
+        seekBarBassBoost.setProgress(mBassBoost.getRoundedStrength());
+        seekBarBassBoost.setEnabled(mBassBoost.getEnabled());
+        seekBarBassBoost.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (mBassBoost == null) return;
+
+                mBassBoost.setStrength((short)progress);
+                sp.edit().putInt(BASS_BOOST, progress).apply();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
     }
 
     private void updateBandSeekBarProgress() {

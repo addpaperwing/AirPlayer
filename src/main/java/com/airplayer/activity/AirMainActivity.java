@@ -113,6 +113,7 @@ public class AirMainActivity extends AppCompatActivity
         int[] attrsArray = { R.attr.actionBarSize };
         TypedArray typedArray = obtainStyledAttributes(attrsArray);
         mSize = typedArray.getDimensionPixelOffset(0, defaultInt);
+        typedArray.recycle();
 
         // ===== bind service =====
         Intent playMusicServiceIntent = new Intent(this, PlayMusicService.class);

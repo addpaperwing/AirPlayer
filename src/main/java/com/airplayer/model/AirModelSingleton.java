@@ -142,7 +142,7 @@ public class AirModelSingleton {
             }
         });
 
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < freqAlbums.size(); i++) {
             if (sActivityAlbums.size() == 12) {
                 sActivityAlbums.remove(6);
             }

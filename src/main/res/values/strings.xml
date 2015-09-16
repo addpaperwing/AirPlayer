@@ -43,11 +43,9 @@
 
     <string name="equalizer_text_desc">Enable global equalizer</string>
 
-    <string-array name="toolbar_title_array">
-        <item>Activities</item>
-        <item>My Library</item>
-        <item>Equalizer</item>
-    </string-array>
+    <string name="toolbar_title_recent">Recent</string>
+    <string name="toolbar_title_Library">Library</string>
+    <string name="toolbar_title_equalizer">Equalizer</string>
 
     <string-array name="tab_item_array">
         <item>Artists</item>

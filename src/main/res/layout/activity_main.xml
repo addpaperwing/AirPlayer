@@ -56,13 +56,12 @@
 
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
-    <fragment
+    <android.support.design.widget.NavigationView
         android:id="@+id/navigation_drawer"
         android:layout_width="@dimen/drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.airplayer.fragment.NavigationDrawerFragment"
-        android:layout="@layout/fragment_navigation_drawer"
-        tools:layout="@layout/fragment_navigation_drawer" />
+        app:menu="@menu/menu_navigation"
+        />
 
 </android.support.v4.widget.DrawerLayout>

@@ -1,7 +1,6 @@
-package com.airplayer.fragment.child;
+package com.airplayer.fragment.libchild;
 
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;

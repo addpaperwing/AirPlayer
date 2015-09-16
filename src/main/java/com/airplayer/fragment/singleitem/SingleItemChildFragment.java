@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -52,7 +51,7 @@ public abstract class SingleItemChildFragment extends Fragment implements Settab
 
         // ===== Invisible main app bar =====
         mAppBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
-        mPaddingTabs = ((AirMainActivity) getActivity()).getPaddingTabLayout();
+        mPaddingTabs = ((AirMainActivity) getActivity()).getTabLayout();
 
         // ===== lock DrawerLayout =====
         mDrawerLayout = ((AirMainActivity) getActivity()).getDrawerLayout();

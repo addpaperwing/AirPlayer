@@ -1,7 +1,5 @@
-package com.airplayer.fragment.child;
+package com.airplayer.fragment.libchild;
 
-import android.content.Intent;
-import android.provider.MediaStore;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;

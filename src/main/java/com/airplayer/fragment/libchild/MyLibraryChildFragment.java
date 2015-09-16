@@ -1,4 +1,4 @@
-package com.airplayer.fragment.child;
+package com.airplayer.fragment.libchild;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

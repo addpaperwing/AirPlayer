@@ -11,21 +11,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.activity.fetchpicture.FetchArtistPictureActivity;
-import com.airplayer.activity.fetchpicture.FetchPictureActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
 import com.airplayer.model.Artist;
 import com.airplayer.model.PictureGettable;
-import com.airplayer.util.BitmapUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -119,7 +114,7 @@ public class ArtistFragment extends SingleItemChildFragment {
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new ArtistAlbumHeader(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_image, parent, false));
+                    .inflate(R.layout.recycler_header_title_detail, parent, false));
         }
 
         @Override

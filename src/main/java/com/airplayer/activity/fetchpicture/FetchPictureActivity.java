@@ -131,7 +131,7 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 default:
                     return;
             }
-            Snackbar.make(mCoordinatorLayout, toastMessage, Snackbar.LENGTH_SHORT).setAction("Retry", new View.OnClickListener() {
+            Snackbar.make(mCoordinatorLayout, toastMessage, Snackbar.LENGTH_LONG).setAction("Retry", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (adapter.getList().size() > 0) {

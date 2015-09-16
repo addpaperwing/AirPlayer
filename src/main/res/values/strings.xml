@@ -13,7 +13,7 @@
     <string name="action_pause">pause</string>
     <string name="action_play_list">play list</string>
 
-    <string name="navigation_top_hint">click to set up a theme picture</string>
+    <string name="navigation_top_hint">click to set up a background</string>
     <string name="navigation_top_toast">Picture is too large</string>
 
     <string name="fetch_picture_from_internet">Fetch picture from internet</string>
@@ -41,13 +41,9 @@
     <string name="image_button_content_desc_next">next</string>
     <string name="image_button_content_desc_shuffle">shuffle</string>
 
-    <string name="equalizer_text_desc">Enable global equalizer</string>
-
-    <string-array name="toolbar_title_array">
-        <item>Activities</item>
-        <item>My Library</item>
-        <item>Equalizer</item>
-    </string-array>
+    <string name="toolbar_title_recent">Recent</string>
+    <string name="toolbar_title_Library">Library</string>
+    <string name="toolbar_title_equalizer">Equalizer</string>
 
     <string-array name="tab_item_array">
         <item>Artists</item>

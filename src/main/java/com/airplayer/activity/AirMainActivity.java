@@ -1,5 +1,6 @@
 package com.airplayer.activity;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -7,50 +8,95 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airplayer.fragment.EqualizerFragment;
 import com.airplayer.fragment.MyLibraryFragment;
-import com.airplayer.fragment.NavigationDrawerFragment;
-import com.airplayer.fragment.PlayNowFragment;
+import com.airplayer.fragment.RecentFragment;
 import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.model.AirModel;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.service.PlayMusicService;
+import com.airplayer.util.BitmapUtils;
+import com.airplayer.util.StorageUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
+import java.io.File;
 
-public class AirMainActivity extends AppCompatActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+public class AirMainActivity extends AppCompatActivity {
 
     public static final String TAG = "AirMainActivity";
 
     public static final String EXTERNAL_PICTURE_FOLDER = Environment.getExternalStoragePublicDirectory(
             Environment.DIRECTORY_PICTURES).getPath() + "/AirPlayer/";
 
+    // handle replace theme picture operation
+    public static final int PICK_PHOTO = 9;
+
+    // what value of message instance that handle the pictures of NavigationView
+    private static final int MSG_SAVE_THEME_PICTURE_SUCCEED = 3;
+    private static final int MSG_SAVE_THEME_PICTURE_FAIL = 2;
+
+    // mProgress dialog when saving background picture
+    private ProgressDialog mProgress;
+
+    // thread to save bitmap of draweeView which is the head of NavigationView
+    private void saveBitmapTask(final Bitmap bitmap, final Uri uri) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message msg = new Message();
+                try {
+                    StorageUtils.saveImage(AirMainActivity.this, "Theme.jpg", bitmap);
+                    msg.what = MSG_SAVE_THEME_PICTURE_SUCCEED;
+                    msg.obj = uri;
+                } catch (Exception e) {
+                    msg.what = MSG_SAVE_THEME_PICTURE_FAIL;
+                } finally {
+                    handler.sendMessage(msg);
+                }
+            }
+        }).start();
+    }
+
     // ===== user interface =====
+    // ----- Left NavigationView -----
     private DrawerLayout mDrawerLayout;
+    private NavigationView mNavigationView;
+    private SimpleDraweeView mNavigationHeadDraweeView;
+    private TextView mNavigationHintTextView;
+
+    // ----- Top ActionBar -----
     private Toolbar mToolbar;
     private AppBarLayout mAppBarLayout;
-    private TabLayout mPaddingTabs;
-    private NavigationDrawerFragment mNavigationDrawFragment;
+    private TabLayout mTabs;
+
+    // ----- Bottom SlidingUpPanel
     private SlidingUpPanelLayout mSlidingUpPanelLayout;
 
     // ===== service =====
@@ -94,6 +140,18 @@ public class AirMainActivity extends AppCompatActivity
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
                 mSlidingUpPanelLayout.setPanelHeight((int) msg.obj);
+            } else if (msg.what == MSG_SAVE_THEME_PICTURE_FAIL || msg.what == MSG_SAVE_THEME_PICTURE_SUCCEED) {
+                mProgress.dismiss();
+                switch (msg.what) {
+                    case MSG_SAVE_THEME_PICTURE_SUCCEED:
+                        setNavigationImage((Uri) msg.obj);
+                        break;
+                    case MSG_SAVE_THEME_PICTURE_FAIL:
+                        Toast.makeText(AirMainActivity.this,
+                                "fail to save picture into external storage",
+                                Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         }
     };
@@ -108,7 +166,7 @@ public class AirMainActivity extends AppCompatActivity
         AirModel.initModels(this);
         setContentView(R.layout.activity_main);
 
-        // ===== get actionbarSize in attr
+        // ===== get actionbarSize in attrs =====
         int defaultInt = getResources().getDimensionPixelOffset(R.dimen.sliding_up_fragment_bottom_bar_height);
         int[] attrsArray = { R.attr.actionBarSize };
         TypedArray typedArray = obtainStyledAttributes(attrsArray);
@@ -121,7 +179,7 @@ public class AirMainActivity extends AppCompatActivity
         startService(playMusicServiceIntent);
         bindService(playMusicServiceIntent, connection, BIND_AUTO_CREATE);
 
-        // ===== get sliding up panel and set panel slide listener =====
+        // ===== getup sliding up panel and set a listener =====
         mSlidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_up_panel_layout);
         mSlidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
@@ -160,15 +218,16 @@ public class AirMainActivity extends AppCompatActivity
         // ===== setup tool bar =====
         mToolbar = (Toolbar) findViewById(R.id.global_toolbar);
         mAppBarLayout = (AppBarLayout) findViewById(R.id.main_appbar_layout);
-        mPaddingTabs = (TabLayout) findViewById(R.id.padding_tabs);
+        mTabs = (TabLayout) findViewById(R.id.tabs);
 
         // ===== setup navigation drawer fragment =====
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mNavigationDrawFragment = (NavigationDrawerFragment) mFragmentManager
-                .findFragmentById(R.id.navigation_drawer);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+        setupNavigationDrawer();
+        mNavigationView.setCheckedItem(R.id.action_recent);
+        onNavigationDrawItemSelected(0);
 
-        mNavigationDrawFragment.setUp(R.id.navigation_drawer, mDrawerLayout);
-
+        // ===== setup and register receiver =====
         mPlayerStateReceiver = new PlayerStateReceiver();
         IntentFilter filter = new IntentFilter(PlayMusicService.PLAY_STATE_CHANGE);
         registerReceiver(mPlayerStateReceiver, filter);
@@ -177,11 +236,23 @@ public class AirMainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
-            if (requestCode == PictureGettable.REQUEST_CODE_FETCH_PICTURE) {
-                mFragmentManager.findFragmentById(R.id.fragment_container)
-                        .onActivityResult(requestCode, resultCode, data);
-            } else {
-                super.onActivityResult(requestCode, resultCode, data);
+            switch (requestCode) {
+                case PictureGettable.REQUEST_CODE_FETCH_PICTURE:
+                    mFragmentManager.findFragmentById(R.id.fragment_container)
+                            .onActivityResult(requestCode, resultCode, data);
+                    break;
+                case PICK_PHOTO:
+                    Uri uri = data.getData();
+                    Bitmap bm = BitmapUtils.getBitmap(this, uri);
+                    if (bm.getByteCount() > 5120000) {
+                        Toast.makeText(this, R.string.navigation_top_toast, Toast.LENGTH_SHORT).show();
+                    } else {
+                        mProgress = new ProgressDialog(this);
+                        mProgress.setMessage("saving picture");
+                        mProgress.show();
+                        saveBitmapTask(bm, uri);
+                    }
+                    break;
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -198,8 +269,8 @@ public class AirMainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mNavigationDrawFragment.getDrawerLayout().isDrawerOpen(GravityCompat.START)) {
-            mNavigationDrawFragment.getDrawerLayout().closeDrawer(GravityCompat.START);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawers();
         } else if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             if (mPlayMusicFragment.isPlayListShow()) {
                 super.onBackPressed();
@@ -221,15 +292,137 @@ public class AirMainActivity extends AppCompatActivity
     }
 
     /**
-     * implements the NavigationDrawerCallbacks
+     * a convenient method to package codes of setting up NavigationView
+     */
+    private void setupNavigationDrawer() {
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        final ActionBarDrawerToggle toggle;
+
+        toggle = new ActionBarDrawerToggle(
+                AirMainActivity.this,
+                mDrawerLayout,
+                mToolbar,
+                R.string.app_name,
+                R.string.app_name
+        );
+
+        mDrawerLayout.setDrawerListener(toggle);
+
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDrawerLayout.isDrawerOpen(mNavigationView)) {
+                    mDrawerLayout.closeDrawers();
+                } else {
+                    mDrawerLayout.openDrawer(mNavigationView);
+                }
+            }
+        });
+
+        mDrawerLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                toggle.syncState();
+            }
+        });
+
+        mNavigationView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+                        menuItem.setChecked(true);
+                        mDrawerLayout.closeDrawers();
+
+                        int position;
+                        switch (menuItem.getItemId()) {
+                            case R.id.action_recent:
+                                position = 0;
+                                break;
+                            case R.id.action_library:
+                                position = 1;
+                                break;
+                            case R.id.action_equalizer:
+                                position = 2;
+                                break;
+                            default:
+                                position = -1;
+                                break;
+                        }
+                        onNavigationDrawItemSelected(position);
+                        return true;
+                    }
+                });
+
+        setupNavigationHeadView();
+    }
+
+    private void setupNavigationHeadView() {
+        View headView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
+        mNavigationHeadDraweeView = (SimpleDraweeView) headView.findViewById(R.id.navigation_image);
+        mNavigationHintTextView = (TextView) headView.findViewById(R.id.navigation_top_image_hint);
+        setNavigationImage(null);
+        mNavigationHeadDraweeView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, PICK_PHOTO);
+            }
+        });
+    }
+
+    private void setNavigationImage(Uri uri) {
+        if (uri == null) {
+            File file = new File(AirMainActivity.EXTERNAL_PICTURE_FOLDER + "Theme.jpg");
+            if (file.exists()) {
+                uri = Uri.fromFile(file);
+            } else {
+                mNavigationHintTextView.setVisibility(View.VISIBLE);
+                return;
+            }
+        }
+        mNavigationHeadDraweeView.setImageURI(uri);
+        mNavigationHintTextView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * handle NavigationDraw selected action
      * @param position of NavigationDrawer item selected
      */
-    @Override
-    public void onNavigationDrawItemSelected(int position) {
-        String[] titles = getResources().getStringArray(R.array.toolbar_title_array);
+    private void onNavigationDrawItemSelected(int position) {
+        if (position == -1) return;
+        String[] titles = { getResources().getString(R.string.toolbar_title_recent), getResources().getString(R.string.toolbar_title_Library), getResources().getString(R.string.toolbar_title_equalizer) };
         mToolbar.setTitle(titles[position]);
         mFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, switchFragment(position)).commit();
+    }
+
+    /**
+     * a convenient method to switch fragment with the position of selected item
+     * @param position of selected item
+     * @return a new Fragment whose name was selected in NavigationDrawer
+     */
+    private Fragment switchFragment(int position) {
+
+        // pop all fragments in back stack
+        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        // set play list is not showing when it popped
+        if (mPlayMusicFragment != null) {
+            mPlayMusicFragment.setIsPlayListShow(false);
+        }
+
+        switch (position) {
+            case 0:
+                return new RecentFragment();
+            case 1:
+                return new MyLibraryFragment();
+            case 2:
+                return new EqualizerFragment();
+            default:
+                return null;
+        }
     }
 
     /**
@@ -252,8 +445,8 @@ public class AirMainActivity extends AppCompatActivity
      * getter of main PaddingTabs, use to setup a 1px tab to block the hiding action
      * @return padding tabs
      */
-    public TabLayout getPaddingTabLayout() {
-        return mPaddingTabs;
+    public TabLayout getTabLayout() {
+        return mTabs;
     }
 
     /**
@@ -297,33 +490,6 @@ public class AirMainActivity extends AppCompatActivity
                     toolbar.inflateMenu(R.menu.menu_sliding_panel_down_play_menu);
                 }
             }
-        }
-    }
-
-    /**
-     * a convenient method to switch fragment with the position of selected item
-     * @param position of selected item
-     * @return a new Fragment whose name was selected in NavigationDrawer
-     */
-    private Fragment switchFragment(int position) {
-
-        // pop all fragments in back stack
-        mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-
-        // set play list is not showing when it popped
-        if (mPlayMusicFragment != null) {
-            mPlayMusicFragment.setIsPlayListShow(false);
-        }
-
-        switch (position) {
-            case 0:
-                return new PlayNowFragment();
-            case 1:
-                return new MyLibraryFragment();
-            case 2:
-                return new EqualizerFragment();
-            default:
-                return null;
         }
     }
 

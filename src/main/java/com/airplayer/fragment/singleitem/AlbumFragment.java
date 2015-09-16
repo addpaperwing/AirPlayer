@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airplayer.R;
@@ -22,8 +21,6 @@ import com.airplayer.model.Album;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.model.Song;
 import com.airplayer.service.PlayMusicService;
-import com.airplayer.util.BitmapUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
@@ -121,7 +118,7 @@ public class AlbumFragment extends SingleItemChildFragment {
         @Override
         public AirHeadViewHolder onCreateHeadViewHolder(ViewGroup parent) {
             return new AlbumSongHeader(getLayoutInflater()
-                    .inflate(R.layout.recycler_header_image, parent, false));
+                    .inflate(R.layout.recycler_header_title_detail, parent, false));
         }
 
         @Override

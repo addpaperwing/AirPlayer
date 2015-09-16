@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -30,7 +31,7 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/4.
  */
-public class PlayNowFragment extends Fragment {
+public class RecentFragment extends Fragment {
 
     private List<Album> mActivityAlbums;
     private RecyclerView mRecyclerView;
@@ -82,6 +83,13 @@ public class PlayNowFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        TabLayout tabLayout = ((AirMainActivity) getActivity()).getTabLayout();
+        tabLayout.setVisibility(View.GONE);
     }
 
     private int correctPosition(int position) {

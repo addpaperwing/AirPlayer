@@ -15,12 +15,6 @@
 
         <item name="colorPrimary">@color/air_dark_primary_color</item>
 
-        <item name="android:textColor">@color/air_text_and_icon</item>
-
         <item name="colorAccent">@color/air_accent_color</item>
-
-        <item name="android:textColorPrimary">@color/air_text_and_icon</item>
-
-        <item name="android:textColorSecondary">@color/air_text_and_icon</item>
     </style>
 </resources>

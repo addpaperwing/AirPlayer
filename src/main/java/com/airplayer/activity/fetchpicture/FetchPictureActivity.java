@@ -285,7 +285,6 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             mToolbar.setTitle(mQueryKeyword);
         }
         executeDownloadTask(MODE_DOWNLOAD_REPLACE);
-
     }
 
     /**

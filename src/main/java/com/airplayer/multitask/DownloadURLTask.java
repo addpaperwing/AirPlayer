@@ -1,6 +1,7 @@
 package com.airplayer.multitask;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.airplayer.model.Picture;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
  * Created by ZiyiTsang on 15/7/12.
  */
 public abstract class DownloadURLTask extends AsyncTask<String, Void, ArrayList<Picture>> {
+
+    private boolean isError;
 
     @Override
     protected ArrayList<Picture> doInBackground(String... params) {
@@ -35,7 +38,8 @@ public abstract class DownloadURLTask extends AsyncTask<String, Void, ArrayList<
             }
             return decodeJson(response.toString());
         } catch (IOException e) {
-                onError(e);
+            onError(e);
+            isError = true;
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -46,6 +50,10 @@ public abstract class DownloadURLTask extends AsyncTask<String, Void, ArrayList<
 
     @Override
     protected void onPostExecute(ArrayList<Picture> list) {
+        if (isError) {
+            isError = false;
+            return;
+        }
         onFinish(list);
     }
 

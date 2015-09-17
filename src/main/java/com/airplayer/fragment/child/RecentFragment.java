@@ -1,16 +1,12 @@
-package com.airplayer.fragment;
+package com.airplayer.fragment.child;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airplayer.R;
-import com.airplayer.activity.AirMainActivity;
 import com.airplayer.adapter.AirAdapter;
 import com.airplayer.adapter.AlbumAdapter;
+import com.airplayer.fragment.child.HideTabsChildFragment;
 import com.airplayer.fragment.singleitem.AlbumFragment;
 import com.airplayer.model.AirModelSingleton;
 import com.airplayer.model.Album;
@@ -31,7 +27,7 @@ import java.util.List;
 /**
  * Created by ZiyiTsang on 15/6/4.
  */
-public class RecentFragment extends Fragment {
+public class RecentFragment extends HideTabsChildFragment {
 
     private List<Album> mActivityAlbums;
     private RecyclerView mRecyclerView;
@@ -43,10 +39,6 @@ public class RecentFragment extends Fragment {
         AirModelSingleton singleton = AirModelSingleton.getInstance(getActivity());
         mActivityAlbums = singleton.getActivityAlbums();
         mRecentAlbumsSize = singleton.getRecentAlbumsSize();
-
-        // ===== AppbarLayout =====
-        AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
-        appBarLayout.setExpanded(true);
     }
 
     @Nullable
@@ -83,13 +75,6 @@ public class RecentFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
 
         return rootView;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        TabLayout tabLayout = ((AirMainActivity) getActivity()).getTabLayout();
-        tabLayout.setVisibility(View.GONE);
     }
 
     private int correctPosition(int position) {

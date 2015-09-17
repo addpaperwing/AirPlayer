@@ -15,7 +15,7 @@ import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-import com.airplayer.fragment.EqualizerFragment;
+import com.airplayer.fragment.child.EqualizerFragment;
 import com.airplayer.model.Song;
 import com.airplayer.notification.AirNotification;
 

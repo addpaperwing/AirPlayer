@@ -31,9 +31,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airplayer.fragment.EqualizerFragment;
-import com.airplayer.fragment.MyLibraryFragment;
-import com.airplayer.fragment.RecentFragment;
+import com.airplayer.fragment.child.EqualizerFragment;
+import com.airplayer.fragment.child.MyLibraryFragment;
+import com.airplayer.fragment.child.RecentFragment;
 import com.airplayer.R;
 import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.model.AirModel;
@@ -434,7 +434,7 @@ public class AirMainActivity extends AppCompatActivity {
     }
 
     /**
-     * getter of main AppbarLayout, use to add a TabLayout in { @link com.airplayer.fragment.MyLibraryFragment}
+     * getter of main AppbarLayout, use to add a TabLayout in { @link com.airplayer.fragment.child.MyLibraryFragment}
      * @return main AppBarLayout
      */
     public AppBarLayout getAppBarLayout() {

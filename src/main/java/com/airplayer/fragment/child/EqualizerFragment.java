@@ -1,4 +1,4 @@
-package com.airplayer.fragment;
+package com.airplayer.fragment.child;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,10 +10,7 @@ import android.media.audiofx.Equalizer;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,18 +18,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.support.v7.widget.Toolbar;
 
 import com.airplayer.R;
 import com.airplayer.activity.AirMainActivity;
-import com.airplayer.service.PlayMusicService;
 
 import java.util.ArrayList;
 
 /**
  * Created by ZiyiTsang on 15/8/11.
  */
-public class EqualizerFragment extends Fragment {
+public class EqualizerFragment extends ChildFragment {
 
     private static final String TAG = EqualizerFragment.class.getSimpleName();
 
@@ -63,10 +58,6 @@ public class EqualizerFragment extends Fragment {
         receiver = new HeadsetPlugReceiver();
         IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         activity.registerReceiver(receiver, filter);
-
-        // ===== AppbarLayout =====
-        AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
-        appBarLayout.setExpanded(true);
     }
 
     @Nullable

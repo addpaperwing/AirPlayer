@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.EditText;
 import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
@@ -209,30 +210,13 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                executeDownloadTask(MODE_DOWNLOAD_REPLACE, null);
+                executeDownloadTask(MODE_DOWNLOAD_REPLACE);
             }
         });
         mSwipeRefreshLayout.setColorSchemeResources(R.color.air_accent_color);
 
-        // task to download a array list of image links
-        executeDownloadTask(MODE_DOWNLOAD_ADD, null);
-
         // ===== setup toolbar =====
         mToolbar = (Toolbar) findViewById(R.id.collapsing_toolbar);
-
-        // ----- toolbar background color -----
-        mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-        // ----- toolbar elevation -----
-        if (Build.VERSION.SDK_INT >= 21) mToolbar.setElevation(19);
-        // ----- toolbar title -----
-        mToolbar.setTitle(mQueryKeyword);
-
-
-        // ----- toolbar background color -----
-        mToolbar.setBackgroundColor(getResources().getColor(R.color.air_dark_primary_color));
-
-        // ----- toolbar elevation -----
-        if (Build.VERSION.SDK_INT >= 21) mToolbar.setElevation(19);
 
         // ----- toolbar title -----
         mToolbar.setTitle(mQueryKeyword);
@@ -265,11 +249,11 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
 
 
         // ===== RecyclerView =====
-        // ===== setup RecyclerView =====
+        // ----- setup RecyclerView -----
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         final GridLayoutManager manager = new GridLayoutManager(this, 2);
 
-        // ----- LayoutManager -----
+        // ----- LayoutManager and Adapter -----
         manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
@@ -288,7 +272,11 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
         });
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        executeDownloadTask(MODE_DOWNLOAD_ADD);
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -296,7 +284,8 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
             mQueryKeyword = intent.getStringExtra(SearchManager.QUERY);
             mToolbar.setTitle(mQueryKeyword);
         }
-        executeDownloadTask(MODE_DOWNLOAD_REPLACE, null);
+        executeDownloadTask(MODE_DOWNLOAD_REPLACE);
+
     }
 
     /**
@@ -332,6 +321,10 @@ public abstract class FetchPictureActivity extends AppCompatActivity {
                 image = (SimpleDraweeView) itemView.findViewById(R.id.simple_drawee_view_item);
             }
         }
+    }
+
+    protected void executeDownloadTask(int downloadMod) {
+        this.executeDownloadTask(downloadMod, null);
     }
 
     protected void executeDownloadTask(final int downloadMod, String otherParam) {

@@ -1,9 +1,8 @@
-package com.airplayer.fragment;
+package com.airplayer.fragment.child;
 
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,18 +22,9 @@ import com.airplayer.fragment.libchild.SongListFragment;
 /**
  * Created by ZiyiTsang on 15/6/2.
  */
-public class MyLibraryFragment extends Fragment {
+public class MyLibraryFragment extends ChildFragment {
 
     public static final String TAG = MyLibraryFragment.class.getSimpleName();
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // ===== AppbarLayout =====
-        AppBarLayout appBarLayout = ((AirMainActivity) getActivity()).getAppBarLayout();
-        appBarLayout.setExpanded(true);
-    }
 
     @Nullable
     @Override

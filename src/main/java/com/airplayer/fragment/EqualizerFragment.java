@@ -78,8 +78,8 @@ public class EqualizerFragment extends Fragment {
         spinner = (Spinner) rootView.findViewById(R.id.equalizer_spinner);
         ArrayList<String> presets = getPresets();
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>
-                (getActivity(), R.layout.spinner_item_equalizer, presets);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_item_equalizer);
+                (getActivity(), android.R.layout.simple_dropdown_item_1line, presets);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(sp.getInt(EQUALIZER_GENRES, 0));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -29,6 +29,10 @@
     <string name="toast_download_fail">Download fail, please check out network connection.</string>
     <string name="toast_no_result_found_or_decode_fail">No result found or decode fail.</string>
 
+    <string name="hint_msg_permission_denied">Air player needs permission to get your local music, and save pics in your phone</string>
+    <string name="grant_permission">grant permission</string>
+    <string name="snack_action_finish_app">finish</string>
+
     <string name="searchable_hint_album_art">Search album art</string>
     <string name="searchable_hint_artist_picture">Search artist picture</string>
 

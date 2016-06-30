@@ -165,21 +165,23 @@ public class PlayMusicService extends Service {
         });
 
         // ===== create Equalizer =====
-        if (!isEmulatorByImei(getApplicationContext())) {
-            mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
-            mEqualizer.setEnabled(true);
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-            int genres = sp.getInt(EqualizerFragment.EQUALIZER_GENRES, 0);
-            if (genres < mEqualizer.getNumberOfPresets()) {
-                mEqualizer.usePreset((short) genres);
-            } else {
-                for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
-                    mEqualizer.setBandLevel(i, (short) sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
-                }
+//        if (!isEmulatorByImei(getApplicationContext())) {
+//
+//        }
+
+        mEqualizer = new Equalizer(0, mPlayer.getAudioSessionId());
+        mEqualizer.setEnabled(true);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        int genres = sp.getInt(EqualizerFragment.EQUALIZER_GENRES, 0);
+        if (genres < mEqualizer.getNumberOfPresets()) {
+            mEqualizer.usePreset((short) genres);
+        } else {
+            for (short i = 0; i < mEqualizer.getNumberOfBands(); i++) {
+                mEqualizer.setBandLevel(i, (short) sp.getInt(EqualizerFragment.EQUALIZER_USER_BAND + i, 0));
             }
-            mBassBoost = new BassBoost(0, mPlayer.getAudioSessionId());
-            mBassBoost.setStrength((short) sp.getInt(EqualizerFragment.BASS_BOOST, 0));
         }
+        mBassBoost = new BassBoost(0, mPlayer.getAudioSessionId());
+        mBassBoost.setStrength((short) sp.getInt(EqualizerFragment.BASS_BOOST, 0));
 
         // ===== register Receiver =====
         playMusicReceiver = new PlayMusicReceiver();

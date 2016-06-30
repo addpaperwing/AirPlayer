@@ -27,5 +27,5 @@ dependencies {
     compile 'com.android.support:design:23.0.1'
     compile 'com.sothree.slidinguppanel:library:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.facebook.fresco:fresco:0.7.0+'
+    compile 'com.facebook.fresco:fresco:0.11.0'
 }

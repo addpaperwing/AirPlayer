@@ -18,6 +18,7 @@ import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -48,7 +49,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import java.io.File;
 
 
-public class AirMainActivity extends AppCompatActivity {
+public class AirMainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     public static final String TAG = "AirMainActivity";
 

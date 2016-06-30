@@ -13,6 +13,7 @@ bin/
 gen/
 
 # Gradle files
+gradle/
 .gradle/
 build/
 /*/build/
@@ -28,3 +29,10 @@ proguard/
 
 #Mac os System
 .DS_Store
+
+#IDE
+.idea/
+
+#others
+*.bat
+gradlew

@@ -1,5 +1,6 @@
 package com.airplayer.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -7,20 +8,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
-import android.os.Handler;
-import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -29,24 +31,32 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airplayer.R;
+import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.fragment.child.EqualizerFragment;
 import com.airplayer.fragment.child.MyLibraryFragment;
 import com.airplayer.fragment.child.RecentFragment;
-import com.airplayer.R;
-import com.airplayer.fragment.PlayMusicFragment;
 import com.airplayer.model.AirModel;
 import com.airplayer.model.PictureGettable;
 import com.airplayer.service.PlayMusicService;
 import com.airplayer.util.BitmapUtils;
 import com.airplayer.util.StorageUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
+import java.io.IOException;
+
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 
 public class AirMainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
@@ -59,37 +69,14 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
     // handle replace theme picture operation
     public static final int PICK_PHOTO = 9;
 
-    // what value of message instance that handle the pictures of NavigationView
-    private static final int MSG_SAVE_THEME_PICTURE_SUCCEED = 3;
-    private static final int MSG_SAVE_THEME_PICTURE_FAIL = 2;
-
-    // mProgress dialog when saving background picture
+    // progress dialog when saving background picture
     private ProgressDialog mProgress;
-
-    // thread to save bitmap of draweeView which is the head of NavigationView
-    private void saveBitmapTask(final Bitmap bitmap, final Uri uri) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message msg = new Message();
-                try {
-                    StorageUtils.saveImage(AirMainActivity.this, "Theme.jpg", bitmap);
-                    msg.what = MSG_SAVE_THEME_PICTURE_SUCCEED;
-                    msg.obj = uri;
-                } catch (Exception e) {
-                    msg.what = MSG_SAVE_THEME_PICTURE_FAIL;
-                } finally {
-                    handler.sendMessage(msg);
-                }
-            }
-        }).start();
-    }
 
     // ===== user interface =====
     // ----- Left NavigationView -----
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private SimpleDraweeView mNavigationHeadDraweeView;
+    private ImageView mNavigationHeadImageView;
     private TextView mNavigationHintTextView;
 
     // ----- Top ActionBar -----
@@ -108,9 +95,7 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
             playerControlBinder = (PlayMusicService.PlayerControlBinder) service;
             // set up bottom sliding fragment when service is connected
             mPlayMusicFragment = new PlayMusicFragment();
-            mFragmentManager.beginTransaction()
-                    .replace(R.id.sliding_fragment_container,
-                            mPlayMusicFragment).commit();
+            mFragmentManager.beginTransaction().replace(R.id.sliding_fragment_container, mPlayMusicFragment).commit();
 
             // set sliding up panel invisible when activity create
             if (!playerControlBinder.isPlaying()) {
@@ -136,36 +121,39 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
     private FragmentManager mFragmentManager;
     private PlayMusicFragment mPlayMusicFragment;
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            if (msg.what == 0) {
-                mSlidingUpPanelLayout.setPanelHeight((int) msg.obj);
-            } else if (msg.what == MSG_SAVE_THEME_PICTURE_FAIL || msg.what == MSG_SAVE_THEME_PICTURE_SUCCEED) {
-                mProgress.dismiss();
-                switch (msg.what) {
-                    case MSG_SAVE_THEME_PICTURE_SUCCEED:
-                        setNavigationImage((Uri) msg.obj);
-                        break;
-                    case MSG_SAVE_THEME_PICTURE_FAIL:
-                        Toast.makeText(AirMainActivity.this,
-                                "fail to save picture into external storage",
-                                Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        }
-    };
 
     // ===== other resource =====
     private int mSize;
+    private boolean hasInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // grant permission
+        ActivityCompat.requestPermissions(AirMainActivity.this, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE }, 1);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // start to initialize when permission is granted
+                init();
+            } else {
+                // finish activity when permission is not granted
+                finish();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void init() {
         Fresco.initialize(this);
         AirModel.initModels(this);
-        setContentView(R.layout.activity_main);
+
 
         // ===== get actionbarSize in attrs =====
         int defaultInt = getResources().getDimensionPixelOffset(R.dimen.sliding_up_fragment_bottom_bar_height);
@@ -232,6 +220,8 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
         mPlayerStateReceiver = new PlayerStateReceiver();
         IntentFilter filter = new IntentFilter(PlayMusicService.PLAY_STATE_CHANGE);
         registerReceiver(mPlayerStateReceiver, filter);
+
+        hasInitialized = true;
     }
 
     @Override
@@ -251,7 +241,38 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
                         mProgress = new ProgressDialog(this);
                         mProgress.setMessage("saving picture");
                         mProgress.show();
-                        saveBitmapTask(bm, uri);
+
+                        // use RxJava to save bitmap of ImageView which is the head of NavigationView
+                        Observable.just(bm).map(new Func1<Bitmap, String>() {
+                            @Override
+                            public String call(Bitmap bitmap) {
+                                try {
+                                    File file = StorageUtils.saveImage(AirMainActivity.this, "Theme.jpg", bitmap);
+                                    return  file.getPath();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    return null;
+                                }
+                            }
+                        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<String>() {
+                                    @Override
+                                    public void onCompleted() {
+                                        mProgress.dismiss();
+                                    }
+
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(AirMainActivity.this, "fail to save picture into external storage", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onNext(String s) {
+                                        if (s != null) setNavigationImage(s);
+                                        else Toast.makeText(AirMainActivity.this, "fail to save picture into external storage", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     }
                     break;
             }
@@ -262,8 +283,10 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
 
     @Override
     protected void onDestroy() {
-        unbindService(connection);                  /* unbind service */
-        unregisterReceiver(mPlayerStateReceiver);   /* unregister receiver */
+        if (hasInitialized) {
+            unbindService(connection);                  /* unbind service */
+            unregisterReceiver(mPlayerStateReceiver);   /* unregister receiver */
+        }
         super.onDestroy();
     }
 
@@ -360,10 +383,10 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
 
     private void setupNavigationHeadView() {
         View headView = mNavigationView.inflateHeaderView(R.layout.navigation_header);
-        mNavigationHeadDraweeView = (SimpleDraweeView) headView.findViewById(R.id.navigation_image);
+        mNavigationHeadImageView = (ImageView) headView.findViewById(R.id.navigation_image);
         mNavigationHintTextView = (TextView) headView.findViewById(R.id.navigation_top_image_hint);
         setNavigationImage(null);
-        mNavigationHeadDraweeView.setOnClickListener(new View.OnClickListener() {
+        mNavigationHeadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -373,17 +396,34 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
         });
     }
 
-    private void setNavigationImage(Uri uri) {
-        if (uri == null) {
+    private void setNavigationImage(String path) {
+        if (path == null || path.equals("")) {
             File file = new File(AirMainActivity.EXTERNAL_PICTURE_FOLDER + "Theme.jpg");
             if (file.exists()) {
-                uri = Uri.fromFile(file);
+                path = file.getPath();
             } else {
                 mNavigationHintTextView.setVisibility(View.VISIBLE);
                 return;
             }
         }
-        mNavigationHeadDraweeView.setImageURI(uri);
+
+        // user RxJava to set navigation head image
+        Observable.just(path)
+                .map(new Func1<String, Bitmap>() {
+                    @Override
+                    public Bitmap call(String path) {
+                        return BitmapFactory.decodeFile(path);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<Bitmap>() {
+                    @Override
+                    public void call(Bitmap bitmap) {
+                        mNavigationHeadImageView.setImageBitmap(bitmap);
+                    }
+                });
+
         mNavigationHintTextView.setVisibility(View.INVISIBLE);
     }
 
@@ -477,7 +517,7 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
             if (playState == PlayMusicService.PLAY_STATE_PLAY) {
                 if (!mSlidingUpPanelLayout.isTouchEnabled()) {
                     mSlidingUpPanelLayout.setTouchEnabled(true);
-                    showPanel();
+                    mSlidingUpPanelLayout.setPanelHeight(mSize);
                 }
                 if (mSlidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     Toolbar toolbar = mPlayMusicFragment.getSlidingUpPanelTopBar();
@@ -492,27 +532,5 @@ public class AirMainActivity extends AppCompatActivity implements ActivityCompat
                 }
             }
         }
-    }
-
-    /**
-     * package method to animate show panel when start to play music
-     */
-    private void showPanel() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int height = 0; height < mSize; height += 2) {
-                    Message msg = new Message();
-                    msg.what = 0;
-                    msg.obj = height;
-                    handler.sendMessage(msg);
-                    try {
-                        Thread.sleep(2);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();
     }
 }

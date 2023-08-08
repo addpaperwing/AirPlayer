@@ -26,7 +26,11 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
-      # The next step will run the unit tests
+      - run
+          name: chmod permissions
+          command: |
+            chmod +x ./gradlew
+      # The next step will run the unit tests  
       - android/run-tests:
           test-command: ./gradlew testDebug
 

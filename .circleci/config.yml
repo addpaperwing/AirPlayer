@@ -26,7 +26,7 @@ jobs:
       - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
-      - run
+      - run:
           name: chmod permissions
           command: |
             chmod +x ./gradlew
